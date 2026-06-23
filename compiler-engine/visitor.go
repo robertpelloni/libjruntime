@@ -132,6 +132,9 @@ func (v *CppTranspilerVisitor) VisitMethodDeclaration(ctx *parser.MethodDeclarat
 
 	fmt.Printf("Discovered method: %s\n", methodName)
 
+
+	fmt.Printf("Discovered method: %s\n", methodName)
+
 	returnType := "void"
 	if ctx.TypeTypeOrVoid().TypeType() != nil {
 		returnType = mapType(ctx.TypeTypeOrVoid().TypeType().GetText())
@@ -159,6 +162,11 @@ func (v *CppTranspilerVisitor) VisitMethodDeclaration(ctx *parser.MethodDeclarat
         v.Visit(ctx.MethodBody().Block())
     }
 
+
+	if ctx.MethodBody().Block() != nil {
+        v.Visit(ctx.MethodBody().Block())
+    }
+
 	v.cppCode.WriteString("}\n\n")
 
 	return nil
@@ -166,6 +174,7 @@ func (v *CppTranspilerVisitor) VisitMethodDeclaration(ctx *parser.MethodDeclarat
 
 func (v *CppTranspilerVisitor) VisitFieldDeclaration(ctx *parser.FieldDeclarationContext) interface{} {
     fmt.Printf("Discovered field declaration\n")
+
 
 	fieldType := mapType(ctx.TypeType().GetText())
 	for _, decl := range ctx.VariableDeclarators().AllVariableDeclarator() {
@@ -203,6 +212,7 @@ func (v *CppTranspilerVisitor) VisitBlockStatement(ctx *parser.BlockStatementCon
         return nil
     }
 
+
     for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
 			payload.Accept(v)
@@ -227,6 +237,7 @@ func (v *CppTranspilerVisitor) VisitStatement(ctx *parser.StatementContext) inte
         }
         v.cppCode.WriteString("    }\n")
 
+
         catchIdx := 0
         for ctx.CatchClause(catchIdx) != nil {
             v.cppCode.WriteString("    catch (")
@@ -243,6 +254,7 @@ func (v *CppTranspilerVisitor) VisitStatement(ctx *parser.StatementContext) inte
             v.cppCode.WriteString("    }\n")
             catchIdx++
         }
+
 
         if ctx.FinallyBlock() != nil {
             v.cppCode.WriteString("    JAVA_FINALLY(\n")
@@ -289,6 +301,7 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::lang::String"
              }
 
+
              argsStr := ""
              if creator.ClassCreatorRest() != nil && creator.ClassCreatorRest().Arguments() != nil {
                  args := creator.ClassCreatorRest().Arguments().(*parser.ArgumentsContext)
@@ -321,6 +334,7 @@ func (v *CppTranspilerVisitor) VisitMethodCallExpression(ctx *parser.MethodCallE
                   objRes = ctx.GetChild(0).(antlr.ParseTree).GetText()
              }
 
+
              if ctx.MethodCall() != nil {
                  methodCallRes := v.Visit(ctx.MethodCall())
                  if methodCallRes == nil {
@@ -337,6 +351,7 @@ func (v *CppTranspilerVisitor) VisitMethodCallExpression(ctx *parser.MethodCallE
          }
     }
 
+
     return ctx.GetText()
 }
 
@@ -348,6 +363,7 @@ func (v *CppTranspilerVisitor) VisitMemberReferenceExpression(ctx *parser.Member
              if objRes == nil {
                   objRes = ctx.GetChild(0).(antlr.ParseTree).GetText()
              }
+
 
              if ctx.Identifier() != nil {
                  return fmt.Sprintf("JAVA_NULL_CHECK(%v)->%v", objRes, ctx.Identifier().GetText())
@@ -391,6 +407,8 @@ func (v *CppTranspilerVisitor) VisitMethodCall(ctx *parser.MethodCallContext) in
 
     argsStr := ""
 
+
+
     // search for ExpressionList manually
     for _, child := range ctx.GetChildren() {
         if exprListCtx, ok := child.(*parser.ExpressionListContext); ok {
@@ -406,6 +424,7 @@ func (v *CppTranspilerVisitor) VisitMethodCall(ctx *parser.MethodCallContext) in
              argsStr = strings.Join(parts, ", ")
         }
     }
+
 
     return fmt.Sprintf("%s(%s)", methodName, argsStr)
 }
