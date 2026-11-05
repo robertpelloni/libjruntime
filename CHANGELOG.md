@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.12
+- Created `libjruntime/Boxes.h` introducing primitive boxed classes `java::lang::Integer`, `java::lang::Boolean`, and `java::lang::Long`.
+- Implemented static factory methods `Integer::valueOf(int32_t)`, `Boolean::valueOf(bool)`, `Long::valueOf(int64_t)`.
+- Implemented primitive extraction methods `intValue()`, `booleanValue()`, `longValue()`, and numeric conversion `doubleValue()`.
+- Implemented `hashCode()`, `equals(Object*)`, and `toString()` on all boxed types.
+- Enhanced `compiler-engine/visitor.go` to recognize primitive wrapper types, map type references to `java::lang::Integer*`, `java::lang::Boolean*`, `java::lang::Long*`, auto-include `#include "Boxes.h"`, and route `Integer.valueOf(...)`, `Boolean.valueOf(...)`, `Long.valueOf(...)`.
+- Added unit test `TestTranspilePrimitiveWrappers` in `compiler-engine/visitor_test.go` and verified with Go test suite.
+- Updated `tests/e2e_test.sh` with `BoxHelper` and assertions validating native allocation, boxing, unboxing, equals, and string conversion with Boehm GC.
+
 ## 1.0.11
 - Created `libjruntime/Math.h` implementing `java::lang::Math` with mathematical constants (`PI`, `E`) and utility functions (`abs`, `min`, `max`, `sqrt`, `pow`, `floor`, `ceil`, `round`).
 - Enhanced `compiler-engine/visitor.go` to route `Math` member references and method invocations directly to `java::lang::Math::member`.

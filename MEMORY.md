@@ -11,6 +11,7 @@
   - `StringBuilder.h`: Mutable string builder backing `java::lang::StringBuilder` with chained appends.
   - `Array.h`: Standard array wrapper `java::lang::Array<T>` with length field, bounds checking, and `GC_MALLOC` buffer allocation.
   - `Math.h`: Mathematical functions (`abs`, `min`, `max`, `sqrt`, `pow`, etc.) and constants (`PI`, `E`).
+  - `Boxes.h`: Primitive wrapper types `java::lang::Integer`, `Boolean`, and `Long` with `valueOf`, unboxing methods, `equals`, `hashCode`, and `toString`.
   - `System.h`: Standard I/O output stream wrapper (`PrintStream`) backing `java::lang::System::out`.
   - `GC.h`: Memory allocation via `GC_MALLOC` wrapped in `java_new<T>()`.
   - `Exceptions.h`: Native exception types `Exception`, `NullPointerException`, and `ArrayIndexOutOfBoundsException`.
@@ -24,6 +25,8 @@
 ## Key Design Patterns & Invariants
 - Class transpilation produces two files per Java class: `<ClassName>.h` and `<ClassName>.cpp`.
 - `Math` calls map directly to `java::lang::Math::method` without allocating instances or checking null pointers.
+- Primitive wrappers `Integer`, `Boolean`, and `Long` map to `java::lang::Integer*`, `java::lang::Boolean*`, `java::lang::Long*`, auto-including `Boxes.h`.
+- Static factory methods like `Integer.valueOf(...)` route directly to `java::lang::Integer::valueOf(...)`.
 - Static initialization blocks `static { ... }` translate to self-invoking lambda runners `static inline bool _static_init_## = []() { ...; return true; }();` ensuring pre-main execution.
 - Static fields map to `inline static fieldType fieldName = init;` in the C++ header.
 - Static methods map to `static returnType methodName(...)` without `virtual`.

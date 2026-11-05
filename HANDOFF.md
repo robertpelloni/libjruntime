@@ -1,39 +1,24 @@
-# HANDOFF & SESSION SUMMARY
+# HANDOFF & ARCHITECTURAL SUMMARY
 
-## Context & State at Handoff
-- **Repository State**: Complete working pipeline containing Go ANTLR4 transpiler CLI (`compiler-engine`), C++ runtime headers (`libjruntime`), Boehm GC submodule (`bdwgc`), ANTLR4 grammar submodule (`grammars-v4`), and automated test suites.
-- **Version**: `1.0.11`
+## Milestone Reached: v1.0.12 - Primitive Wrapper Types (`Integer`, `Boolean`, `Long`)
 
-## Key Accomplishments in this Session
-1. **`java.lang.Math` Runtime & Transpilation Support**:
-   - Implemented `libjruntime/Math.h` declaring `java::lang::Math` with constants `PI` and `E`, and static methods (`abs`, `min`, `max`, `sqrt`, `pow`, `floor`, `ceil`, `round`).
-   - Mapped `Math` in `compiler-engine/visitor.go` to directly invoke `java::lang::Math::member`.
-   - Verified `Math` operations in unit and end-to-end native tests.
-2. **Static Initialization Blocks (`static { ... }`)**:
-   - Transpiled into module-level self-executing lambda runners (`static inline bool _static_init_## = []() { ...; return true; }();`).
-   - Automatically qualified static fields within static blocks and class methods.
-3. **`java.lang.StringBuilder` Support**:
-   - `libjruntime/StringBuilder.h` with chained `append` overloads and `toString()`.
-4. **Static Members Support**:
-   - `static` methods without `virtual`.
-   - `inline static` fields with initializers.
-   - `ClassName::member` scope resolution.
-5. **Array Support & Bounds Safety**:
-   - `libjruntime/Array.h` defining `java::lang::Array<T>` with `length` field, `operator[]`, and `GC_MALLOC` buffer allocation.
-   - `ArrayIndexOutOfBoundsException` in `libjruntime/Exceptions.h`.
-6. **Interfaces, Inheritance & Polymorphism**:
-   - Abstract base classes for `interface`, pure virtual methods, and `implements` multiple inheritance.
-   - `extends SuperClass` base class emission and header include.
-7. **Constructors, Console I/O, & Control Flow**:
-   - Default and parameterized constructors.
-   - `libjruntime/System.h` (`System.out.println`).
-   - `if-else`, `while`, and `for` loops.
-8. **Automated Testing Suite**:
-   - Unit tests in `compiler-engine/visitor_test.go` covering classes, methods, constructors, interfaces, inheritance, static members, static init blocks, Math, StringBuilder, control flow, exceptions, System.out, and arrays.
-   - End-to-end integration and native execution test suite in `tests/e2e_test.sh` asserting runtime behavior with Math, static initialization blocks, StringBuilder, static fields, static methods, arrays, bounds check exceptions, interfaces, polymorphism, constructors, loops, conditionals, and Boehm GC allocation.
-9. **Documentation Governance**:
-   - Synchronized `CHANGELOG.md`, `VERSION` (1.0.11), `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
+### What Was Accomplished in v1.0.12
+1. **Primitive Boxed Types in `libjruntime/Boxes.h`**:
+   - `java::lang::Integer`: holds `int32_t value`, implements `valueOf(int32_t)`, `intValue()`, `hashCode()`, `equals(Object*)`, and `toString()`.
+   - `java::lang::Boolean`: holds `bool value`, implements `valueOf(bool)`, `booleanValue()`, `hashCode()`, `equals(Object*)`, and `toString()`.
+   - `java::lang::Long`: holds `int64_t value`, implements `valueOf(int64_t)`, `longValue()`, `intValue()`, `doubleValue()`, `hashCode()`, `equals(Object*)`, and `toString()`.
+2. **Compiler AST Transpilation**:
+   - `visitor.go` updated:
+     - Type mappings for `Integer`, `Boolean`, `Long` converted to `java::lang::Integer*`, `java::lang::Boolean*`, `java::lang::Long*`.
+     - Automatic inclusion of `#include "Boxes.h"` whenever wrapper types are encountered in fields, parameters, return types, or allocations.
+     - Static method calls like `Integer.valueOf(...)` routed to C++ static scope without null checking.
+3. **Verification**:
+   - Added `TestTranspilePrimitiveWrappers` unit test in `compiler-engine/visitor_test.go`.
+   - Updated end-to-end integration test runner `tests/e2e_test.sh` asserting runtime native allocation, boxing, unboxing, conversion, and comparison with Boehm GC.
+   - All tests passing cleanly.
 
-## Instructions for Successor Agents
-- Run `./tests/e2e_test.sh` to quickly verify the end-to-end transpilation, native compilation, and execution stack.
-- To implement primitive wrapper classes, create `libjruntime/Integer.h`, `Boolean.h`, etc., providing `valueOf()` and primitive unwrapping.
+### Context for Successor Agents
+- Project compiles clean with Go and C++20.
+- Runtime headers reside in `libjruntime/`.
+- Native executable tests link with `bdwgc/.libs/libgc.so` (`-lgc`).
+- Next roadmap milestones: Dynamic collections (`ArrayList`), enhanced `for-each` loops, constructor chaining (`this(...)`, `super(...)`).

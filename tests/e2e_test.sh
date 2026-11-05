@@ -42,6 +42,26 @@ public class MathHelper {
 }
 EOF
 
+cat << 'EOF' > "${TEMP_DIR}/src/BoxHelper.java"
+public class BoxHelper {
+    public static Integer boxInt(int val) {
+        return new Integer(val);
+    }
+
+    public static int unboxInt(Integer boxed) {
+        return boxed.intValue();
+    }
+
+    public static Boolean boxBool(boolean val) {
+        return new Boolean(val);
+    }
+
+    public static boolean unboxBool(Boolean boxed) {
+        return boxed.booleanValue();
+    }
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/Describable.java"
 public interface Describable {
     String describe();
@@ -175,6 +195,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include <cassert>
 #include "Config.h"
 #include "MathHelper.h"
+#include "BoxHelper.h"
 #include "Describable.h"
 #include "Animal.h"
 #include "Dog.h"
@@ -184,6 +205,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "Array.h"
 #include "StringBuilder.h"
 #include "Math.h"
+#include "Boxes.h"
 
 int main() {
     GC_INIT();
@@ -209,6 +231,24 @@ int main() {
     assert(MathHelper::FACTOR == 7);
     int32_t scaled = MathHelper::multiplyByFactor(6);
     assert(scaled == 42);
+
+    // Verify BoxHelper and java.lang.Integer / Boolean boxing & unboxing
+    java::lang::Integer* boxedInt = BoxHelper::boxInt(12345);
+    assert(boxedInt != nullptr);
+    assert(boxedInt->intValue() == 12345);
+    assert(BoxHelper::unboxInt(boxedInt) == 12345);
+    assert(boxedInt->toString()->getStdString() == "12345");
+
+    java::lang::Boolean* boxedBool = BoxHelper::boxBool(true);
+    assert(boxedBool != nullptr);
+    assert(boxedBool->booleanValue() == true);
+    assert(BoxHelper::unboxBool(boxedBool) == true);
+    assert(boxedBool->toString()->getStdString() == "true");
+
+    java::lang::Long* boxedLong = java::lang::Long::valueOf(9876543210LL);
+    assert(boxedLong != nullptr);
+    assert(boxedLong->longValue() == 9876543210LL);
+    assert(boxedLong->intValue() == (int32_t)9876543210LL);
 
     // Verify inheritance, polymorphism, and virtual method override
     Dog* dog = java_new<Dog>(java_new<java::lang::String>("Golden Retriever"));

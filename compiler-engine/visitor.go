@@ -47,6 +47,12 @@ func mapType(javaType string) string {
 		return "java::lang::String*"
 	case "StringBuilder":
 		return "java::lang::StringBuilder*"
+	case "Integer":
+		return "java::lang::Integer*"
+	case "Boolean":
+		return "java::lang::Boolean*"
+	case "Long":
+		return "java::lang::Long*"
 	case "Object":
 		return "java::lang::Object*"
 	case "void":
@@ -121,7 +127,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	extraIncludeStr := strings.Join(extraIncludes, "")
 	baseClassesStr := strings.Join(baseClasses, ", ")
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
 
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
@@ -136,7 +142,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
-		"void": true, "String": true, "StringBuilder": true, "Math": true, "Object": true, "Exception": true,
+		"void": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Object": true, "Exception": true,
 	}
 	for inc := range v.included {
 		cleanInc := strings.TrimSuffix(inc, "[]")
@@ -170,7 +176,7 @@ func (v *CppTranspilerVisitor) VisitInterfaceDeclaration(ctx *parser.InterfaceDe
 	v.cppCode.Reset()
 	v.included = make(map[string]bool)
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
 
 	if ctx.InterfaceBody() != nil {
 		v.Visit(ctx.InterfaceBody())
@@ -411,9 +417,12 @@ func (v *CppTranspilerVisitor) VisitBlock(ctx *parser.BlockContext) interface{} 
 func (v *CppTranspilerVisitor) VisitBlockStatement(ctx *parser.BlockStatementContext) interface{} {
     if ctx.LocalVariableDeclaration() != nil {
         decl := ctx.LocalVariableDeclaration()
-        rawType := decl.TypeType().GetText()
-        v.included[rawType] = true
-        typ := mapType(rawType)
+        typ := "auto"
+        if decl.TypeType() != nil {
+            rawType := decl.TypeType().GetText()
+            v.included[rawType] = true
+            typ = mapType(rawType)
+        }
         for _, vd := range decl.VariableDeclarators().AllVariableDeclarator() {
             name := vd.VariableDeclaratorId().GetText()
             v.cppCode.WriteString(fmt.Sprintf("    %s %s", typ, name))
@@ -622,6 +631,12 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::lang::String"
              } else if className == "StringBuilder" {
                  className = "java::lang::StringBuilder"
+             } else if className == "Integer" {
+                 className = "java::lang::Integer"
+             } else if className == "Boolean" {
+                 className = "java::lang::Boolean"
+             } else if className == "Long" {
+                 className = "java::lang::Long"
              }
 
              // Array creation: new T[size]
@@ -679,6 +694,9 @@ func (v *CppTranspilerVisitor) VisitMethodCallExpression(ctx *parser.MethodCallE
                      methodCallRes = ctx.MethodCall().GetText()
                  }
                  objStr := fmt.Sprintf("%v", objRes)
+                 if objStr == "Integer" || objStr == "Boolean" || objStr == "Long" {
+                     return fmt.Sprintf("java::lang::%s::%v", objStr, methodCallRes)
+                 }
                  if objStr == "Math" {
                      return fmt.Sprintf("java::lang::Math::%v", methodCallRes)
                  }

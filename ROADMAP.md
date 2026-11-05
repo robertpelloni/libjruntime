@@ -15,6 +15,7 @@
 - [x] Native string manipulation: `java.lang.StringBuilder` with chained appends.
 - [x] Static initialization blocks (`static { ... }`) mapped to self-executing lambda runners.
 - [x] Mathematical utilities: `java.lang.Math` constants (`PI`, `E`) and functions (`abs`, `min`, `max`, `sqrt`, `pow`, etc.).
+- [x] Primitive wrapper classes (`Integer`, `Long`, `Boolean`) and boxed methods (`libjruntime/Boxes.h`).
 
 ## Milestone 2: Language Completeness (v1.1.0)
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
@@ -24,7 +25,7 @@
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
 - [ ] Core collections: `ArrayList`, `HashMap`.
 - [ ] File I/O (`FileInputStream`, `FileOutputStream`, `File`).
-- [ ] Primitive wrapper classes (`Integer`, `Long`, `Boolean`, `Double`).
+- [ ] Extended wrapper classes (`Double`, `Float`, `Byte`, `Short`, `Character`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
 - [ ] `synchronized` block and method syntax translation backed by `std::mutex*` monitor.

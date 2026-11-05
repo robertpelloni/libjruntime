@@ -73,6 +73,36 @@ public class Calculator {
 	}
 }
 
+func TestTranspilePrimitiveWrappers(t *testing.T) {
+	javaSrc := `
+public class BoxTest {
+    public void run() {
+        Integer i = new Integer(42);
+        Boolean b = new Boolean(true);
+        Long l = new Long(100);
+        int unboxed = i.intValue();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Boxes.h\"") {
+		t.Errorf("Expected #include \"Boxes.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::lang::Integer* i = java_new<java::lang::Integer>(42);") {
+		t.Errorf("Expected Integer creation, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::lang::Boolean* b = java_new<java::lang::Boolean>(true);") {
+		t.Errorf("Expected Boolean creation, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::lang::Long* l = java_new<java::lang::Long>(100);") {
+		t.Errorf("Expected Long creation, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(i)->intValue()") {
+		t.Errorf("Expected intValue invocation, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileStaticMembers(t *testing.T) {
 	javaSrc := `
 public class MathUtil {
