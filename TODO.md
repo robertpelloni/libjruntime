@@ -2,8 +2,8 @@
 
 ## Immediate Next Steps
 - [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
-- [ ] Implement static initialization blocks (`static { ... }`) mapping to C++ static anonymous execution helpers.
 - [ ] Implement core math functions in `libjruntime/Math.h` (`java::lang::Math`).
+- [ ] Implement enhanced `for-each` loops in statement visitor.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
@@ -18,3 +18,4 @@
 - [x] Implement array wrapper `java::lang::Array<T>` and array transpilation syntax.
 - [x] Implement static fields and static method declarations and member access without null checks.
 - [x] Implement `java::lang::StringBuilder` with chained appends and `toString()`.
+- [x] Implement static initialization blocks (`static { ... }`) mapped to self-executing lambda runners.

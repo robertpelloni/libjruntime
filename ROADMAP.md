@@ -13,9 +13,9 @@
 - [x] Array types (`T[]`), creation (`new T[n]`), indexing (`arr[i]`), and bounds safety (`Array.h`).
 - [x] Static fields, static methods, and class member access (`ClassName::member`).
 - [x] Native string manipulation: `java.lang.StringBuilder` with chained appends.
+- [x] Static initialization blocks (`static { ... }`) mapped to self-executing lambda runners.
 
 ## Milestone 2: Language Completeness (v1.1.0)
-- [ ] Class static initialization blocks (`static { ... }`).
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
 - [ ] Enhanced `for-each` loops and switch / pattern matching statements.
 - [ ] Explicit type casting and `instanceof` expressions.

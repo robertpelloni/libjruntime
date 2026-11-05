@@ -18,6 +18,8 @@ type CppTranspilerVisitor struct {
 	cppCode         strings.Builder
 	included        map[string]bool
 	currentIsStatic bool
+	staticInitCount int
+	staticFields    map[string]bool
 }
 
 func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
@@ -25,6 +27,7 @@ func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
 		BaseJavaParserVisitor: &parser.BaseJavaParserVisitor{},
 		outDir:                outDir,
 		included:              make(map[string]bool),
+		staticFields:          make(map[string]bool),
 	}
 }
 
@@ -86,6 +89,8 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	v.headerCode.Reset()
 	v.cppCode.Reset()
 	v.included = make(map[string]bool)
+	v.staticFields = make(map[string]bool)
+	v.staticInitCount = 0
 
 	superClass := "java::lang::Object"
 	var extraIncludes []string
@@ -259,6 +264,17 @@ func (v *CppTranspilerVisitor) VisitClassBodyDeclaration(ctx *parser.ClassBodyDe
 			v.currentIsStatic = true
 		}
 	}
+
+	// Check for static initialization block: static { ... }
+	if ctx.STATIC() != nil && ctx.Block() != nil {
+		v.staticInitCount++
+		v.cppCode.WriteString(fmt.Sprintf("static inline bool _static_init_%s_%d = []() {\n", v.currentClass, v.staticInitCount))
+		v.Visit(ctx.Block())
+		v.cppCode.WriteString("    return true;\n}();\n\n")
+		v.currentIsStatic = false
+		return nil
+	}
+
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
 			payload.Accept(v)
@@ -374,6 +390,7 @@ func (v *CppTranspilerVisitor) VisitFieldDeclaration(ctx *parser.FieldDeclaratio
 			}
 		}
 		if v.currentIsStatic {
+			v.staticFields[fieldName] = true
 			v.headerCode.WriteString(fmt.Sprintf("    inline static %s %s%s;\n", fieldType, fieldName, initVal))
 		} else {
 			v.headerCode.WriteString(fmt.Sprintf("    %s %s%s;\n", fieldType, fieldName, initVal))
@@ -725,6 +742,13 @@ func (v *CppTranspilerVisitor) VisitPrimaryExpression(ctx *parser.PrimaryExpress
 }
 
 func (v *CppTranspilerVisitor) VisitPrimary(ctx *parser.PrimaryContext) interface{} {
+    if ctx.Identifier() != nil {
+        idName := ctx.Identifier().GetText()
+        if v.staticFields[idName] {
+            return fmt.Sprintf("%s::%s", v.currentClass, idName)
+        }
+        return idName
+    }
     if ctx.GetChildCount() == 1 {
         child := ctx.GetChild(0)
         if payload, ok := child.(antlr.ParseTree); ok {

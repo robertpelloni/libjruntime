@@ -16,6 +16,18 @@ echo "=== Building compiler-engine CLI ==="
 echo "=== Preparing test Java source ==="
 mkdir -p "${TEMP_DIR}/src"
 
+cat << 'EOF' > "${TEMP_DIR}/src/Config.java"
+public class Config {
+    public static int DEFAULT_PORT;
+    public static String APP_NAME;
+
+    static {
+        DEFAULT_PORT = 8080;
+        APP_NAME = "LibJRuntimeApp";
+    }
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/MathHelper.java"
 public class MathHelper {
     public static int FACTOR = 7;
@@ -157,6 +169,7 @@ echo "=== Creating C++ Test Entrypoint ==="
 cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include <iostream>
 #include <cassert>
+#include "Config.h"
 #include "MathHelper.h"
 #include "Describable.h"
 #include "Animal.h"
@@ -169,6 +182,11 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 
 int main() {
     GC_INIT();
+
+    // Verify static initialization block execution
+    assert(Config::DEFAULT_PORT == 8080);
+    assert(Config::APP_NAME != nullptr);
+    assert(Config::APP_NAME->getStdString() == "LibJRuntimeApp");
 
     // Verify static fields and static method invocation
     assert(MathHelper::FACTOR == 7);

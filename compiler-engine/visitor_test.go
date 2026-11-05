@@ -104,6 +104,26 @@ public class MathUtil {
 	}
 }
 
+func TestTranspileStaticInitBlock(t *testing.T) {
+	javaSrc := `
+public class StaticInitTest {
+    public static int VAL;
+
+    static {
+        VAL = 500;
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "static inline bool _static_init_StaticInitTest_1 = []() {") {
+		t.Errorf("Expected static initialization lambda in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "return true;\n}();") {
+		t.Errorf("Expected static lambda self-invocation in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileStringBuilder(t *testing.T) {
 	javaSrc := `
 public class BuilderTest {

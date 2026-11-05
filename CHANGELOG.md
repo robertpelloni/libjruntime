@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.10
+- Implemented static initialization blocks (`static { ... }`) in `compiler-engine/visitor.go` transpiled to self-executing static lambdas run at module initialization time.
+- Added tracking and automatic qualification of static class fields inside static blocks and class methods (`ClassName::field`).
+- Added unit test `TestTranspileStaticInitBlock` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting static initialization block execution prior to application entry.
+- Synchronized workspace documentation and bumped version to `1.0.10`.
+
 ## 1.0.9
 - Created `libjruntime/StringBuilder.h` implementing `java::lang::StringBuilder` with chained `append` overloads for strings, characters, numbers, booleans, and objects, and `toString()` backed by Boehm GC.
 - Updated `compiler-engine/visitor.go` with `StringBuilder` type mapping, object creation translation, and header inclusion.
