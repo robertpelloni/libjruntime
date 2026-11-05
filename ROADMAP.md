@@ -11,11 +11,13 @@
 - [x] Class inheritance (`extends SuperClass`), dynamic dispatch, and polymorphism.
 - [x] Interface declarations (`interface Foo`) and implementation (`implements Bar`) with pure virtual C++ bases.
 - [x] Array types (`T[]`), creation (`new T[n]`), indexing (`arr[i]`), and bounds safety (`Array.h`).
+- [x] Static fields, static methods, and class member access (`ClassName::member`).
 
 ## Milestone 2: Language Completeness (v1.1.0)
-- [ ] Static fields, static methods, and class initialization blocks (`static { ... }`).
+- [ ] Class static initialization blocks (`static { ... }`).
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
 - [ ] Enhanced `for-each` loops and switch / pattern matching statements.
+- [ ] Explicit type casting and `instanceof` expressions.
 
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
 - [ ] Core collections: `ArrayList`, `HashMap`.

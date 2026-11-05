@@ -73,6 +73,37 @@ public class Calculator {
 	}
 }
 
+func TestTranspileStaticMembers(t *testing.T) {
+	javaSrc := `
+public class MathUtil {
+    public static int CONSTANT = 100;
+
+    public static int multiply(int a, int b) {
+        return a * b;
+    }
+
+    public void test() {
+        int x = MathUtil.CONSTANT;
+        int y = MathUtil.multiply(2, 3);
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "inline static int32_t CONSTANT = 100;") {
+		t.Errorf("Expected inline static field in header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "static int32_t multiply(int32_t a, int32_t b);") {
+		t.Errorf("Expected static method declaration in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "MathUtil::CONSTANT") {
+		t.Errorf("Expected MathUtil::CONSTANT reference in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "MathUtil::multiply(2, 3)") {
+		t.Errorf("Expected MathUtil::multiply invocation in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileInheritance(t *testing.T) {
 	javaSrc := `
 public class Dog extends Animal {

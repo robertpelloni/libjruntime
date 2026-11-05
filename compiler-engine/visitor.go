@@ -12,11 +12,12 @@ import (
 
 type CppTranspilerVisitor struct {
 	*parser.BaseJavaParserVisitor
-	outDir       string
-	currentClass string
-	headerCode   strings.Builder
-	cppCode      strings.Builder
-	included     map[string]bool
+	outDir          string
+	currentClass    string
+	headerCode      strings.Builder
+	cppCode         strings.Builder
+	included        map[string]bool
+	currentIsStatic bool
 }
 
 func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
@@ -247,11 +248,21 @@ func (v *CppTranspilerVisitor) VisitClassBody(ctx *parser.ClassBodyContext) inte
 }
 
 func (v *CppTranspilerVisitor) VisitClassBodyDeclaration(ctx *parser.ClassBodyDeclarationContext) interface{} {
+	v.currentIsStatic = false
+	if ctx.STATIC() != nil {
+		v.currentIsStatic = true
+	}
+	for _, mod := range ctx.AllModifier() {
+		if mod.ClassOrInterfaceModifier() != nil && mod.ClassOrInterfaceModifier().STATIC() != nil {
+			v.currentIsStatic = true
+		}
+	}
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
 			payload.Accept(v)
 		}
 	}
+	v.currentIsStatic = false
 	return nil
 }
 
@@ -328,7 +339,11 @@ func (v *CppTranspilerVisitor) VisitMethodDeclaration(ctx *parser.MethodDeclarat
 	}
 	params := strings.Join(pList, ", ")
 
-	v.headerCode.WriteString(fmt.Sprintf("    virtual %s %s(%s);\n", returnType, methodName, params))
+	if v.currentIsStatic {
+		v.headerCode.WriteString(fmt.Sprintf("    static %s %s(%s);\n", returnType, methodName, params))
+	} else {
+		v.headerCode.WriteString(fmt.Sprintf("    virtual %s %s(%s);\n", returnType, methodName, params))
+	}
 
 	v.cppCode.WriteString(fmt.Sprintf("%s %s::%s(%s) {\n", returnType, v.currentClass, methodName, params))
 
@@ -344,11 +359,23 @@ func (v *CppTranspilerVisitor) VisitMethodDeclaration(ctx *parser.MethodDeclarat
 func (v *CppTranspilerVisitor) VisitFieldDeclaration(ctx *parser.FieldDeclarationContext) interface{} {
     fmt.Printf("Discovered field declaration\n")
 
-
 	fieldType := mapType(ctx.TypeType().GetText())
 	for _, decl := range ctx.VariableDeclarators().AllVariableDeclarator() {
 		fieldName := decl.VariableDeclaratorId().GetText()
-		v.headerCode.WriteString(fmt.Sprintf("    %s %s;\n", fieldType, fieldName))
+		initVal := ""
+		if decl.VariableInitializer() != nil {
+			res := v.Visit(decl.VariableInitializer())
+			if res != nil {
+				initVal = fmt.Sprintf(" = %v", res)
+			} else {
+				initVal = fmt.Sprintf(" = %s", decl.VariableInitializer().GetText())
+			}
+		}
+		if v.currentIsStatic {
+			v.headerCode.WriteString(fmt.Sprintf("    inline static %s %s%s;\n", fieldType, fieldName, initVal))
+		} else {
+			v.headerCode.WriteString(fmt.Sprintf("    %s %s%s;\n", fieldType, fieldName, initVal))
+		}
 	}
 	return nil
 }
@@ -630,6 +657,10 @@ func (v *CppTranspilerVisitor) VisitMethodCallExpression(ctx *parser.MethodCallE
                  if methodCallRes == nil {
                      methodCallRes = ctx.MethodCall().GetText()
                  }
+                 objStr := fmt.Sprintf("%v", objRes)
+                 if len(objStr) > 0 && objStr[0] >= 'A' && objStr[0] <= 'Z' && !strings.Contains(objStr, "->") && !strings.Contains(objStr, "::") {
+                     return fmt.Sprintf("%s::%v", objStr, methodCallRes)
+                 }
                  return fmt.Sprintf("JAVA_NULL_CHECK(%v)->%v", objRes, methodCallRes)
              }
          }
@@ -659,12 +690,21 @@ func (v *CppTranspilerVisitor) VisitMemberReferenceExpression(ctx *parser.Member
              if leftStr == "System" && ctx.Identifier() != nil && ctx.Identifier().GetText() == "out" {
                  return "java::lang::System::out"
              }
+             objStr := fmt.Sprintf("%v", objRes)
+             isClass := len(objStr) > 0 && objStr[0] >= 'A' && objStr[0] <= 'Z' && !strings.Contains(objStr, "->") && !strings.Contains(objStr, "::")
+
              if ctx.Identifier() != nil {
+                 if isClass {
+                     return fmt.Sprintf("%s::%v", objStr, ctx.Identifier().GetText())
+                 }
                  return fmt.Sprintf("JAVA_NULL_CHECK(%v)->%v", objRes, ctx.Identifier().GetText())
              } else if ctx.MethodCall() != nil {
                  methodCallRes := v.Visit(ctx.MethodCall())
                  if methodCallRes == nil {
                      methodCallRes = ctx.MethodCall().GetText()
+                 }
+                 if isClass {
+                     return fmt.Sprintf("%s::%v", objStr, methodCallRes)
                  }
                  return fmt.Sprintf("JAVA_NULL_CHECK(%v)->%v", objRes, methodCallRes)
              }

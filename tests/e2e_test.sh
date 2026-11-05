@@ -16,6 +16,16 @@ echo "=== Building compiler-engine CLI ==="
 echo "=== Preparing test Java source ==="
 mkdir -p "${TEMP_DIR}/src"
 
+cat << 'EOF' > "${TEMP_DIR}/src/MathHelper.java"
+public class MathHelper {
+    public static int FACTOR = 7;
+
+    public static int multiplyByFactor(int n) {
+        return n * FACTOR;
+    }
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/Describable.java"
 public interface Describable {
     String describe();
@@ -139,6 +149,7 @@ echo "=== Creating C++ Test Entrypoint ==="
 cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include <iostream>
 #include <cassert>
+#include "MathHelper.h"
 #include "Describable.h"
 #include "Animal.h"
 #include "Dog.h"
@@ -149,6 +160,11 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 
 int main() {
     GC_INIT();
+
+    // Verify static fields and static method invocation
+    assert(MathHelper::FACTOR == 7);
+    int32_t scaled = MathHelper::multiplyByFactor(6);
+    assert(scaled == 42);
 
     // Verify inheritance, polymorphism, and virtual method override
     Dog* dog = java_new<Dog>(java_new<java::lang::String>("Golden Retriever"));

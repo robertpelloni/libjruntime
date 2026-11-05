@@ -1,10 +1,19 @@
 # Changelog
 
+## 1.0.8
+- Implemented static method transpilation (`static returnType methodName(...)`) in `compiler-engine/visitor.go`.
+- Implemented static field transpilation (`inline static fieldType fieldName = init;`) in C++ headers.
+- Enhanced static member invocation and field access in `VisitMethodCallExpression` and `VisitMemberReferenceExpression` (`ClassName::member`) bypassing instance null checks.
+- Added unit test `TestTranspileStaticMembers` to `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime static field reads and static method calculations.
+- Synchronized workspace documentation and bumped version to `1.0.8`.
+
 ## 1.0.7
 - Created `libjruntime/Array.h` defining `java::lang::Array<T>` with bounds checking, length property, and Boehm GC allocation.
 - Added `ArrayIndexOutOfBoundsException` in `libjruntime/Exceptions.h`.
 - Supported array type mapping (`T[]` -> `java::lang::Array<T>*`) and array creation (`new T[n]`) in `compiler-engine/visitor.go`.
 - Implemented square bracket indexing (`VisitSquareBracketExpression`) for array access and mutation.
+- Updated `JAVA_FINALLY` in `libjruntime/FinallyGuard.h` to accept variadic macro arguments with line-unique guard identifiers.
 - Added unit test `TestTranspileArrayOperations` in `compiler-engine/visitor_test.go`.
 - Expanded end-to-end integration test suite `tests/e2e_test.sh` asserting runtime array creation, assignment, length, and bounds checking exceptions.
 - Synchronized workspace documentation and bumped version to `1.0.7`.
