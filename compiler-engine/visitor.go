@@ -81,16 +81,35 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	v.included = make(map[string]bool)
 
 	superClass := "java::lang::Object"
-	extraInclude := ""
+	var extraIncludes []string
 	if ctx.EXTENDS() != nil && ctx.TypeType() != nil {
 		superClass = ctx.TypeType().GetText()
-		if superClass != "Object" && superClass != "java::lang::Object" {
-			extraInclude = fmt.Sprintf("#include \"%s.h\"\n", superClass)
+		if superClass == "Object" {
+			superClass = "java::lang::Object"
+		} else if superClass != "java::lang::Object" {
+			extraIncludes = append(extraIncludes, fmt.Sprintf("#include \"%s.h\"\n", superClass))
 			v.included[superClass] = true
 		}
 	}
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n%s\nclass %s : public %s {\npublic:\n", extraInclude, className, superClass))
+	var baseClasses []string
+	baseClasses = append(baseClasses, fmt.Sprintf("public %s", superClass))
+
+	if ctx.IMPLEMENTS() != nil {
+		for _, typeList := range ctx.AllTypeList() {
+			for _, tt := range typeList.AllTypeType() {
+				ifaceName := tt.GetText()
+				baseClasses = append(baseClasses, fmt.Sprintf("public %s", ifaceName))
+				extraIncludes = append(extraIncludes, fmt.Sprintf("#include \"%s.h\"\n", ifaceName))
+				v.included[ifaceName] = true
+			}
+		}
+	}
+
+	extraIncludeStr := strings.Join(extraIncludes, "")
+	baseClassesStr := strings.Join(baseClasses, ", ")
+
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
 
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
@@ -124,6 +143,92 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 		fmt.Printf("Failed to write cpp file: %v\n", err)
 	}
 
+	return nil
+}
+
+
+func (v *CppTranspilerVisitor) VisitInterfaceDeclaration(ctx *parser.InterfaceDeclarationContext) interface{} {
+	ifaceName := ctx.Identifier().GetText()
+	v.currentClass = ifaceName
+
+	fmt.Printf("Discovered interface: %s\n", ifaceName)
+
+	v.headerCode.Reset()
+	v.cppCode.Reset()
+	v.included = make(map[string]bool)
+
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
+
+	if ctx.InterfaceBody() != nil {
+		v.Visit(ctx.InterfaceBody())
+	}
+
+	v.headerCode.WriteString("};\n")
+
+	err := os.WriteFile(filepath.Join(v.outDir, ifaceName+".h"), []byte(v.headerCode.String()), 0644)
+	if err != nil {
+		fmt.Printf("Failed to write interface header file: %v\n", err)
+	}
+	return nil
+}
+
+func (v *CppTranspilerVisitor) VisitInterfaceBody(ctx *parser.InterfaceBodyContext) interface{} {
+	for _, child := range ctx.GetChildren() {
+		if payload, ok := child.(antlr.ParseTree); ok {
+			payload.Accept(v)
+		}
+	}
+	return nil
+}
+
+func (v *CppTranspilerVisitor) VisitInterfaceBodyDeclaration(ctx *parser.InterfaceBodyDeclarationContext) interface{} {
+	for _, child := range ctx.GetChildren() {
+		if payload, ok := child.(antlr.ParseTree); ok {
+			payload.Accept(v)
+		}
+	}
+	return nil
+}
+
+func (v *CppTranspilerVisitor) VisitInterfaceMemberDeclaration(ctx *parser.InterfaceMemberDeclarationContext) interface{} {
+	for _, child := range ctx.GetChildren() {
+		if payload, ok := child.(antlr.ParseTree); ok {
+			payload.Accept(v)
+		}
+	}
+	return nil
+}
+
+func (v *CppTranspilerVisitor) VisitInterfaceMethodDeclaration(ctx *parser.InterfaceMethodDeclarationContext) interface{} {
+	cb := ctx.InterfaceCommonBodyDeclaration()
+	if cb == nil {
+		return nil
+	}
+
+	methodName := cb.Identifier().GetText()
+	returnType := "void"
+	if cb.TypeTypeOrVoid() != nil && cb.TypeTypeOrVoid().TypeType() != nil {
+		returnType = mapType(cb.TypeTypeOrVoid().TypeType().GetText())
+	}
+
+	var pList []string
+	if cb.FormalParameters() != nil {
+		if fp := cb.FormalParameters().FormalParameter(); fp != nil {
+			pType := mapType(fp.TypeType().GetText())
+			pName := fp.VariableDeclaratorId().GetText()
+			pList = append(pList, fmt.Sprintf("%s %s", pType, pName))
+		}
+		for _, fpList := range cb.FormalParameters().AllFormalParameterList() {
+			for _, p := range fpList.AllFormalParameter() {
+				pType := mapType(p.TypeType().GetText())
+				pName := p.VariableDeclaratorId().GetText()
+				pList = append(pList, fmt.Sprintf("%s %s", pType, pName))
+			}
+		}
+	}
+	params := strings.Join(pList, ", ")
+
+	v.headerCode.WriteString(fmt.Sprintf("    virtual %s %s(%s) = 0;\n", returnType, methodName, params))
 	return nil
 }
 

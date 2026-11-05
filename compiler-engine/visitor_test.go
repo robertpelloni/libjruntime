@@ -94,6 +94,42 @@ public class Dog extends Animal {
 	}
 }
 
+func TestTranspileInterfaceAndImplements(t *testing.T) {
+	javaIface := `
+public interface Greeter {
+    void greet(String name);
+}
+`
+	header, _ := transpileJavaSnippet(t, javaIface)
+	if !strings.Contains(header, "class Greeter {") {
+		t.Errorf("Expected class Greeter in header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "virtual ~Greeter() = default;") {
+		t.Errorf("Expected virtual destructor in interface header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "virtual void greet(java::lang::String* name) = 0;") {
+		t.Errorf("Expected pure virtual greet method in interface header, got:\n%s", header)
+	}
+
+	javaClass := `
+public class FriendlyGreeter extends Object implements Greeter {
+    public void greet(String name) {
+        System.out.println(name);
+    }
+}
+`
+	classHeader, classCpp := transpileJavaSnippet(t, javaClass)
+	if !strings.Contains(classHeader, "#include \"Greeter.h\"") {
+		t.Errorf("Expected #include \"Greeter.h\" in class header, got:\n%s", classHeader)
+	}
+	if !strings.Contains(classHeader, "class FriendlyGreeter : public java::lang::Object, public Greeter") {
+		t.Errorf("Expected multiple inheritance in class header, got:\n%s", classHeader)
+	}
+	if !strings.Contains(classCpp, "void FriendlyGreeter::greet(java::lang::String* name) {") {
+		t.Errorf("Expected greet method implementation in cpp, got:\n%s", classCpp)
+	}
+}
+
 func TestTranspileConstructor(t *testing.T) {
 	javaSrc := `
 public class Person {

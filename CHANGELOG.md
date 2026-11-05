@@ -1,9 +1,18 @@
 # Changelog
 
+## 1.0.6
+- Implemented Java interface declaration transpilation (`VisitInterfaceDeclaration`) emitting C++ abstract base classes with virtual destructors.
+- Implemented pure virtual method signature generation (`VisitInterfaceMethodDeclaration`) for interface methods.
+- Supported `implements` clause in class declarations with multiple inheritance and automatic interface header inclusion.
+- Added unit test `TestTranspileInterfaceAndImplements` to `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test harness `tests/e2e_test.sh` asserting runtime polymorphic interface dispatch.
+- Synchronized workspace documentation and bumped version to `1.0.6`.
+
 ## 1.0.5
 - Implemented class inheritance (`extends SuperClass`) in `compiler-engine/visitor.go`.
 - Added automatic header inclusion of parent classes in generated `<ClassName>.h`.
 - Wrapped Java string literals in `java_new<java::lang::String>(...)` via `VisitLiteral` for strict C++ type safety when passing or returning strings.
+- Refactored `JAVA_NULL_CHECK` into an inline C++ template function `check_not_null<T>` in `libjruntime/Runtime.h` to eliminate duplicate expression evaluation.
 - Added unit test `TestTranspileInheritance` in `compiler-engine/visitor_test.go`.
 - Updated end-to-end integration test runner `tests/e2e_test.sh` asserting runtime inheritance, polymorphism, and virtual method overrides.
 - Synchronized workspace documentation and bumped version to `1.0.5`.

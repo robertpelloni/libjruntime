@@ -9,12 +9,13 @@
 - [x] Basic console I/O emulation: `System.out.println` and `System.out.print` (`System.h`).
 - [x] Class constructor transpilation (default, overloaded, parameterized constructors).
 - [x] Class inheritance (`extends SuperClass`), dynamic dispatch, and polymorphism.
+- [x] Interface declarations (`interface Foo`) and implementation (`implements Bar`) with pure virtual C++ bases.
 
 ## Milestone 2: Language Completeness (v1.1.0)
-- [ ] Interface implementation (`implements InterfaceA, InterfaceB`) with pure virtual C++ bases.
 - [ ] Static fields, static methods, and class initialization blocks (`static { ... }`).
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
 - [ ] Enhanced `for-each` loops and switch / pattern matching statements.
+- [ ] Arrays and array creation syntax (`T[] arr = new T[n]`).
 
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
 - [ ] Core collections: `ArrayList`, `HashMap`, `Arrays`.

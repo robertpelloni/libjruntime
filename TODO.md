@@ -1,7 +1,7 @@
 # TODO
 
 ## Immediate Next Steps
-- [ ] Implement interface declarations (`interface Foo`) and implementation (`implements Bar`) mapping to C++ abstract classes with pure virtual methods.
+- [ ] Implement array support (mapping `T[]` to `java::lang::Array<T>` wrapper and `new T[n]` expressions).
 - [ ] Implement `java.lang.StringBuilder` in `libjruntime` for complex string concatenations.
 - [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
@@ -14,3 +14,4 @@
 - [x] Implement control flow statement visitor (`if-else`, `while`, `for`).
 - [x] Implement class constructor translation in `VisitConstructorDeclaration`.
 - [x] Implement class inheritance (`extends SuperClass`) in `VisitClassDeclaration`.
+- [x] Implement interface declaration and `implements` clause multiple inheritance support.

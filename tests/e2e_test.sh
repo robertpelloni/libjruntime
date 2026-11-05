@@ -16,8 +16,14 @@ echo "=== Building compiler-engine CLI ==="
 echo "=== Preparing test Java source ==="
 mkdir -p "${TEMP_DIR}/src"
 
+cat << 'EOF' > "${TEMP_DIR}/src/Describable.java"
+public interface Describable {
+    String describe();
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/Animal.java"
-public class Animal {
+public class Animal implements Describable {
     int legs;
 
     public Animal() {
@@ -30,6 +36,10 @@ public class Animal {
 
     public String speak() {
         return "Generic sound";
+    }
+
+    public String describe() {
+        return "An animal with legs";
     }
 }
 EOF
@@ -45,6 +55,10 @@ public class Dog extends Animal {
 
     public String speak() {
         return "Woof";
+    }
+
+    public String describe() {
+        return "A loyal dog";
     }
 }
 EOF
@@ -117,6 +131,7 @@ echo "=== Creating C++ Test Entrypoint ==="
 cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include <iostream>
 #include <cassert>
+#include "Describable.h"
 #include "Animal.h"
 #include "Dog.h"
 #include "SampleApp.h"
@@ -131,11 +146,17 @@ int main() {
     assert(dog != nullptr);
     assert(dog->getLegCount() == 4);
 
-    // Dynamic dispatch / polymorphic call
+    // Dynamic dispatch / polymorphic base class pointer
     Animal* animal = dog;
     java::lang::String* sound = animal->speak();
     assert(sound != nullptr);
     assert(sound->getStdString() == "Woof");
+
+    // Dynamic dispatch / interface pointer
+    Describable* desc = dog;
+    java::lang::String* description = desc->describe();
+    assert(description != nullptr);
+    assert(description->getStdString() == "A loyal dog");
 
     // Verify default and parameterized constructor
     SampleApp* defaultApp = java_new<SampleApp>();
