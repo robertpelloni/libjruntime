@@ -100,6 +100,14 @@ public class SampleApp {
         }
     }
 
+    public int[] createArray(int size) {
+        int[] arr = new int[size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = i * 10;
+        }
+        return arr;
+    }
+
     public void testException() {
         try {
             int val = 42;
@@ -137,6 +145,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "SampleApp.h"
 #include "Main.h"
 #include "System.h"
+#include "Array.h"
 
 int main() {
     GC_INIT();
@@ -178,6 +187,25 @@ int main() {
 
     int32_t branch2 = defaultApp->checkBranch(5);
     assert(branch2 == 0);
+
+    // Verify array creation and indexing
+    java::lang::Array<int32_t>* numbers = defaultApp->createArray(4);
+    assert(numbers != nullptr);
+    assert(numbers->length == 4);
+    assert((*numbers)[0] == 0);
+    assert((*numbers)[1] == 10);
+    assert((*numbers)[2] == 20);
+    assert((*numbers)[3] == 30);
+
+    // Verify array bounds checking
+    bool boundsCaught = false;
+    try {
+        int32_t bad = (*numbers)[10];
+        (void)bad;
+    } catch (const java::lang::ArrayIndexOutOfBoundsException& e) {
+        boundsCaught = true;
+    }
+    assert(boundsCaught);
 
     defaultApp->testException();
 

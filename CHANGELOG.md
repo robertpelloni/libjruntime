@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.7
+- Created `libjruntime/Array.h` defining `java::lang::Array<T>` with bounds checking, length property, and Boehm GC allocation.
+- Added `ArrayIndexOutOfBoundsException` in `libjruntime/Exceptions.h`.
+- Supported array type mapping (`T[]` -> `java::lang::Array<T>*`) and array creation (`new T[n]`) in `compiler-engine/visitor.go`.
+- Implemented square bracket indexing (`VisitSquareBracketExpression`) for array access and mutation.
+- Added unit test `TestTranspileArrayOperations` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test suite `tests/e2e_test.sh` asserting runtime array creation, assignment, length, and bounds checking exceptions.
+- Synchronized workspace documentation and bumped version to `1.0.7`.
+
 ## 1.0.6
 - Implemented Java interface declaration transpilation (`VisitInterfaceDeclaration`) emitting C++ abstract base classes with virtual destructors.
 - Implemented pure virtual method signature generation (`VisitInterfaceMethodDeclaration`) for interface methods.

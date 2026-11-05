@@ -1,9 +1,9 @@
 # TODO
 
 ## Immediate Next Steps
-- [ ] Implement array support (mapping `T[]` to `java::lang::Array<T>` wrapper and `new T[n]` expressions).
 - [ ] Implement `java.lang.StringBuilder` in `libjruntime` for complex string concatenations.
 - [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
+- [ ] Add static field and static method transpilation support in `CppTranspilerVisitor`.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
@@ -15,3 +15,4 @@
 - [x] Implement class constructor translation in `VisitConstructorDeclaration`.
 - [x] Implement class inheritance (`extends SuperClass`) in `VisitClassDeclaration`.
 - [x] Implement interface declaration and `implements` clause multiple inheritance support.
+- [x] Implement array wrapper `java::lang::Array<T>` and array transpilation syntax.

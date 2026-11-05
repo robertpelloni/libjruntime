@@ -130,6 +130,28 @@ public class FriendlyGreeter extends Object implements Greeter {
 	}
 }
 
+func TestTranspileArrayOperations(t *testing.T) {
+	javaSrc := `
+public class ArrayTest {
+    public void run() {
+        int[] numbers = new int[5];
+        int first = numbers[0];
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Array.h\"") {
+		t.Errorf("Expected #include \"Array.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::lang::Array<int32_t>* numbers = java_new<java::lang::Array<int32_t>>(5);") {
+		t.Errorf("Expected array creation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "(*JAVA_NULL_CHECK(numbers))[0]") {
+		t.Errorf("Expected array bracket indexing in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileConstructor(t *testing.T) {
 	javaSrc := `
 public class Person {

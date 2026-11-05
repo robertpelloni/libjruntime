@@ -13,4 +13,6 @@ FinallyGuard<F> make_finally_guard(F f) {
     return FinallyGuard<F>(f);
 }
 
-#define JAVA_FINALLY(code) [[maybe_unused]] auto finally_guard = make_finally_guard([&]() { code });
+#define _JAVA_FINALLY_CONCAT_INNER(a, b) a ## b
+#define _JAVA_FINALLY_CONCAT(a, b) _JAVA_FINALLY_CONCAT_INNER(a, b)
+#define JAVA_FINALLY(...) [[maybe_unused]] auto _JAVA_FINALLY_CONCAT(finally_guard_, __LINE__) = make_finally_guard([&]() { __VA_ARGS__ });

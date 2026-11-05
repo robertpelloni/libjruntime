@@ -28,6 +28,10 @@ func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
 }
 
 func mapType(javaType string) string {
+	if strings.HasSuffix(javaType, "[]") {
+		elemType := mapType(strings.TrimSuffix(javaType, "[]"))
+		return fmt.Sprintf("java::lang::Array<%s>*", elemType)
+	}
 	switch javaType {
 	case "int":
 		return "int32_t"
@@ -109,7 +113,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	extraIncludeStr := strings.Join(extraIncludes, "")
 	baseClassesStr := strings.Join(baseClasses, ", ")
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
 
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
@@ -127,8 +131,9 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 		"void": true, "String": true, "Object": true, "Exception": true,
 	}
 	for inc := range v.included {
-		if inc != className && !primitives[inc] {
-			cppFinal.WriteString(fmt.Sprintf("#include \"%s.h\"\n", inc))
+		cleanInc := strings.TrimSuffix(inc, "[]")
+		if cleanInc != className && !primitives[cleanInc] && !strings.Contains(cleanInc, "[") {
+			cppFinal.WriteString(fmt.Sprintf("#include \"%s.h\"\n", cleanInc))
 		}
 	}
 	cppFinal.WriteString("\n")
@@ -157,7 +162,7 @@ func (v *CppTranspilerVisitor) VisitInterfaceDeclaration(ctx *parser.InterfaceDe
 	v.cppCode.Reset()
 	v.included = make(map[string]bool)
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
 
 	if ctx.InterfaceBody() != nil {
 		v.Visit(ctx.InterfaceBody())
@@ -571,6 +576,21 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::lang::String"
              }
 
+             // Array creation: new T[size]
+             if creator.ArrayCreatorRest() != nil {
+                 acr := creator.ArrayCreatorRest()
+                 sizeExprStr := "0"
+                 if len(acr.AllExpression()) > 0 {
+                     res := v.Visit(acr.AllExpression()[0])
+                     if res != nil {
+                         sizeExprStr = fmt.Sprintf("%v", res)
+                     } else {
+                         sizeExprStr = acr.AllExpression()[0].GetText()
+                     }
+                 }
+                 elemType := mapType(rawClassName)
+                 return fmt.Sprintf("java_new<java::lang::Array<%s>>(%s)", elemType, sizeExprStr)
+             }
 
              argsStr := ""
              if creator.ClassCreatorRest() != nil && creator.ClassCreatorRest().Arguments() != nil {
@@ -726,6 +746,22 @@ func (v *CppTranspilerVisitor) VisitPostIncrementDecrementOperatorExpression(ctx
 func (v *CppTranspilerVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 	if ctx.STRING_LITERAL() != nil || ctx.TEXT_BLOCK() != nil {
 		return fmt.Sprintf("java_new<java::lang::String>(%s)", ctx.GetText())
+	}
+	return ctx.GetText()
+}
+
+func (v *CppTranspilerVisitor) VisitSquareBracketExpression(ctx *parser.SquareBracketExpressionContext) interface{} {
+	exprs := ctx.AllExpression()
+	if len(exprs) == 2 {
+		arrRes := v.Visit(exprs[0])
+		if arrRes == nil {
+			arrRes = exprs[0].GetText()
+		}
+		idxRes := v.Visit(exprs[1])
+		if idxRes == nil {
+			idxRes = exprs[1].GetText()
+		}
+		return fmt.Sprintf("(*JAVA_NULL_CHECK(%v))[%v]", arrRes, idxRes)
 	}
 	return ctx.GetText()
 }
