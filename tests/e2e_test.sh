@@ -18,6 +18,19 @@ mkdir -p "${TEMP_DIR}/src"
 cat << 'EOF' > "${TEMP_DIR}/src/SampleApp.java"
 public class SampleApp {
     int counter;
+    int baseValue;
+
+    public SampleApp() {
+        this.baseValue = 100;
+    }
+
+    public SampleApp(int base) {
+        this.baseValue = base;
+    }
+
+    public int getBaseValue() {
+        return this.baseValue;
+    }
 
     public int compute(int a, int b) {
         return a + b;
@@ -54,7 +67,7 @@ EOF
 cat << 'EOF' > "${TEMP_DIR}/src/Main.java"
 public class Main {
     public void start() {
-        SampleApp app = new SampleApp();
+        SampleApp app = new SampleApp(250);
         app.compute(10, 20);
         app.testException();
         System.out.println("Main pipeline running!");
@@ -77,38 +90,43 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 int main() {
     GC_INIT();
 
-    SampleApp* app = java_new<SampleApp>();
-    assert(app != nullptr);
+    // Verify default and parameterized constructor
+    SampleApp* defaultApp = java_new<SampleApp>();
+    assert(defaultApp != nullptr);
+    assert(defaultApp->getBaseValue() == 100);
 
-    int32_t sum = app->compute(15, 27);
+    SampleApp* customApp = java_new<SampleApp>(350);
+    assert(customApp != nullptr);
+    assert(customApp->getBaseValue() == 350);
+
+    int32_t sum = defaultApp->compute(15, 27);
     assert(sum == 42);
 
-    int32_t loopSum = app->calculateSum(5);
-    // 0 + 1 + 2 + 3 + 4 = 10
+    int32_t loopSum = defaultApp->calculateSum(5);
     assert(loopSum == 10);
 
-    int32_t branch1 = app->checkBranch(20);
+    int32_t branch1 = defaultApp->checkBranch(20);
     assert(branch1 == 1);
 
-    int32_t branch2 = app->checkBranch(5);
+    int32_t branch2 = defaultApp->checkBranch(5);
     assert(branch2 == 0);
 
-    app->testException();
+    defaultApp->testException();
 
     Main* m = java_new<Main>();
     m->start();
 
-    // Verify System.out.println with primitives and strings
+    // Verify System.out.println
     java::lang::System::out->println("Testing System.out.println string");
     java::lang::System::out->println(42);
     java::lang::System::out->println(true);
 
     // Verify String representation and Object monitor
-    java::lang::String* str = app->toString();
+    java::lang::String* str = defaultApp->toString();
     assert(str != nullptr);
     assert(!str->getStdString().empty());
 
-    std::mutex* mon = app->getMonitor();
+    std::mutex* mon = defaultApp->getMonitor();
     assert(mon != nullptr);
 
     // Verify JAVA_NULL_CHECK throws NullPointerException

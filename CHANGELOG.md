@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4
+- Implemented constructor transpilation (`VisitConstructorDeclaration`) in `compiler-engine/visitor.go`.
+- Added support for overloaded and parameterized constructors mapped to C++ constructors.
+- Added unit test `TestTranspileConstructor` to `compiler-engine/visitor_test.go`.
+- Updated end-to-end integration test harness `tests/e2e_test.sh` to verify default and parameterized constructor runtime initialization with `java_new<T>(...)`.
+- Synchronized workspace documentation and bumped version to `1.0.4`.
+
 ## 1.0.3
 - Created `libjruntime/System.h` providing `java::lang::PrintStream` and static `System::out` supporting printing and line printing for strings, primitives, and objects.
 - Enhanced `compiler-engine/visitor.go` to handle `System.out.println` / `System.out.print` without injecting redundant null checks on static `System`.

@@ -144,6 +144,43 @@ func (v *CppTranspilerVisitor) VisitMemberDeclaration(ctx *parser.MemberDeclarat
 	return nil
 }
 
+
+func (v *CppTranspilerVisitor) VisitConstructorDeclaration(ctx *parser.ConstructorDeclarationContext) interface{} {
+	constructorName := ctx.Identifier().GetText()
+	fmt.Printf("Discovered constructor: %s\n", constructorName)
+
+	var pList []string
+	if ctx.FormalParameters() != nil {
+		if fp := ctx.FormalParameters().FormalParameter(); fp != nil {
+			pType := mapType(fp.TypeType().GetText())
+			pName := fp.VariableDeclaratorId().GetText()
+			pList = append(pList, fmt.Sprintf("%s %s", pType, pName))
+		}
+		for _, fpList := range ctx.FormalParameters().AllFormalParameterList() {
+			for _, p := range fpList.AllFormalParameter() {
+				pType := mapType(p.TypeType().GetText())
+				pName := p.VariableDeclaratorId().GetText()
+				pList = append(pList, fmt.Sprintf("%s %s", pType, pName))
+			}
+		}
+	}
+	params := strings.Join(pList, ", ")
+
+	v.headerCode.WriteString(fmt.Sprintf("    %s(%s);\n", constructorName, params))
+	v.cppCode.WriteString(fmt.Sprintf("%s::%s(%s) {\n", v.currentClass, constructorName, params))
+
+	body := ctx.GetConstructorBody()
+	if body == nil {
+		body = ctx.Block()
+	}
+	if body != nil {
+		v.Visit(body)
+	}
+
+	v.cppCode.WriteString("}\n\n")
+	return nil
+}
+
 func (v *CppTranspilerVisitor) VisitMethodDeclaration(ctx *parser.MethodDeclarationContext) interface{} {
 	methodName := ctx.Identifier().GetText()
 

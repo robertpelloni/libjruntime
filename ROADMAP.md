@@ -7,6 +7,7 @@
 - [x] Automated unit test suite (`visitor_test.go`) and end-to-end integration test harness (`tests/e2e_test.sh`).
 - [x] Control flow statement transpilation: `if`, `else`, `while`, and `for` loops.
 - [x] Basic console I/O emulation: `System.out.println` and `System.out.print` (`System.h`).
+- [x] Class constructor transpilation (default, overloaded, parameterized constructors).
 
 ## Milestone 2: Language Completeness (v1.1.0)
 - [ ] Support class inheritance (`extends`), interface implementation (`implements`), and method overrides.

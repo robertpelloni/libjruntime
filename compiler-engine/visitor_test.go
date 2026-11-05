@@ -73,6 +73,28 @@ public class Calculator {
 	}
 }
 
+func TestTranspileConstructor(t *testing.T) {
+	javaSrc := `
+public class Person {
+    String name;
+    int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "Person(java::lang::String* name, int32_t age);") {
+		t.Errorf("Expected constructor in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "Person::Person(java::lang::String* name, int32_t age) {") {
+		t.Errorf("Expected constructor in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileTryCatchFinally(t *testing.T) {
 	javaSrc := `
 public class TryCatchTest {
