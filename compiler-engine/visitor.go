@@ -80,7 +80,17 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	v.cppCode.Reset()
 	v.included = make(map[string]bool)
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n\nclass %s : public java::lang::Object {\npublic:\n", className))
+	superClass := "java::lang::Object"
+	extraInclude := ""
+	if ctx.EXTENDS() != nil && ctx.TypeType() != nil {
+		superClass = ctx.TypeType().GetText()
+		if superClass != "Object" && superClass != "java::lang::Object" {
+			extraInclude = fmt.Sprintf("#include \"%s.h\"\n", superClass)
+			v.included[superClass] = true
+		}
+	}
+
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n%s\nclass %s : public %s {\npublic:\n", extraInclude, className, superClass))
 
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
@@ -606,4 +616,11 @@ func (v *CppTranspilerVisitor) VisitPostIncrementDecrementOperatorExpression(ctx
 		op = ctx.GetPostfix().GetText()
 	}
 	return fmt.Sprintf("%s%s", exprStr, op)
+}
+
+func (v *CppTranspilerVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
+	if ctx.STRING_LITERAL() != nil || ctx.TEXT_BLOCK() != nil {
+		return fmt.Sprintf("java_new<java::lang::String>(%s)", ctx.GetText())
+	}
+	return ctx.GetText()
 }

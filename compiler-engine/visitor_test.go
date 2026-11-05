@@ -73,6 +73,27 @@ public class Calculator {
 	}
 }
 
+func TestTranspileInheritance(t *testing.T) {
+	javaSrc := `
+public class Dog extends Animal {
+    public void bark() {
+        System.out.println("Woof");
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Animal.h\"") {
+		t.Errorf("Expected #include \"Animal.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "class Dog : public Animal") {
+		t.Errorf("Expected class Dog : public Animal, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "void Dog::bark() {") {
+		t.Errorf("Expected bark method in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileConstructor(t *testing.T) {
 	javaSrc := `
 public class Person {
@@ -154,7 +175,7 @@ public class PrintTest {
 	if !strings.Contains(header, "#include \"System.h\"") {
 		t.Errorf("Expected System.h include in header, got:\n%s", header)
 	}
-	if !strings.Contains(cpp, "JAVA_NULL_CHECK(java::lang::System::out)->println(\"Hello World\");") {
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(java::lang::System::out)->println(java_new<java::lang::String>(\"Hello World\"));") {
 		t.Errorf("Expected java::lang::System::out println call, got:\n%s", cpp)
 	}
 }

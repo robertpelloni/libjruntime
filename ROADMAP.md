@@ -8,9 +8,10 @@
 - [x] Control flow statement transpilation: `if`, `else`, `while`, and `for` loops.
 - [x] Basic console I/O emulation: `System.out.println` and `System.out.print` (`System.h`).
 - [x] Class constructor transpilation (default, overloaded, parameterized constructors).
+- [x] Class inheritance (`extends SuperClass`), dynamic dispatch, and polymorphism.
 
 ## Milestone 2: Language Completeness (v1.1.0)
-- [ ] Support class inheritance (`extends`), interface implementation (`implements`), and method overrides.
+- [ ] Interface implementation (`implements InterfaceA, InterfaceB`) with pure virtual C++ bases.
 - [ ] Static fields, static methods, and class initialization blocks (`static { ... }`).
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
 - [ ] Enhanced `for-each` loops and switch / pattern matching statements.

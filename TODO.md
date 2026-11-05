@@ -1,7 +1,7 @@
 # TODO
 
 ## Immediate Next Steps
-- [ ] Implement support for class inheritance (`extends`) and virtual method overrides in C++ headers.
+- [ ] Implement interface declarations (`interface Foo`) and implementation (`implements Bar`) mapping to C++ abstract classes with pure virtual methods.
 - [ ] Implement `java.lang.StringBuilder` in `libjruntime` for complex string concatenations.
 - [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
@@ -13,3 +13,4 @@
 - [x] Implement native console output via `libjruntime/System.h` and transpiler mapping for `System.out.println`.
 - [x] Implement control flow statement visitor (`if-else`, `while`, `for`).
 - [x] Implement class constructor translation in `VisitConstructorDeclaration`.
+- [x] Implement class inheritance (`extends SuperClass`) in `VisitClassDeclaration`.

@@ -15,6 +15,40 @@ echo "=== Building compiler-engine CLI ==="
 
 echo "=== Preparing test Java source ==="
 mkdir -p "${TEMP_DIR}/src"
+
+cat << 'EOF' > "${TEMP_DIR}/src/Animal.java"
+public class Animal {
+    int legs;
+
+    public Animal() {
+        this.legs = 4;
+    }
+
+    public int getLegCount() {
+        return this.legs;
+    }
+
+    public String speak() {
+        return "Generic sound";
+    }
+}
+EOF
+
+cat << 'EOF' > "${TEMP_DIR}/src/Dog.java"
+public class Dog extends Animal {
+    String breed;
+
+    public Dog(String breed) {
+        this.legs = 4;
+        this.breed = breed;
+    }
+
+    public String speak() {
+        return "Woof";
+    }
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/SampleApp.java"
 public class SampleApp {
     int counter;
@@ -83,12 +117,25 @@ echo "=== Creating C++ Test Entrypoint ==="
 cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include <iostream>
 #include <cassert>
+#include "Animal.h"
+#include "Dog.h"
 #include "SampleApp.h"
 #include "Main.h"
 #include "System.h"
 
 int main() {
     GC_INIT();
+
+    // Verify inheritance, polymorphism, and virtual method override
+    Dog* dog = java_new<Dog>(java_new<java::lang::String>("Golden Retriever"));
+    assert(dog != nullptr);
+    assert(dog->getLegCount() == 4);
+
+    // Dynamic dispatch / polymorphic call
+    Animal* animal = dog;
+    java::lang::String* sound = animal->speak();
+    assert(sound != nullptr);
+    assert(sound->getStdString() == "Woof");
 
     // Verify default and parameterized constructor
     SampleApp* defaultApp = java_new<SampleApp>();
