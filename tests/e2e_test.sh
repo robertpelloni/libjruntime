@@ -118,6 +118,14 @@ public class SampleApp {
         return arr;
     }
 
+    public String buildMessage(String prefix, int value) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix);
+        sb.append(" : ");
+        sb.append(value);
+        return sb.toString();
+    }
+
     public void testException() {
         try {
             int val = 42;
@@ -157,6 +165,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "Main.h"
 #include "System.h"
 #include "Array.h"
+#include "StringBuilder.h"
 
 int main() {
     GC_INIT();
@@ -222,6 +231,11 @@ int main() {
         boundsCaught = true;
     }
     assert(boundsCaught);
+
+    // Verify StringBuilder string concatenation
+    java::lang::String* built = defaultApp->buildMessage(java_new<java::lang::String>("Score"), 100);
+    assert(built != nullptr);
+    assert(built->getStdString() == "Score : 100");
 
     defaultApp->testException();
 

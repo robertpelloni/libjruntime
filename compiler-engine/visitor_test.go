@@ -104,6 +104,29 @@ public class MathUtil {
 	}
 }
 
+func TestTranspileStringBuilder(t *testing.T) {
+	javaSrc := `
+public class BuilderTest {
+    public String build() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello");
+        return sb.toString();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"StringBuilder.h\"") {
+		t.Errorf("Expected #include \"StringBuilder.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::lang::StringBuilder* sb = java_new<java::lang::StringBuilder>();") {
+		t.Errorf("Expected StringBuilder allocation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(sb)->append(java_new<java::lang::String>(\"Hello\"));") {
+		t.Errorf("Expected append call in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileInheritance(t *testing.T) {
 	javaSrc := `
 public class Dog extends Animal {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.9
+- Created `libjruntime/StringBuilder.h` implementing `java::lang::StringBuilder` with chained `append` overloads for strings, characters, numbers, booleans, and objects, and `toString()` backed by Boehm GC.
+- Updated `compiler-engine/visitor.go` with `StringBuilder` type mapping, object creation translation, and header inclusion.
+- Added unit test `TestTranspileStringBuilder` to `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime `StringBuilder` append chaining and string creation.
+- Synchronized workspace documentation and bumped version to `1.0.9`.
+
 ## 1.0.8
 - Implemented static method transpilation (`static returnType methodName(...)`) in `compiler-engine/visitor.go`.
 - Implemented static field transpilation (`inline static fieldType fieldName = init;`) in C++ headers.

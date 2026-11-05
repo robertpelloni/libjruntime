@@ -12,6 +12,7 @@
 - [x] Interface declarations (`interface Foo`) and implementation (`implements Bar`) with pure virtual C++ bases.
 - [x] Array types (`T[]`), creation (`new T[n]`), indexing (`arr[i]`), and bounds safety (`Array.h`).
 - [x] Static fields, static methods, and class member access (`ClassName::member`).
+- [x] Native string manipulation: `java.lang.StringBuilder` with chained appends.
 
 ## Milestone 2: Language Completeness (v1.1.0)
 - [ ] Class static initialization blocks (`static { ... }`).
@@ -22,7 +23,7 @@
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
 - [ ] Core collections: `ArrayList`, `HashMap`.
 - [ ] File I/O (`FileInputStream`, `FileOutputStream`, `File`).
-- [ ] `java.lang.Math`, `java.lang.StringBuilder`, and primitive wrappers (`Integer`, `Boolean`, etc.).
+- [ ] `java.lang.Math` and primitive wrappers (`Integer`, `Boolean`, etc.).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
 - [ ] `synchronized` block and method syntax translation backed by `std::mutex*` monitor.

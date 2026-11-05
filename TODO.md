@@ -1,9 +1,9 @@
 # TODO
 
 ## Immediate Next Steps
-- [ ] Implement `java.lang.StringBuilder` in `libjruntime` for complex string concatenations.
 - [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
 - [ ] Implement static initialization blocks (`static { ... }`) mapping to C++ static anonymous execution helpers.
+- [ ] Implement core math functions in `libjruntime/Math.h` (`java::lang::Math`).
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
@@ -17,3 +17,4 @@
 - [x] Implement interface declaration and `implements` clause multiple inheritance support.
 - [x] Implement array wrapper `java::lang::Array<T>` and array transpilation syntax.
 - [x] Implement static fields and static method declarations and member access without null checks.
+- [x] Implement `java::lang::StringBuilder` with chained appends and `toString()`.
