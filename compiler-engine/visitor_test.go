@@ -73,6 +73,32 @@ public class Calculator {
 	}
 }
 
+func TestTranspileArrayList(t *testing.T) {
+	javaSrc := `
+public class ListTest {
+    public void run() {
+        ArrayList list = new ArrayList();
+        list.add("Item1");
+        int count = list.size();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"ArrayList.h\"") {
+		t.Errorf("Expected #include \"ArrayList.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::util::ArrayList<java::lang::Object*>* list = java_new<java::util::ArrayList<java::lang::Object*>>();") {
+		t.Errorf("Expected ArrayList creation, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(list)->add(java_new<java::lang::String>(\"Item1\"));") {
+		t.Errorf("Expected add method call, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(list)->size()") {
+		t.Errorf("Expected size method call, got:\n%s", cpp)
+	}
+}
+
 func TestTranspilePrimitiveWrappers(t *testing.T) {
 	javaSrc := `
 public class BoxTest {

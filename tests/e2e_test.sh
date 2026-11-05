@@ -28,6 +28,18 @@ public class Config {
 }
 EOF
 
+cat << 'EOF' > "${TEMP_DIR}/src/ListHelper.java"
+public class ListHelper {
+    public static ArrayList createList() {
+        ArrayList list = new ArrayList();
+        list.add("First");
+        list.add("Second");
+        list.add("Third");
+        return list;
+    }
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/MathHelper.java"
 public class MathHelper {
     public static int FACTOR = 7;
@@ -206,6 +218,8 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "StringBuilder.h"
 #include "Math.h"
 #include "Boxes.h"
+#include "ArrayList.h"
+#include "ListHelper.h"
 
 int main() {
     GC_INIT();
@@ -231,6 +245,32 @@ int main() {
     assert(MathHelper::FACTOR == 7);
     int32_t scaled = MathHelper::multiplyByFactor(6);
     assert(scaled == 42);
+
+    // Verify ListHelper and ArrayList functionality
+    java::util::ArrayList<java::lang::Object*>* myList = ListHelper::createList();
+    assert(myList != nullptr);
+    assert(myList->size() == 3);
+    assert(!myList->isEmpty());
+
+    java::lang::String* elem0 = dynamic_cast<java::lang::String*>(myList->get(0));
+    assert(elem0 != nullptr);
+    assert(elem0->getStdString() == "First");
+
+    java::lang::String* elem1 = dynamic_cast<java::lang::String*>(myList->get(1));
+    assert(elem1 != nullptr);
+    assert(elem1->getStdString() == "Second");
+
+    java::lang::Object* removed = myList->remove(1);
+    assert(removed == elem1);
+    assert(myList->size() == 2);
+
+    bool listBoundsCaught = false;
+    try {
+        myList->get(10);
+    } catch (const java::lang::ArrayIndexOutOfBoundsException& e) {
+        listBoundsCaught = true;
+    }
+    assert(listBoundsCaught);
 
     // Verify BoxHelper and java.lang.Integer / Boolean boxing & unboxing
     java::lang::Integer* boxedInt = BoxHelper::boxInt(12345);

@@ -36,6 +36,11 @@ func mapType(javaType string) string {
 		elemType := mapType(strings.TrimSuffix(javaType, "[]"))
 		return fmt.Sprintf("java::lang::Array<%s>*", elemType)
 	}
+	if strings.HasPrefix(javaType, "ArrayList<") && strings.HasSuffix(javaType, ">") {
+		innerType := javaType[10 : len(javaType)-1]
+		mappedInner := mapType(innerType)
+		return fmt.Sprintf("java::util::ArrayList<%s>*", mappedInner)
+	}
 	switch javaType {
 	case "int":
 		return "int32_t"
@@ -53,6 +58,8 @@ func mapType(javaType string) string {
 		return "java::lang::Boolean*"
 	case "Long":
 		return "java::lang::Long*"
+	case "ArrayList":
+		return "java::util::ArrayList<java::lang::Object*>*"
 	case "Object":
 		return "java::lang::Object*"
 	case "void":
@@ -127,7 +134,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	extraIncludeStr := strings.Join(extraIncludes, "")
 	baseClassesStr := strings.Join(baseClasses, ", ")
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
 
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
@@ -142,7 +149,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
-		"void": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Object": true, "Exception": true,
+		"void": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "ArrayList": true, "Object": true, "Exception": true,
 	}
 	for inc := range v.included {
 		cleanInc := strings.TrimSuffix(inc, "[]")
@@ -176,7 +183,7 @@ func (v *CppTranspilerVisitor) VisitInterfaceDeclaration(ctx *parser.InterfaceDe
 	v.cppCode.Reset()
 	v.included = make(map[string]bool)
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
 
 	if ctx.InterfaceBody() != nil {
 		v.Visit(ctx.InterfaceBody())
@@ -637,6 +644,15 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::lang::Boolean"
              } else if className == "Long" {
                  className = "java::lang::Long"
+             } else if className == "ArrayList" || className == "ArrayList<>" {
+                 className = "java::util::ArrayList<java::lang::Object*>"
+             } else if strings.HasPrefix(className, "ArrayList<") && strings.HasSuffix(className, ">") {
+                 innerType := className[10 : len(className)-1]
+                 if innerType == "" {
+                     innerType = "Object"
+                 }
+                 mappedInner := mapType(innerType)
+                 className = fmt.Sprintf("java::util::ArrayList<%s>", mappedInner)
              }
 
              // Array creation: new T[size]

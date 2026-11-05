@@ -2,11 +2,12 @@
 
 ## Immediate Next Steps
 - [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
-- [ ] Implement dynamic collections in `libjruntime` (`ArrayList<T>`).
-- [ ] Implement enhanced `for-each` loops in statement visitor.
+- [ ] Implement enhanced `for-each` loops in statement visitor (`for (Type x : collection)`).
+- [ ] Implement `java.util.HashMap` associative container in `libjruntime`.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
+- [x] Implement dynamic collections in `libjruntime/ArrayList.h` (`ArrayList<T>`) with dynamic GC allocation.
 - [x] Implement primitive wrapper classes in `libjruntime/Boxes.h` (`Integer`, `Long`, `Boolean`) and visitor mappings.
 - [x] Eliminate compiler warnings on `JAVA_FINALLY` guard variable using `[[maybe_unused]]`.
 - [x] Fix duplicate method body emission and duplicate logging in `visitor.go`.

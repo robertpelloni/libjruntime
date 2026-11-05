@@ -16,14 +16,15 @@
 - [x] Static initialization blocks (`static { ... }`) mapped to self-executing lambda runners.
 - [x] Mathematical utilities: `java.lang.Math` constants (`PI`, `E`) and functions (`abs`, `min`, `max`, `sqrt`, `pow`, etc.).
 - [x] Primitive wrapper classes (`Integer`, `Long`, `Boolean`) and boxed methods (`libjruntime/Boxes.h`).
+- [x] Dynamic collections runtime (`java.util.ArrayList<T>` in `libjruntime/ArrayList.h`).
 
 ## Milestone 2: Language Completeness (v1.1.0)
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
-- [ ] Enhanced `for-each` loops and switch / pattern matching statements.
+- [ ] Enhanced `for-each` loops (`for (T x : collection)`).
 - [ ] Explicit type casting and `instanceof` expressions.
 
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
-- [ ] Core collections: `ArrayList`, `HashMap`.
+- [ ] Key-value associative container: `java.util.HashMap<K, V>`.
 - [ ] File I/O (`FileInputStream`, `FileOutputStream`, `File`).
 - [ ] Extended wrapper classes (`Double`, `Float`, `Byte`, `Short`, `Character`).
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.13
+- Created `libjruntime/ArrayList.h` implementing `java::util::ArrayList<T>` dynamic collection with Boehm GC-backed resizing.
+- Implemented `add(element)`, `add(index, element)`, `get(index)`, `set(index, element)`, `remove(index)`, `size()`, `isEmpty()`, `clear()`, `contains(element)`, and bounds checking throwing `ArrayIndexOutOfBoundsException`.
+- Updated `compiler-engine/visitor.go` to support `ArrayList` and parameterized `ArrayList<T>` type mappings, header auto-inclusion (`ArrayList.h`), and instantiation (`java_new<java::util::ArrayList<...>>`).
+- Added unit test `TestTranspileArrayList` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime `ArrayList` creation, element addition, indexed retrieval, removal, and bounds exception handling in native C++20.
+
 ## 1.0.12
 - Created `libjruntime/Boxes.h` introducing primitive boxed classes `java::lang::Integer`, `java::lang::Boolean`, and `java::lang::Long`.
 - Implemented static factory methods `Integer::valueOf(int32_t)`, `Boolean::valueOf(bool)`, `Long::valueOf(int64_t)`.
