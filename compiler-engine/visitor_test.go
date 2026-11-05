@@ -104,6 +104,28 @@ public class MathUtil {
 	}
 }
 
+func TestTranspileMathOperations(t *testing.T) {
+	javaSrc := `
+public class MathTest {
+    public void run() {
+        int maximum = Math.max(10, 20);
+        int absolute = Math.abs(-5);
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Math.h\"") {
+		t.Errorf("Expected #include \"Math.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::lang::Math::max(10, 20)") {
+		t.Errorf("Expected java::lang::Math::max invocation, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::lang::Math::abs(-5)") {
+		t.Errorf("Expected java::lang::Math::abs invocation, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileStaticInitBlock(t *testing.T) {
 	javaSrc := `
 public class StaticInitTest {

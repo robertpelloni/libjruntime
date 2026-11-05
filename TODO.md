@@ -2,7 +2,7 @@
 
 ## Immediate Next Steps
 - [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
-- [ ] Implement core math functions in `libjruntime/Math.h` (`java::lang::Math`).
+- [ ] Implement primitive wrapper classes in `libjruntime` (`Integer`, `Long`, `Boolean`, `Double`).
 - [ ] Implement enhanced `for-each` loops in statement visitor.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
@@ -19,3 +19,4 @@
 - [x] Implement static fields and static method declarations and member access without null checks.
 - [x] Implement `java::lang::StringBuilder` with chained appends and `toString()`.
 - [x] Implement static initialization blocks (`static { ... }`) mapped to self-executing lambda runners.
+- [x] Implement `java::lang::Math` in `libjruntime/Math.h` and visitor mapping for Math methods/constants.

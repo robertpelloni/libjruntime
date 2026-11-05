@@ -35,6 +35,10 @@ public class MathHelper {
     public static int multiplyByFactor(int n) {
         return n * FACTOR;
     }
+
+    public static int getClampedValue(int val, int low, int high) {
+        return Math.max(low, Math.min(val, high));
+    }
 }
 EOF
 
@@ -179,6 +183,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "System.h"
 #include "Array.h"
 #include "StringBuilder.h"
+#include "Math.h"
 
 int main() {
     GC_INIT();
@@ -187,6 +192,18 @@ int main() {
     assert(Config::DEFAULT_PORT == 8080);
     assert(Config::APP_NAME != nullptr);
     assert(Config::APP_NAME->getStdString() == "LibJRuntimeApp");
+
+    // Verify java.lang.Math constants and operations
+    assert(java::lang::Math::abs(-42) == 42);
+    assert(java::lang::Math::max(10, 50) == 50);
+    assert(java::lang::Math::min(10, 50) == 10);
+    assert(java::lang::Math::PI > 3.14 && java::lang::Math::PI < 3.15);
+
+    // Verify MathHelper static method that uses Math.max and Math.min
+    int32_t clamped = MathHelper::getClampedValue(150, 0, 100);
+    assert(clamped == 100);
+    int32_t clampedLow = MathHelper::getClampedValue(-50, 0, 100);
+    assert(clampedLow == 0);
 
     // Verify static fields and static method invocation
     assert(MathHelper::FACTOR == 7);

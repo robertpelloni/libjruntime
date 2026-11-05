@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.11
+- Created `libjruntime/Math.h` implementing `java::lang::Math` with mathematical constants (`PI`, `E`) and utility functions (`abs`, `min`, `max`, `sqrt`, `pow`, `floor`, `ceil`, `round`).
+- Enhanced `compiler-engine/visitor.go` to route `Math` member references and method invocations directly to `java::lang::Math::member`.
+- Added unit test `TestTranspileMathOperations` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime `java.lang.Math` operations in native C++20.
+- Synchronized workspace documentation and bumped version to `1.0.11`.
+
 ## 1.0.10
 - Implemented static initialization blocks (`static { ... }`) in `compiler-engine/visitor.go` transpiled to self-executing static lambdas run at module initialization time.
 - Added tracking and automatic qualification of static class fields inside static blocks and class methods (`ClassName::field`).
