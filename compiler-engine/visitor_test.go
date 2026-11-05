@@ -118,3 +118,57 @@ public class ObjectTest {
 		t.Errorf("Expected JAVA_NULL_CHECK macro wrapping member access, got:\n%s", cpp)
 	}
 }
+
+func TestTranspileSystemOutPrintln(t *testing.T) {
+	javaSrc := `
+public class PrintTest {
+    public void run() {
+        System.out.println("Hello World");
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"System.h\"") {
+		t.Errorf("Expected System.h include in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(java::lang::System::out)->println(\"Hello World\");") {
+		t.Errorf("Expected java::lang::System::out println call, got:\n%s", cpp)
+	}
+}
+
+func TestTranspileControlFlow(t *testing.T) {
+	javaSrc := `
+public class FlowTest {
+    public void run(int val) {
+        if (val > 0) {
+            val = val - 1;
+        } else {
+            val = 0;
+        }
+
+        while (val < 10) {
+            val = val + 1;
+        }
+
+        for (int i = 0; i < 5; i++) {
+            val = val + i;
+        }
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "if (val > 0) {") {
+		t.Errorf("Expected if block in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "else {") {
+		t.Errorf("Expected else block in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "while (val < 10) {") {
+		t.Errorf("Expected while block in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "for (int32_t i = 0; i < 5; i++) {") {
+		t.Errorf("Expected for loop in cpp, got:\n%s", cpp)
+	}
+}

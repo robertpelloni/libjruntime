@@ -80,7 +80,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	v.cppCode.Reset()
 	v.included = make(map[string]bool)
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n\nclass %s : public java::lang::Object {\npublic:\n", className))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n\nclass %s : public java::lang::Object {\npublic:\n", className))
 
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
@@ -278,6 +278,108 @@ func (v *CppTranspilerVisitor) VisitStatement(ctx *parser.StatementContext) inte
         return nil
     }
 
+    // IF statement
+    if ctx.IF() != nil {
+        v.cppCode.WriteString("    if (")
+        if ctx.Expression(0) != nil {
+            res := v.Visit(ctx.Expression(0))
+            if res != nil {
+                v.cppCode.WriteString(fmt.Sprintf("%v", res))
+            } else {
+                v.cppCode.WriteString(ctx.Expression(0).GetText())
+            }
+        }
+        v.cppCode.WriteString(") {\n")
+        if ctx.Statement(0) != nil {
+            if ctx.Statement(0).Block() != nil {
+                v.Visit(ctx.Statement(0).Block())
+            } else {
+                v.Visit(ctx.Statement(0))
+            }
+        }
+        v.cppCode.WriteString("    }")
+        if ctx.ELSE() != nil && ctx.Statement(1) != nil {
+            v.cppCode.WriteString(" else {\n")
+            if ctx.Statement(1).Block() != nil {
+                v.Visit(ctx.Statement(1).Block())
+            } else {
+                v.Visit(ctx.Statement(1))
+            }
+            v.cppCode.WriteString("    }")
+        }
+        v.cppCode.WriteString("\n")
+        return nil
+    }
+
+    // WHILE statement
+    if ctx.WHILE() != nil && ctx.DO() == nil {
+        v.cppCode.WriteString("    while (")
+        if ctx.Expression(0) != nil {
+            res := v.Visit(ctx.Expression(0))
+            if res != nil {
+                v.cppCode.WriteString(fmt.Sprintf("%v", res))
+            } else {
+                v.cppCode.WriteString(ctx.Expression(0).GetText())
+            }
+        }
+        v.cppCode.WriteString(") {\n")
+        if ctx.Statement(0) != nil {
+            if ctx.Statement(0).Block() != nil {
+                v.Visit(ctx.Statement(0).Block())
+            } else {
+                v.Visit(ctx.Statement(0))
+            }
+        }
+        v.cppCode.WriteString("    }\n")
+        return nil
+    }
+
+    // FOR statement
+    if ctx.FOR() != nil && ctx.ForControl() != nil {
+        fc := ctx.ForControl()
+        initStr := ""
+        condStr := ""
+        updStr := ""
+        if fc.ForInit() != nil {
+            initStr = fc.ForInit().GetText()
+            if fc.ForInit().LocalVariableDeclaration() != nil {
+                decl := fc.ForInit().LocalVariableDeclaration()
+                typ := mapType(decl.TypeType().GetText())
+                var inits []string
+                for _, vd := range decl.VariableDeclarators().AllVariableDeclarator() {
+                    name := vd.VariableDeclaratorId().GetText()
+                    val := ""
+                    if vd.VariableInitializer() != nil {
+                        val = fmt.Sprintf(" = %v", vd.VariableInitializer().GetText())
+                    }
+                    inits = append(inits, fmt.Sprintf("%s %s%s", typ, name, val))
+                }
+                initStr = strings.Join(inits, ", ")
+            }
+        }
+        if fc.Expression() != nil {
+            res := v.Visit(fc.Expression())
+            if res != nil {
+                condStr = fmt.Sprintf("%v", res)
+            } else {
+                condStr = fc.Expression().GetText()
+            }
+        }
+        if fc.GetForUpdate() != nil {
+            updStr = fc.GetForUpdate().GetText()
+        }
+        v.cppCode.WriteString(fmt.Sprintf("    for (%s; %s; %s) {\n", initStr, condStr, updStr))
+        if ctx.Statement(0) != nil {
+            if ctx.Statement(0).Block() != nil {
+                v.Visit(ctx.Statement(0).Block())
+            } else {
+                v.Visit(ctx.Statement(0))
+            }
+        }
+        v.cppCode.WriteString("    }\n")
+        return nil
+    }
+
     if ctx.RETURN() != nil {
         v.cppCode.WriteString("    return ")
         if ctx.Expression(0) != nil {
@@ -381,6 +483,10 @@ func (v *CppTranspilerVisitor) VisitMemberReferenceExpression(ctx *parser.Member
              }
 
 
+             leftStr := fmt.Sprintf("%v", objRes)
+             if leftStr == "System" && ctx.Identifier() != nil && ctx.Identifier().GetText() == "out" {
+                 return "java::lang::System::out"
+             }
              if ctx.Identifier() != nil {
                  return fmt.Sprintf("JAVA_NULL_CHECK(%v)->%v", objRes, ctx.Identifier().GetText())
              } else if ctx.MethodCall() != nil {
@@ -450,4 +556,17 @@ func (v *CppTranspilerVisitor) VisitBinaryOperatorExpression(ctx *parser.BinaryO
 		return fmt.Sprintf("%v %s %v", left, op, right)
 	}
 	return ctx.GetText()
+}
+
+func (v *CppTranspilerVisitor) VisitPostIncrementDecrementOperatorExpression(ctx *parser.PostIncrementDecrementOperatorExpressionContext) interface{} {
+	exprStr := ctx.Expression().GetText()
+	res := v.Visit(ctx.Expression())
+	if res != nil {
+		exprStr = fmt.Sprintf("%v", res)
+	}
+	op := "++"
+	if ctx.GetPostfix() != nil {
+		op = ctx.GetPostfix().GetText()
+	}
+	return fmt.Sprintf("%s%s", exprStr, op)
 }

@@ -23,6 +23,22 @@ public class SampleApp {
         return a + b;
     }
 
+    public int calculateSum(int limit) {
+        int total = 0;
+        for (int i = 0; i < limit; i++) {
+            total = total + i;
+        }
+        return total;
+    }
+
+    public int checkBranch(int val) {
+        if (val > 10) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     public void testException() {
         try {
             int val = 42;
@@ -41,6 +57,7 @@ public class Main {
         SampleApp app = new SampleApp();
         app.compute(10, 20);
         app.testException();
+        System.out.println("Main pipeline running!");
     }
 }
 EOF
@@ -55,6 +72,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include <cassert>
 #include "SampleApp.h"
 #include "Main.h"
+#include "System.h"
 
 int main() {
     GC_INIT();
@@ -65,10 +83,25 @@ int main() {
     int32_t sum = app->compute(15, 27);
     assert(sum == 42);
 
+    int32_t loopSum = app->calculateSum(5);
+    // 0 + 1 + 2 + 3 + 4 = 10
+    assert(loopSum == 10);
+
+    int32_t branch1 = app->checkBranch(20);
+    assert(branch1 == 1);
+
+    int32_t branch2 = app->checkBranch(5);
+    assert(branch2 == 0);
+
     app->testException();
 
     Main* m = java_new<Main>();
     m->start();
+
+    // Verify System.out.println with primitives and strings
+    java::lang::System::out->println("Testing System.out.println string");
+    java::lang::System::out->println(42);
+    java::lang::System::out->println(true);
 
     // Verify String representation and Object monitor
     java::lang::String* str = app->toString();
