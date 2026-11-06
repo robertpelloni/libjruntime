@@ -20,6 +20,9 @@
   - `Runtime.h`: Runtime safety macros including `JAVA_NULL_CHECK` implemented via `check_not_null<T>()`.
 - **`bdwgc/`**: Git submodule pointing to Boehm GC repository.
 - **`grammars-v4/`**: Git submodule containing standard ANTLR4 grammar definitions.
+- **`scripts/`**: Automation and toolchain scripts.
+  - `build_submodules.sh`: Recursively initializes submodules and builds Boehm GC (`bdwgc/.libs/libgc.so`).
+  - `generate_parser.sh`: Compiles `grammars-v4/java/java/JavaLexer.g4` and `JavaParser.g4` to Go parser bindings in `compiler-engine/parser/` via `antlr-4.13.1-complete.jar`.
 - **`tests/`**: Integration and regression tests.
   - `e2e_test.sh`: End-to-end pipeline transpiling Java sample code, compiling with `g++ -std=c++20`, linking with `libgc`, and verifying assertions, Math, static initialization blocks, StringBuilder, static members, arrays, polymorphism, interfaces, constructors, and console output at runtime.
 

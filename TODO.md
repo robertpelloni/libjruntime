@@ -7,6 +7,8 @@
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
+- [x] Create automated submodule build and validation script `scripts/build_submodules.sh`.
+- [x] Create automated parser regeneration script `scripts/generate_parser.sh` using ANTLR4 and `grammars-v4`.
 - [x] Support explicit type casting (`(Type)expr`) and `instanceof` expressions.
 - [x] Implement enhanced `for-each` loops in statement visitor (`for (Type x : collection)`) with C++ range iterators.
 - [x] Implement dynamic collections in `libjruntime/ArrayList.h` (`ArrayList<T>`) with dynamic GC allocation.

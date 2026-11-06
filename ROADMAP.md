@@ -2,6 +2,7 @@
 
 ## Milestone 1: Core Foundation & Toolchain (v1.0.x) - [Completed]
 - [x] Initial submodules and runtime headers setup (`grammars-v4`, `bdwgc`).
+- [x] Automated submodule build and parser generation toolchain scripts (`scripts/build_submodules.sh`, `scripts/generate_parser.sh`).
 - [x] AST transpiler engine in Go (`j2cpp-engine`) mapping Java syntax to C++20.
 - [x] Base native runtime types: `Object`, `String`, `Exceptions`, `FinallyGuard`, and `GC`.
 - [x] Automated unit test suite (`visitor_test.go`) and end-to-end integration test harness (`tests/e2e_test.sh`).

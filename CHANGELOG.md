@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.16
+- Created `scripts/build_submodules.sh` automating submodule recursive initialization and native Boehm GC (`bdwgc`) compilation.
+- Created `scripts/generate_parser.sh` automating ANTLR4 Go target generation from `grammars-v4` Java grammar sources (`JavaLexer.g4`, `JavaParser.g4`) into `compiler-engine/parser/`.
+- Updated `DEPLOY.md` and `README.md` to document automated scripts for developers.
+
 ## 1.0.15
 - Implemented `instanceof` expression transpilation (`expr instanceof TargetType`) into `(dynamic_cast<TargetType*>(expr) != nullptr)`.
 - Implemented explicit type casting expressions (`(TargetType) expr`) into `dynamic_cast<TargetType*>(expr)` for reference types and `static_cast<PrimitiveType>(expr)` for primitive types.

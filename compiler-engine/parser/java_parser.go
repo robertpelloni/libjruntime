@@ -1,7 +1,6 @@
-// Code generated from JavaParser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from /app/grammars-v4/java/java/JavaParser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // JavaParser
-
 import (
 	"fmt"
 	"strconv"

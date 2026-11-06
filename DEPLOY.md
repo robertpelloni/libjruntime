@@ -8,20 +8,27 @@
 
 ## Step-by-Step Build & Setup
 
-### 1. Initialize Git Submodules
+### 1. Initialize & Build Git Submodules (Automated)
 ```bash
-git submodule update --init --recursive
+./scripts/build_submodules.sh
 ```
 
-### 2. Compile Boehm Garbage Collector (`bdwgc`)
+Or manually:
 ```bash
+git submodule update --init --recursive
 cd bdwgc
 ./autogen.sh
 ./configure
 make -j$(nproc)
 cd ..
 ```
-*Note: This creates shared libraries in `bdwgc/.libs/libgc.so`.*
+*Note: This builds and verifies shared libraries in `bdwgc/.libs/libgc.so`.*
+
+### 2. Regenerate ANTLR4 Go Parser Bindings (Optional / Development)
+To regenerate parser bindings from `grammars-v4`:
+```bash
+./scripts/generate_parser.sh
+```
 
 ### 3. Build the Go Transpiler Engine (`j2cpp-engine`)
 ```bash
