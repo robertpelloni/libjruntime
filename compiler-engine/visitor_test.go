@@ -73,6 +73,24 @@ public class Calculator {
 	}
 }
 
+func TestTranspileTernaryExpression(t *testing.T) {
+	javaSrc := `
+public class TernaryTest {
+    public int choose(int x) {
+        return (x > 10 ? 100 : 200);
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "virtual int32_t choose(int32_t x);") {
+		t.Errorf("Expected choose method in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "return (x > 10 ? 100 : 200);") {
+		t.Errorf("Expected ternary expression in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

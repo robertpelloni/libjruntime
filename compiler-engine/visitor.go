@@ -901,6 +901,12 @@ func (v *CppTranspilerVisitor) VisitPrimary(ctx *parser.PrimaryContext) interfac
         }
         return idName
     }
+    if ctx.Expression() != nil {
+        res := v.Visit(ctx.Expression())
+        if res != nil {
+            return fmt.Sprintf("(%v)", res)
+        }
+    }
     if ctx.GetChildCount() == 1 {
         child := ctx.GetChild(0)
         if payload, ok := child.(antlr.ParseTree); ok {
@@ -1013,6 +1019,26 @@ func (v *CppTranspilerVisitor) VisitLiteral(ctx *parser.LiteralContext) interfac
 	}
 	if ctx.NULL_LITERAL() != nil {
 		return "nullptr"
+	}
+	return ctx.GetText()
+}
+
+func (v *CppTranspilerVisitor) VisitTernaryExpression(ctx *parser.TernaryExpressionContext) interface{} {
+	exprs := ctx.AllExpression()
+	if len(exprs) == 3 {
+		cond := v.Visit(exprs[0])
+		if cond == nil {
+			cond = exprs[0].GetText()
+		}
+		thenBranch := v.Visit(exprs[1])
+		if thenBranch == nil {
+			thenBranch = exprs[1].GetText()
+		}
+		elseBranch := v.Visit(exprs[2])
+		if elseBranch == nil {
+			elseBranch = exprs[2].GetText()
+		}
+		return fmt.Sprintf("%v ? %v : %v", cond, thenBranch, elseBranch)
 	}
 	return ctx.GetText()
 }

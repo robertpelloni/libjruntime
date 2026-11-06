@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.19
+- Implemented ternary operator expression transpilation (`cond ? thenBranch : elseBranch`) in `compiler-engine/visitor.go` (`VisitTernaryExpression`).
+- Added parenthesized expression preservation in `VisitPrimary` (`(expr)`).
+- Added unit test `TestTranspileTernaryExpression` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime ternary operator evaluations with Boehm GC.
+
 ## 1.0.18
 - Implemented `switch` statement transpilation (`switch (expr) { case val: ... default: ... }`) with `case`, `default`, `break`, and `continue` statement support in `compiler-engine/visitor.go`.
 - Implemented `VisitUnaryOperatorExpression` in `compiler-engine/visitor.go` to support unary prefix operators (e.g., negative literals `-1`, `!`, `~`, `+`).

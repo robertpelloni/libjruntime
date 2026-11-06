@@ -3,10 +3,10 @@
 ## Immediate Next Steps
 - [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
 - [ ] Implement `java.util.HashMap` associative container in `libjruntime`.
-- [ ] Add ternary operator (`condition ? a : b`) support in `VisitTernaryExpression`.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
+- [x] Add ternary operator (`condition ? a : b`) support in `VisitTernaryExpression`.
 - [x] Support `switch` statements (`switch-case-default`), `break`, `continue`, and unary prefix expressions (`-`, `!`, `~`).
 - [x] Create automated submodule build and validation script `scripts/build_submodules.sh`.
 - [x] Create automated parser regeneration script `scripts/generate_parser.sh` using ANTLR4 and `grammars-v4`.

@@ -32,6 +32,7 @@
 - Primitive wrappers `Integer`, `Boolean`, and `Long` map to `java::lang::Integer*`, `java::lang::Boolean*`, `java::lang::Long*`, auto-including `Boxes.h`.
 - Collections like `ArrayList` and `ArrayList<T>` map to `java::util::ArrayList<mappedT>*` with auto-inclusion of `ArrayList.h`.
 - Enhanced for-each loops `for (Type x : iterable)` map to `for (Type x : *JAVA_NULL_CHECK(iterable))` leveraging C++ `begin()`/`end()` pointer ranges on `Array<T>` and `ArrayList<T>`.
+- Ternary expressions map via `VisitTernaryExpression` to `cond ? thenVal : elseVal` with parenthesized group preservation.
 - `switch` statements map to C++ `switch (expr) { case ...: default: ... }` with `break;` and `continue;` statement support.
 - Unary expressions map via `VisitUnaryOperatorExpression` with prefix operators (`-`, `+`, `!`, `~`).
 - `instanceof` expressions map to `(dynamic_cast<TargetType*>(expr) != nullptr)`.

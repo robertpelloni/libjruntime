@@ -80,6 +80,10 @@ public class ListHelper {
         }
         return res;
     }
+
+    public static int ternarySelect(int val) {
+        return (val > 50 ? 999 : 111);
+    }
 }
 EOF
 
@@ -315,10 +319,13 @@ int main() {
     }
     assert(listBoundsCaught);
 
-    // Verify switch statements
+    // Verify switch statements and ternary expressions
     assert(ListHelper::switchBranch(10) == 100);
     assert(ListHelper::switchBranch(20) == 200);
     assert(ListHelper::switchBranch(999) == -1);
+
+    assert(ListHelper::ternarySelect(100) == 999);
+    assert(ListHelper::ternarySelect(10) == 111);
 
     // Verify enhanced for-each loops over Array and ArrayList
     int32_t totalListItems = ListHelper::countListLength(myList);
