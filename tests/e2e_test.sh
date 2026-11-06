@@ -64,6 +64,22 @@ public class ListHelper {
         }
         return null;
     }
+
+    public static int switchBranch(int code) {
+        int res = 0;
+        switch (code) {
+            case 10:
+                res = 100;
+                break;
+            case 20:
+                res = 200;
+                break;
+            default:
+                res = -1;
+                break;
+        }
+        return res;
+    }
 }
 EOF
 
@@ -298,6 +314,11 @@ int main() {
         listBoundsCaught = true;
     }
     assert(listBoundsCaught);
+
+    // Verify switch statements
+    assert(ListHelper::switchBranch(10) == 100);
+    assert(ListHelper::switchBranch(20) == 200);
+    assert(ListHelper::switchBranch(999) == -1);
 
     // Verify enhanced for-each loops over Array and ArrayList
     int32_t totalListItems = ListHelper::countListLength(myList);

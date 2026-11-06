@@ -73,6 +73,45 @@ public class Calculator {
 	}
 }
 
+func TestTranspileSwitchStatement(t *testing.T) {
+	javaSrc := `
+public class SwitchTest {
+    public int eval(int code) {
+        int result = 0;
+        switch (code) {
+            case 1:
+                result = 10;
+                break;
+            case 2:
+                result = 20;
+                break;
+            default:
+                result = -1;
+                break;
+        }
+        return result;
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "virtual int32_t eval(int32_t code);") {
+		t.Errorf("Expected eval method declaration in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "switch (code) {") {
+		t.Errorf("Expected switch statement in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "case 1:") || !strings.Contains(cpp, "case 2:") {
+		t.Errorf("Expected cases in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "default:") {
+		t.Errorf("Expected default label in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "break;") {
+		t.Errorf("Expected break statement in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileCastAndInstanceOf(t *testing.T) {
 	javaSrc := `
 public class CastTest {

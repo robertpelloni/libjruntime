@@ -653,12 +653,62 @@ func (v *CppTranspilerVisitor) VisitStatement(ctx *parser.StatementContext) inte
         return nil
     }
 
-    if ctx.RETURN() != nil {
-        v.cppCode.WriteString("    return ")
+    // SWITCH statement
+    if ctx.SWITCH() != nil {
+        exprStr := ""
         if ctx.Expression(0) != nil {
             res := v.Visit(ctx.Expression(0))
             if res != nil {
+                exprStr = fmt.Sprintf("%v", res)
+            } else {
+                exprStr = ctx.Expression(0).GetText()
+            }
+        }
+        v.cppCode.WriteString(fmt.Sprintf("    switch (%s) {\n", exprStr))
+        for _, group := range ctx.AllSwitchBlockStatementGroup() {
+            for _, label := range group.AllSwitchLabel() {
+                if label.DEFAULT() != nil {
+                    v.cppCode.WriteString("    default:\n")
+                } else if label.CASE() != nil {
+                    caseExpr := ""
+                    if label.Expression() != nil {
+                        res := v.Visit(label.Expression())
+                        if res != nil {
+                            caseExpr = fmt.Sprintf("%v", res)
+                        } else {
+                            caseExpr = label.Expression().GetText()
+                        }
+                    }
+                    v.cppCode.WriteString(fmt.Sprintf("    case %s:\n", caseExpr))
+                }
+            }
+            for _, bs := range group.AllBlockStatement() {
+                v.Visit(bs)
+            }
+        }
+        v.cppCode.WriteString("    }\n")
+        return nil
+    }
+
+    if ctx.BREAK() != nil {
+        v.cppCode.WriteString("    break;\n")
+        return nil
+    }
+
+    if ctx.CONTINUE() != nil {
+        v.cppCode.WriteString("    continue;\n")
+        return nil
+    }
+
+    if ctx.RETURN() != nil {
+        v.cppCode.WriteString("    return")
+        if ctx.Expression(0) != nil {
+            v.cppCode.WriteString(" ")
+            res := v.Visit(ctx.Expression(0))
+            if res != nil {
                 v.cppCode.WriteString(fmt.Sprintf("%v", res))
+            } else {
+                v.cppCode.WriteString(ctx.Expression(0).GetText())
             }
         }
         v.cppCode.WriteString(";\n")
@@ -965,6 +1015,23 @@ func (v *CppTranspilerVisitor) VisitLiteral(ctx *parser.LiteralContext) interfac
 		return "nullptr"
 	}
 	return ctx.GetText()
+}
+
+func (v *CppTranspilerVisitor) VisitUnaryOperatorExpression(ctx *parser.UnaryOperatorExpressionContext) interface{} {
+	prefix := ""
+	if ctx.GetPrefix() != nil {
+		prefix = ctx.GetPrefix().GetText()
+	}
+	exprStr := ""
+	if ctx.Expression() != nil {
+		res := v.Visit(ctx.Expression())
+		if res != nil {
+			exprStr = fmt.Sprintf("%v", res)
+		} else {
+			exprStr = ctx.Expression().GetText()
+		}
+	}
+	return fmt.Sprintf("%s%s", prefix, exprStr)
 }
 
 func (v *CppTranspilerVisitor) VisitSquareBracketExpression(ctx *parser.SquareBracketExpressionContext) interface{} {

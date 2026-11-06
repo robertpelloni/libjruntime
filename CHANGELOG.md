@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.18
+- Implemented `switch` statement transpilation (`switch (expr) { case val: ... default: ... }`) with `case`, `default`, `break`, and `continue` statement support in `compiler-engine/visitor.go`.
+- Implemented `VisitUnaryOperatorExpression` in `compiler-engine/visitor.go` to support unary prefix operators (e.g., negative literals `-1`, `!`, `~`, `+`).
+- Added unit test `TestTranspileSwitchStatement` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime `switch` statement evaluations and branch selection.
+
 ## 1.0.17
 - Expanded `README.md` with a comprehensive section detailing ANTLR4 grammar integration with `grammars-v4` and Go transpiler CLI setup/usage instructions.
 - Sourced version string `1.0.17` in `VERSION`.
