@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.17
+- Expanded `README.md` with a comprehensive section detailing ANTLR4 grammar integration with `grammars-v4` and Go transpiler CLI setup/usage instructions.
+- Sourced version string `1.0.17` in `VERSION`.
+
 ## 1.0.16
 - Created `scripts/build_submodules.sh` automating submodule recursive initialization and native Boehm GC (`bdwgc`) compilation.
 - Created `scripts/generate_parser.sh` automating ANTLR4 Go target generation from `grammars-v4` Java grammar sources (`JavaLexer.g4`, `JavaParser.g4`) into `compiler-engine/parser/`.
