@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.20
+- Created `libjruntime/HashMap.h` implementing `java::util::HashMap<K, V>` key-value associative dictionary with dynamic bucket array resizing and Boehm GC allocation.
+- Implemented `put(k, v)`, `get(k)`, `containsKey(k)`, `remove(k)`, `size()`, `isEmpty()`, and `clear()`, supporting both primitive keys and `Object`-derived reference keys through `equals(Object*)` and `hashCode()`.
+- Updated `compiler-engine/visitor.go` with type mappings for `HashMap` and parameterized `HashMap<K, V>`, object allocation (`java_new<java::util::HashMap<...>>`), and `#include "HashMap.h"` header generation.
+- Added unit test `TestTranspileHashMap` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime native `HashMap` entry insertion, key lookup, containment, and removal.
+
 ## 1.0.19
 - Implemented ternary operator expression transpilation (`cond ? thenBranch : elseBranch`) in `compiler-engine/visitor.go` (`VisitTernaryExpression`).
 - Added parenthesized expression preservation in `VisitPrimary` (`(expr)`).

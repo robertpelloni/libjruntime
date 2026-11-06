@@ -180,6 +180,33 @@ public class ForEachTest {
 	}
 }
 
+func TestTranspileHashMap(t *testing.T) {
+	javaSrc := `
+public class MapTest {
+    public void run() {
+        HashMap map = new HashMap();
+        map.put("key", "val");
+        Object v = map.get("key");
+        int count = map.size();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"HashMap.h\"") {
+		t.Errorf("Expected #include \"HashMap.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::util::HashMap<java::lang::Object*, java::lang::Object*>* map = java_new<java::util::HashMap<java::lang::Object*, java::lang::Object*>>();") {
+		t.Errorf("Expected HashMap creation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(map)->put(java_new<java::lang::String>(\"key\"), java_new<java::lang::String>(\"val\"));") {
+		t.Errorf("Expected put call in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(map)->get(java_new<java::lang::String>(\"key\"));") {
+		t.Errorf("Expected get call in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileArrayList(t *testing.T) {
 	javaSrc := `
 public class ListTest {

@@ -84,6 +84,14 @@ public class ListHelper {
     public static int ternarySelect(int val) {
         return (val > 50 ? 999 : 111);
     }
+
+    public static HashMap createMap() {
+        HashMap map = new HashMap();
+        map.put("one", "1");
+        map.put("two", "2");
+        map.put("three", "3");
+        return map;
+    }
 }
 EOF
 
@@ -266,6 +274,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "Math.h"
 #include "Boxes.h"
 #include "ArrayList.h"
+#include "HashMap.h"
 #include "ListHelper.h"
 
 int main() {
@@ -326,6 +335,25 @@ int main() {
 
     assert(ListHelper::ternarySelect(100) == 999);
     assert(ListHelper::ternarySelect(10) == 111);
+
+    // Verify HashMap functionality
+    java::util::HashMap<java::lang::Object*, java::lang::Object*>* myMap = ListHelper::createMap();
+    assert(myMap != nullptr);
+    assert(myMap->size() == 3);
+    assert(!myMap->isEmpty());
+
+    java::lang::String* kOne = java_new<java::lang::String>("one");
+    assert(myMap->containsKey(kOne));
+    java::lang::String* vOne = dynamic_cast<java::lang::String*>(myMap->get(kOne));
+    assert(vOne != nullptr);
+    assert(vOne->getStdString() == "1");
+
+    java::lang::String* kTwo = java_new<java::lang::String>("two");
+    java::lang::String* vTwo = dynamic_cast<java::lang::String*>(myMap->remove(kTwo));
+    assert(vTwo != nullptr);
+    assert(vTwo->getStdString() == "2");
+    assert(myMap->size() == 2);
+    assert(!myMap->containsKey(kTwo));
 
     // Verify enhanced for-each loops over Array and ArrayList
     int32_t totalListItems = ListHelper::countListLength(myList);

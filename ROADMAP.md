@@ -27,8 +27,9 @@
 ## Milestone 2: Language Completeness (v1.1.0)
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
 
+- [x] Key-value associative container: `java.util.HashMap<K, V>` in `libjruntime/HashMap.h`.
+
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
-- [ ] Key-value associative container: `java.util.HashMap<K, V>`.
 - [ ] File I/O (`FileInputStream`, `FileOutputStream`, `File`).
 - [ ] Extended wrapper classes (`Double`, `Float`, `Byte`, `Short`, `Character`).
 
