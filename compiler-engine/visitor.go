@@ -14,6 +14,7 @@ type CppTranspilerVisitor struct {
 	*parser.BaseJavaParserVisitor
 	outDir          string
 	currentClass    string
+	currentSuper    string
 	headerCode      strings.Builder
 	cppCode         strings.Builder
 	included        map[string]bool
@@ -128,6 +129,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 			v.included[superClass] = true
 		}
 	}
+	v.currentSuper = superClass
 
 	var baseClasses []string
 	baseClasses = append(baseClasses, fmt.Sprintf("public %s", superClass))
@@ -357,15 +359,58 @@ func (v *CppTranspilerVisitor) VisitConstructorDeclaration(ctx *parser.Construct
 	}
 	params := strings.Join(pList, ", ")
 
-	v.headerCode.WriteString(fmt.Sprintf("    %s(%s);\n", constructorName, params))
-	v.cppCode.WriteString(fmt.Sprintf("%s::%s(%s) {\n", v.currentClass, constructorName, params))
-
 	body := ctx.GetConstructorBody()
 	if body == nil {
 		body = ctx.Block()
 	}
+
+	initListStr := ""
+	skipFirstStatement := false
+
+	if body != nil && len(body.AllBlockStatement()) > 0 {
+		firstStmt := body.AllBlockStatement()[0]
+		if firstStmt.Statement() != nil && firstStmt.Statement().GetStatementExpression() != nil {
+			expr := firstStmt.Statement().GetStatementExpression()
+			if mcExpr, ok := expr.(*parser.MethodCallExpressionContext); ok && mcExpr.MethodCall() != nil {
+				mc := mcExpr.MethodCall()
+				var callTarget string
+				if mc.SUPER() != nil {
+					callTarget = v.currentSuper
+				} else if mc.THIS() != nil {
+					callTarget = v.currentClass
+				}
+				if callTarget != "" {
+					argsStr := ""
+					if mc.Arguments() != nil && mc.Arguments().(*parser.ArgumentsContext).ExpressionList() != nil {
+						exprList := mc.Arguments().(*parser.ArgumentsContext).ExpressionList().(*parser.ExpressionListContext)
+						var parts []string
+						for _, a := range exprList.AllExpression() {
+							res := v.Visit(a)
+							if res != nil {
+								parts = append(parts, fmt.Sprintf("%v", res))
+							} else {
+								parts = append(parts, a.GetText())
+							}
+						}
+						argsStr = strings.Join(parts, ", ")
+					}
+					initListStr = fmt.Sprintf(" : %s(%s)", callTarget, argsStr)
+					skipFirstStatement = true
+				}
+			}
+		}
+	}
+
+	v.headerCode.WriteString(fmt.Sprintf("    %s(%s);\n", constructorName, params))
+	v.cppCode.WriteString(fmt.Sprintf("%s::%s(%s)%s {\n", v.currentClass, constructorName, params, initListStr))
+
 	if body != nil {
-		v.Visit(body)
+		for i, bs := range body.AllBlockStatement() {
+			if i == 0 && skipFirstStatement {
+				continue
+			}
+			v.Visit(bs)
+		}
 	}
 
 	v.cppCode.WriteString("}\n\n")

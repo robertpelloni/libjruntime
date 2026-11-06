@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.21
+- Implemented constructor chaining (`this(...)`, `super(...)`) in `compiler-engine/visitor.go` (`VisitConstructorDeclaration`).
+- Detected leading delegating and super constructor calls in constructor bodies and translated them to C++ member initializer lists (`: Base(args)` / `: Sibling(args)`).
+- Prevented duplicate body execution of chaining constructor calls.
+- Added unit test `TestTranspileConstructorChaining` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime constructor delegation and base constructor execution.
+
 ## 1.0.20
 - Created `libjruntime/HashMap.h` implementing `java::util::HashMap<K, V>` key-value associative dictionary with dynamic bucket array resizing and Boehm GC allocation.
 - Implemented `put(k, v)`, `get(k)`, `containsKey(k)`, `remove(k)`, `size()`, `isEmpty()`, and `clear()`, supporting both primitive keys and `Object`-derived reference keys through `equals(Object*)` and `hashCode()`.

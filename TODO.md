@@ -1,11 +1,12 @@
 # TODO
 
 ## Immediate Next Steps
-- [ ] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration`.
 - [ ] Implement file I/O classes (`FileInputStream`, `FileOutputStream`, `File`) in `libjruntime`.
+- [ ] Implement concurrency primitives (`java.lang.Thread`, `Runnable`) in `libjruntime`.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
+- [x] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration` with C++ member initializer lists.
 - [x] Implement `java.util.HashMap` associative container in `libjruntime/HashMap.h` and visitor mappings.
 - [x] Add ternary operator (`condition ? a : b`) support in `VisitTernaryExpression`.
 - [x] Support `switch` statements (`switch-case-default`), `break`, `continue`, and unary prefix expressions (`-`, `!`, `~`).

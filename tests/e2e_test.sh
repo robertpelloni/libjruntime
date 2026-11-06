@@ -161,9 +161,18 @@ cat << 'EOF' > "${TEMP_DIR}/src/Dog.java"
 public class Dog extends Animal {
     String breed;
 
+    public Dog() {
+        this("Unknown Breed");
+    }
+
     public Dog(String breed) {
+        super();
         this.legs = 4;
         this.breed = breed;
+    }
+
+    public String getBreed() {
+        return this.breed;
     }
 
     public String speak() {
@@ -385,9 +394,16 @@ int main() {
     assert(boxedLong->intValue() == (int32_t)9876543210LL);
 
     // Verify inheritance, polymorphism, and virtual method override
+    // Verify constructor chaining with super() and this(...)
+    Dog* defaultDog = java_new<Dog>();
+    assert(defaultDog != nullptr);
+    assert(defaultDog->getLegCount() == 4);
+    assert(defaultDog->getBreed()->getStdString() == "Unknown Breed");
+
     Dog* dog = java_new<Dog>(java_new<java::lang::String>("Golden Retriever"));
     assert(dog != nullptr);
     assert(dog->getLegCount() == 4);
+    assert(dog->getBreed()->getStdString() == "Golden Retriever");
 
     // Dynamic dispatch / polymorphic base class pointer
     Animal* animal = dog;

@@ -438,6 +438,42 @@ public class ArrayTest {
 	}
 }
 
+func TestTranspileConstructorChaining(t *testing.T) {
+	javaSrc := `
+public class Vehicle {
+    int wheels;
+
+    public Vehicle(int wheels) {
+        this.wheels = wheels;
+    }
+}
+`
+	_, _ = transpileJavaSnippet(t, javaSrc)
+
+	derivedSrc := `
+public class Car extends Vehicle {
+    String model;
+
+    public Car(String model) {
+        this(model, 4);
+    }
+
+    public Car(String model, int wheels) {
+        super(wheels);
+        this.model = model;
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, derivedSrc)
+
+	if !strings.Contains(cpp, "Car::Car(java::lang::String* model) : Car(model, 4) {") {
+		t.Errorf("Expected delegating constructor in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "Car::Car(java::lang::String* model, int32_t wheels) : Vehicle(wheels) {") {
+		t.Errorf("Expected base constructor chaining in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileConstructor(t *testing.T) {
 	javaSrc := `
 public class Person {

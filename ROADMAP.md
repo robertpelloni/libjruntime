@@ -24,8 +24,10 @@
 - [x] `switch` statements (`switch (expr) { case ...: default: ... }`), `break`, `continue`, and unary expressions.
 - [x] Ternary expressions (`cond ? a : b`).
 
+- [x] Constructor chaining (`this(...)`, `super(...)`) and C++ member initializer lowering.
+
 ## Milestone 2: Language Completeness (v1.1.0)
-- [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
+- [ ] Field default initializers in generated constructors.
 
 - [x] Key-value associative container: `java.util.HashMap<K, V>` in `libjruntime/HashMap.h`.
 

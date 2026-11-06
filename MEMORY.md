@@ -34,6 +34,7 @@
 - Collections like `ArrayList` and `ArrayList<T>` map to `java::util::ArrayList<mappedT>*` with auto-inclusion of `ArrayList.h`.
 - `HashMap` and `HashMap<K, V>` map to `java::util::HashMap<mappedK, mappedV>*` with auto-inclusion of `HashMap.h`.
 - Enhanced for-each loops `for (Type x : iterable)` map to `for (Type x : *JAVA_NULL_CHECK(iterable))` leveraging C++ `begin()`/`end()` pointer ranges on `Array<T>` and `ArrayList<T>`.
+- Constructor chaining `this(...)` and `super(...)` inside constructor bodies translate into C++ constructor member initializer lists (`: Sibling(args)` or `: Super(args)`) and are omitted from the constructor body.
 - Ternary expressions map via `VisitTernaryExpression` to `cond ? thenVal : elseVal` with parenthesized group preservation.
 - `switch` statements map to C++ `switch (expr) { case ...: default: ... }` with `break;` and `continue;` statement support.
 - Unary expressions map via `VisitUnaryOperatorExpression` with prefix operators (`-`, `+`, `!`, `~`).
