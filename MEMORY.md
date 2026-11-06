@@ -28,6 +28,7 @@
 - `Math` calls map directly to `java::lang::Math::method` without allocating instances or checking null pointers.
 - Primitive wrappers `Integer`, `Boolean`, and `Long` map to `java::lang::Integer*`, `java::lang::Boolean*`, `java::lang::Long*`, auto-including `Boxes.h`.
 - Collections like `ArrayList` and `ArrayList<T>` map to `java::util::ArrayList<mappedT>*` with auto-inclusion of `ArrayList.h`.
+- Enhanced for-each loops `for (Type x : iterable)` map to `for (Type x : *JAVA_NULL_CHECK(iterable))` leveraging C++ `begin()`/`end()` pointer ranges on `Array<T>` and `ArrayList<T>`.
 - Static factory methods like `Integer.valueOf(...)` route directly to `java::lang::Integer::valueOf(...)`.
 - Static initialization blocks `static { ... }` translate to self-invoking lambda runners `static inline bool _static_init_## = []() { ...; return true; }();` ensuring pre-main execution.
 - Static fields map to `inline static fieldType fieldName = init;` in the C++ header.

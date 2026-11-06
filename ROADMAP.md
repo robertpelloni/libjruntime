@@ -17,10 +17,10 @@
 - [x] Mathematical utilities: `java.lang.Math` constants (`PI`, `E`) and functions (`abs`, `min`, `max`, `sqrt`, `pow`, etc.).
 - [x] Primitive wrapper classes (`Integer`, `Long`, `Boolean`) and boxed methods (`libjruntime/Boxes.h`).
 - [x] Dynamic collections runtime (`java.util.ArrayList<T>` in `libjruntime/ArrayList.h`).
+- [x] Enhanced for-each loops (`for (T x : collection)`) with range-based loop lowering.
 
 ## Milestone 2: Language Completeness (v1.1.0)
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
-- [ ] Enhanced `for-each` loops (`for (T x : collection)`).
 - [ ] Explicit type casting and `instanceof` expressions.
 
 ## Milestone 3: Runtime Library Expansion (v1.2.0)

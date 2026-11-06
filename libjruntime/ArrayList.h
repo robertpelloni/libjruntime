@@ -123,6 +123,13 @@ public:
         }
         return false;
     }
+
+    T* begin() noexcept { return data; }
+    T* end() noexcept { return data + currentSize; }
+    const T* begin() const noexcept { return data; }
+    const T* end() const noexcept { return data + currentSize; }
+    const T* cbegin() const noexcept { return data; }
+    const T* cend() const noexcept { return data + currentSize; }
 };
 
 } // namespace util

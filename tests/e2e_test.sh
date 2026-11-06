@@ -37,6 +37,22 @@ public class ListHelper {
         list.add("Third");
         return list;
     }
+
+    public static int sumArray(int[] numbers) {
+        int total = 0;
+        for (int n : numbers) {
+            total = total + n;
+        }
+        return total;
+    }
+
+    public static int countListLength(ArrayList list) {
+        int count = 0;
+        for (Object item : list) {
+            count = count + 1;
+        }
+        return count;
+    }
 }
 EOF
 
@@ -271,6 +287,17 @@ int main() {
         listBoundsCaught = true;
     }
     assert(listBoundsCaught);
+
+    // Verify enhanced for-each loops over Array and ArrayList
+    int32_t totalListItems = ListHelper::countListLength(myList);
+    assert(totalListItems == 2);
+
+    java::lang::Array<int32_t>* testArr = java_new<java::lang::Array<int32_t>>(3);
+    (*testArr)[0] = 5;
+    (*testArr)[1] = 15;
+    (*testArr)[2] = 25;
+    int32_t arrSum = ListHelper::sumArray(testArr);
+    assert(arrSum == 45);
 
     // Verify BoxHelper and java.lang.Integer / Boolean boxing & unboxing
     java::lang::Integer* boxedInt = BoxHelper::boxInt(12345);

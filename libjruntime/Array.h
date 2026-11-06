@@ -53,6 +53,13 @@ public:
     int32_t getLength() const {
         return len;
     }
+
+    T* begin() noexcept { return data; }
+    T* end() noexcept { return data + len; }
+    const T* begin() const noexcept { return data; }
+    const T* end() const noexcept { return data + len; }
+    const T* cbegin() const noexcept { return data; }
+    const T* cend() const noexcept { return data + len; }
 };
 
 } // namespace lang

@@ -73,6 +73,31 @@ public class Calculator {
 	}
 }
 
+func TestTranspileEnhancedForLoop(t *testing.T) {
+	javaSrc := `
+public class ForEachTest {
+    public int sum(int[] numbers) {
+        int total = 0;
+        for (int n : numbers) {
+            total = total + n;
+        }
+        return total;
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "virtual int32_t sum(java::lang::Array<int32_t>* numbers);") {
+		t.Errorf("Expected sum method declaration with Array parameter, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "for (int32_t n : *JAVA_NULL_CHECK(numbers)) {") {
+		t.Errorf("Expected range-based for loop in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "total = total + n;") {
+		t.Errorf("Expected loop body statement in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileArrayList(t *testing.T) {
 	javaSrc := `
 public class ListTest {

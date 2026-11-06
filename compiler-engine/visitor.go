@@ -556,6 +556,43 @@ func (v *CppTranspilerVisitor) VisitStatement(ctx *parser.StatementContext) inte
     // FOR statement
     if ctx.FOR() != nil && ctx.ForControl() != nil {
         fc := ctx.ForControl()
+
+        // Enhanced for-each loop: for (Type varName : iterableExpr)
+        if fc.EnhancedForControl() != nil {
+            efc := fc.EnhancedForControl()
+            elemVar := ""
+            if efc.VariableDeclaratorId() != nil {
+                elemVar = efc.VariableDeclaratorId().GetText()
+            }
+            elemType := "auto"
+            if efc.TypeType() != nil {
+                elemType = mapType(efc.TypeType().GetText())
+                v.included[efc.TypeType().GetText()] = true
+            }
+
+            iterableStr := ""
+            if efc.Expression() != nil {
+                res := v.Visit(efc.Expression())
+                if res != nil {
+                    iterableStr = fmt.Sprintf("%v", res)
+                } else {
+                    iterableStr = efc.Expression().GetText()
+                }
+            }
+
+            v.cppCode.WriteString(fmt.Sprintf("    for (%s %s : *JAVA_NULL_CHECK(%s)) {\n", elemType, elemVar, iterableStr))
+            if ctx.Statement(0) != nil {
+                if ctx.Statement(0).Block() != nil {
+                    v.Visit(ctx.Statement(0).Block())
+                } else {
+                    v.Visit(ctx.Statement(0))
+                }
+            }
+            v.cppCode.WriteString("    }\n")
+            return nil
+        }
+
+        // Standard 3-part for loop: for (init; cond; update)
         initStr := ""
         condStr := ""
         updStr := ""

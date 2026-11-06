@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.14
+- Implemented enhanced for-each loop transpilation (`for (Type var : iterable)`) in `compiler-engine/visitor.go` mapping to C++ range-based loops (`for (Type var : *JAVA_NULL_CHECK(iterable))`).
+- Added standard iterator accessors `begin()`, `end()`, `cbegin()`, and `cend()` to `libjruntime/Array.h` and `libjruntime/ArrayList.h` for seamless C++ standard iteration.
+- Added unit test `TestTranspileEnhancedForLoop` to `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime native array and `ArrayList` element iteration and summation.
+
 ## 1.0.13
 - Created `libjruntime/ArrayList.h` implementing `java::util::ArrayList<T>` dynamic collection with Boehm GC-backed resizing.
 - Implemented `add(element)`, `add(index, element)`, `get(index)`, `set(index, element)`, `remove(index)`, `size()`, `isEmpty()`, `clear()`, `contains(element)`, and bounds checking throwing `ArrayIndexOutOfBoundsException`.
