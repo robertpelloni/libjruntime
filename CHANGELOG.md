@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.15
+- Implemented `instanceof` expression transpilation (`expr instanceof TargetType`) into `(dynamic_cast<TargetType*>(expr) != nullptr)`.
+- Implemented explicit type casting expressions (`(TargetType) expr`) into `dynamic_cast<TargetType*>(expr)` for reference types and `static_cast<PrimitiveType>(expr)` for primitive types.
+- Added Java `null` literal mapping to C++ `nullptr` in `VisitLiteral`.
+- Added delayed header generation in `VisitClassDeclaration` to ensure all referenced and casted types are included in `<ClassName>.h`.
+- Added unit test `TestTranspileCastAndInstanceOf` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime `instanceof` checks and polymorphic downcasting with Boehm GC.
+
 ## 1.0.14
 - Implemented enhanced for-each loop transpilation (`for (Type var : iterable)`) in `compiler-engine/visitor.go` mapping to C++ range-based loops (`for (Type var : *JAVA_NULL_CHECK(iterable))`).
 - Added standard iterator accessors `begin()`, `end()`, `cbegin()`, and `cend()` to `libjruntime/Array.h` and `libjruntime/ArrayList.h` for seamless C++ standard iteration.

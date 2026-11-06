@@ -19,9 +19,11 @@
 - [x] Dynamic collections runtime (`java.util.ArrayList<T>` in `libjruntime/ArrayList.h`).
 - [x] Enhanced for-each loops (`for (T x : collection)`) with range-based loop lowering.
 
+- [x] Explicit type casting (`(Type)expr`) and runtime `instanceof` expressions.
+
 ## Milestone 2: Language Completeness (v1.1.0)
 - [ ] Constructor chaining (`this(...)`, `super(...)`) and field default initializers.
-- [ ] Explicit type casting and `instanceof` expressions.
+- [ ] `switch` statement and case expression branch transpilation.
 
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
 - [ ] Key-value associative container: `java.util.HashMap<K, V>`.

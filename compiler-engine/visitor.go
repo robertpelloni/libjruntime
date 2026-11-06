@@ -134,7 +134,10 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	extraIncludeStr := strings.Join(extraIncludes, "")
 	baseClassesStr := strings.Join(baseClasses, ", ")
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
+	var bodyCode strings.Builder
+	// swap headerCode to temporary builder for class body
+	origHeader := v.headerCode
+	v.headerCode = bodyCode
 
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
@@ -142,18 +145,32 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 		}
 	}
 
-	v.headerCode.WriteString("};\n")
+	classBodyStr := v.headerCode.String()
+	v.headerCode = origHeader
 
-	var cppFinal strings.Builder
-	cppFinal.WriteString(fmt.Sprintf("#include \"%s.h\"\n", className))
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
 		"void": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "ArrayList": true, "Object": true, "Exception": true,
 	}
+
 	for inc := range v.included {
 		cleanInc := strings.TrimSuffix(inc, "[]")
-		if cleanInc != className && !primitives[cleanInc] && !strings.Contains(cleanInc, "[") {
+		if cleanInc != className && !primitives[cleanInc] && !strings.Contains(cleanInc, "[") && !strings.Contains(cleanInc, "<") {
+			extraIncludes = append(extraIncludes, fmt.Sprintf("#include \"%s.h\"\n", cleanInc))
+		}
+	}
+
+	extraIncludeStr = strings.Join(extraIncludes, "")
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
+	v.headerCode.WriteString(classBodyStr)
+	v.headerCode.WriteString("};\n")
+
+	var cppFinal strings.Builder
+	cppFinal.WriteString(fmt.Sprintf("#include \"%s.h\"\n", className))
+	for inc := range v.included {
+		cleanInc := strings.TrimSuffix(inc, "[]")
+		if cleanInc != className && !primitives[cleanInc] && !strings.Contains(cleanInc, "[") && !strings.Contains(cleanInc, "<") {
 			cppFinal.WriteString(fmt.Sprintf("#include \"%s.h\"\n", cleanInc))
 		}
 	}
@@ -883,6 +900,50 @@ func (v *CppTranspilerVisitor) VisitBinaryOperatorExpression(ctx *parser.BinaryO
 	return ctx.GetText()
 }
 
+func (v *CppTranspilerVisitor) VisitInstanceOfOperatorExpression(ctx *parser.InstanceOfOperatorExpressionContext) interface{} {
+	exprStr := ""
+	if ctx.Expression() != nil {
+		res := v.Visit(ctx.Expression())
+		if res != nil {
+			exprStr = fmt.Sprintf("%v", res)
+		} else {
+			exprStr = ctx.Expression().GetText()
+		}
+	}
+
+	targetType := "java::lang::Object*"
+	if ctx.TypeType() != nil {
+		rawType := ctx.TypeType().GetText()
+		v.included[rawType] = true
+		targetType = mapType(rawType)
+	}
+
+	return fmt.Sprintf("(dynamic_cast<%s>(%s) != nullptr)", targetType, exprStr)
+}
+
+func (v *CppTranspilerVisitor) VisitCastExpression(ctx *parser.CastExpressionContext) interface{} {
+	exprStr := ""
+	if ctx.Expression() != nil {
+		res := v.Visit(ctx.Expression())
+		if res != nil {
+			exprStr = fmt.Sprintf("%v", res)
+		} else {
+			exprStr = ctx.Expression().GetText()
+		}
+	}
+
+	if len(ctx.AllTypeType()) > 0 {
+		rawType := ctx.AllTypeType()[0].GetText()
+		v.included[rawType] = true
+		mapped := mapType(rawType)
+		if strings.HasSuffix(mapped, "*") {
+			return fmt.Sprintf("dynamic_cast<%s>(%s)", mapped, exprStr)
+		}
+		return fmt.Sprintf("static_cast<%s>(%s)", mapped, exprStr)
+	}
+	return ctx.GetText()
+}
+
 func (v *CppTranspilerVisitor) VisitPostIncrementDecrementOperatorExpression(ctx *parser.PostIncrementDecrementOperatorExpressionContext) interface{} {
 	exprStr := ctx.Expression().GetText()
 	res := v.Visit(ctx.Expression())
@@ -899,6 +960,9 @@ func (v *CppTranspilerVisitor) VisitPostIncrementDecrementOperatorExpression(ctx
 func (v *CppTranspilerVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 	if ctx.STRING_LITERAL() != nil || ctx.TEXT_BLOCK() != nil {
 		return fmt.Sprintf("java_new<java::lang::String>(%s)", ctx.GetText())
+	}
+	if ctx.NULL_LITERAL() != nil {
+		return "nullptr"
 	}
 	return ctx.GetText()
 }

@@ -73,6 +73,31 @@ public class Calculator {
 	}
 }
 
+func TestTranspileCastAndInstanceOf(t *testing.T) {
+	javaSrc := `
+public class CastTest {
+    public boolean checkAndCast(Object obj) {
+        if (obj instanceof Dog) {
+            Dog d = (Dog) obj;
+            return true;
+        }
+        return false;
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "#include \"Dog.h\"") {
+		t.Errorf("Expected #include \"Dog.h\" in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "(dynamic_cast<Dog*>(obj) != nullptr)") {
+		t.Errorf("Expected dynamic_cast instanceof check in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "dynamic_cast<Dog*>(obj)") {
+		t.Errorf("Expected dynamic_cast in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileEnhancedForLoop(t *testing.T) {
 	javaSrc := `
 public class ForEachTest {

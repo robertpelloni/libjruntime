@@ -53,6 +53,17 @@ public class ListHelper {
         }
         return count;
     }
+
+    public static boolean isDog(Object obj) {
+        return obj instanceof Dog;
+    }
+
+    public static Dog castToDog(Object obj) {
+        if (obj instanceof Dog) {
+            return (Dog) obj;
+        }
+        return null;
+    }
 }
 EOF
 
@@ -327,6 +338,17 @@ int main() {
     java::lang::String* sound = animal->speak();
     assert(sound != nullptr);
     assert(sound->getStdString() == "Woof");
+
+    // Verify instanceof and explicit type casts
+    assert(ListHelper::isDog(dog) == true);
+    assert(ListHelper::isDog(myList) == false);
+
+    Dog* castedDog = ListHelper::castToDog(animal);
+    assert(castedDog != nullptr);
+    assert(castedDog->getLegCount() == 4);
+
+    Dog* castedFail = ListHelper::castToDog(myList);
+    assert(castedFail == nullptr);
 
     // Dynamic dispatch / interface pointer
     Describable* desc = dog;
