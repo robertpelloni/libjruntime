@@ -1,10 +1,11 @@
 # TODO
 
 ## Immediate Next Steps
-- [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 - [ ] Add lambda expression syntax transpilation (`(a, b) -> expr`).
+- [ ] Implement method references (`Class::method`).
 
 ## Maintenance & Optimization
+- [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.
 - [x] Implement concurrency primitives (`java.lang.Thread`, `Runnable`) in `libjruntime/Thread.h`.
 - [x] Implement `synchronized` block and method transpilation with `std::lock_guard` monitor locking.
 - [x] Implement extended wrapper classes (`Double`, `Float`) in `libjruntime/Boxes.h` and visitor mappings.

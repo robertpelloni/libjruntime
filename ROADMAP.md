@@ -43,5 +43,7 @@
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
 - [ ] Functional interfaces and lambda expressions.
 
+- [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
+
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
 - [ ] Real-time transpilation dashboard and interactive developer CLI tools.

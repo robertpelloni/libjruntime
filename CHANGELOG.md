@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.28
+- Added continuous integration workflow `.github/workflows/ci.yml` running Go unit tests and end-to-end native execution tests across pull requests and pushes.
+- Bumped version to `1.0.28` in `VERSION`.
+
 ## 1.0.27
 - Enhanced `README.md` with comprehensive step-by-step documentation for building `j2cpp-engine`, submodule preparation scripts, CLI flags, native compilation, and end-to-end testing.
 - Bumped version to `1.0.27` in `VERSION`.
