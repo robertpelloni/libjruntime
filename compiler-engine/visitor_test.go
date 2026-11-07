@@ -190,6 +190,36 @@ public class MethodRefTest {
 	}
 }
 
+func TestTranspileFunctionalInterfaces(t *testing.T) {
+	javaSrc := `
+public class FunctionalTest {
+    public void test(Function<String, Integer> fn, Consumer<String> cons, Supplier<Integer> supp, Predicate<String> pred) {
+        Integer res = fn.apply(new String("test"));
+        cons.accept(new String("hello"));
+        Integer val = supp.get();
+        boolean ok = pred.test(new String("abc"));
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "java::util::function::Function<java::lang::String*, java::lang::Integer*>* fn") {
+		t.Errorf("Expected Function type in header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "java::util::function::Consumer<java::lang::String*>* cons") {
+		t.Errorf("Expected Consumer type in header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "java::util::function::Supplier<java::lang::Integer*>* supp") {
+		t.Errorf("Expected Supplier type in header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "java::util::function::Predicate<java::lang::String*>* pred") {
+		t.Errorf("Expected Predicate type in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(fn)->apply") {
+		t.Errorf("Expected fn.apply call in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

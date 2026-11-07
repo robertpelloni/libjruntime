@@ -59,3 +59,4 @@
 - All native allocations must route through `java_new<T>` instead of raw `new` to remain visible to `bdwgc`.
 - Lambda expressions `(args) -> expr` / `(args) -> { ... }` map to C++20 lambda expressions `[=](params) { return expr; }` or `[=](params) { body; }` with explicit types or `auto` inferred parameters.
 - Method references `Type::method`, `expr::method`, and `Type::new` map to universal forwarding C++ lambda closures `[=](auto&&... args) { return ...; }`.
+- Functional interfaces (`Function<T, R>`, `Consumer<T>`, `Supplier<T>`, `Predicate<T>`) map to `java::util::function::*` templates in `libjruntime/Functions.h` with adapter helpers (`make_function`, `make_consumer`, `make_supplier`, `make_predicate`).

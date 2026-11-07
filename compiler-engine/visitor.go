@@ -56,6 +56,31 @@ func mapType(javaType string) string {
 		}
 		return "java::util::HashMap<java::lang::Object*, java::lang::Object*>*"
 	}
+	if strings.HasPrefix(javaType, "Function<") && strings.HasSuffix(javaType, ">") {
+		innerTypes := javaType[9 : len(javaType)-1]
+		parts := strings.Split(innerTypes, ",")
+		if len(parts) == 2 {
+			t := mapType(strings.TrimSpace(parts[0]))
+			r := mapType(strings.TrimSpace(parts[1]))
+			return fmt.Sprintf("java::util::function::Function<%s, %s>*", t, r)
+		}
+		return "java::util::function::Function<java::lang::Object*, java::lang::Object*>*"
+	}
+	if strings.HasPrefix(javaType, "Consumer<") && strings.HasSuffix(javaType, ">") {
+		innerType := javaType[9 : len(javaType)-1]
+		mappedInner := mapType(innerType)
+		return fmt.Sprintf("java::util::function::Consumer<%s>*", mappedInner)
+	}
+	if strings.HasPrefix(javaType, "Supplier<") && strings.HasSuffix(javaType, ">") {
+		innerType := javaType[9 : len(javaType)-1]
+		mappedInner := mapType(innerType)
+		return fmt.Sprintf("java::util::function::Supplier<%s>*", mappedInner)
+	}
+	if strings.HasPrefix(javaType, "Predicate<") && strings.HasSuffix(javaType, ">") {
+		innerType := javaType[10 : len(javaType)-1]
+		mappedInner := mapType(innerType)
+		return fmt.Sprintf("java::util::function::Predicate<%s>*", mappedInner)
+	}
 	switch javaType {
 	case "byte":
 		return "int8_t"
@@ -101,6 +126,14 @@ func mapType(javaType string) string {
 		return "java::lang::Runnable*"
 	case "Thread":
 		return "java::lang::Thread*"
+	case "Function":
+		return "java::util::function::Function<java::lang::Object*, java::lang::Object*>*"
+	case "Consumer":
+		return "java::util::function::Consumer<java::lang::Object*>*"
+	case "Supplier":
+		return "java::util::function::Supplier<java::lang::Object*>*"
+	case "Predicate":
+		return "java::util::function::Predicate<java::lang::Object*>*"
 	case "Object":
 		return "java::lang::Object*"
 	case "void":
@@ -197,7 +230,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
-		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "ArrayList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true,
+		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "ArrayList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true, "Function": true, "Consumer": true, "Supplier": true, "Predicate": true,
 	}
 
 	for inc := range v.included {
@@ -208,7 +241,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	}
 
 	extraIncludeStr = strings.Join(extraIncludes, "")
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"HashMap.h\"\n#include \"FileIO.h\"\n#include \"Thread.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"HashMap.h\"\n#include \"FileIO.h\"\n#include \"Thread.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n#include \"Functions.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
 	v.headerCode.WriteString(classBodyStr)
 	v.headerCode.WriteString("};\n")
 
@@ -246,7 +279,7 @@ func (v *CppTranspilerVisitor) VisitInterfaceDeclaration(ctx *parser.InterfaceDe
 	v.cppCode.Reset()
 	v.included = make(map[string]bool)
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"HashMap.h\"\n#include \"FileIO.h\"\n#include \"Thread.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"HashMap.h\"\n#include \"FileIO.h\"\n#include \"Thread.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n#include \"Functions.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
 
 	if ctx.InterfaceBody() != nil {
 		v.Visit(ctx.InterfaceBody())

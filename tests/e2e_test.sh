@@ -363,6 +363,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "HashMap.h"
 #include "FileIO.h"
 #include "Thread.h"
+#include "Functions.h"
 #include "ListHelper.h"
 #include "CounterTask.h"
 
@@ -575,6 +576,26 @@ int main() {
     // Verify Method reference evaluation
     int32_t methodRefResult = defaultApp->applyMethodRef(42, 99);
     assert(methodRefResult == 99);
+
+    // Verify Functional interfaces (Function, Consumer, Supplier, Predicate)
+    java::util::function::Function<int32_t, int32_t>* squareFn =
+        java::util::function::make_function<int32_t, int32_t>([](int32_t x) { return x * x; });
+    assert(squareFn->apply(6) == 36);
+
+    int32_t consumedVal = 0;
+    java::util::function::Consumer<int32_t>* consumer =
+        java::util::function::make_consumer<int32_t>([&consumedVal](int32_t x) { consumedVal = x + 10; });
+    consumer->accept(25);
+    assert(consumedVal == 35);
+
+    java::util::function::Supplier<int32_t>* supplier =
+        java::util::function::make_supplier<int32_t>([]() { return 777; });
+    assert(supplier->get() == 777);
+
+    java::util::function::Predicate<int32_t>* predicate =
+        java::util::function::make_predicate<int32_t>([](int32_t x) { return x > 50; });
+    assert(predicate->test(100) == true);
+    assert(predicate->test(20) == false);
 
     // Verify array creation and indexing
     java::lang::Array<int32_t>* numbers = defaultApp->createArray(4);

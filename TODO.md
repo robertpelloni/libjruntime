@@ -3,7 +3,8 @@
 ## Immediate Next Steps
 - [x] Add lambda expression syntax transpilation (`(a, b) -> expr`).
 - [x] Implement method references (`Class::method`, `expr::method`, `Class::new`).
-- [ ] Implement nested / inner classes and anonymous class support.
+- [x] Implement nested / inner classes and anonymous class support.
+- [x] Implement functional interfaces (`java.util.function.*` - `Consumer`, `Supplier`, `Function`, `Predicate`) in `libjruntime/Functions.h`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

@@ -43,6 +43,8 @@
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
 - [x] Functional interfaces and lambda expressions (`(args) -> expr / { ... }`).
 - [x] Method references (`Class::method`, `expr::method`, `Class::new`).
+- [x] Nested / inner classes and anonymous class support.
+- [x] Functional interfaces runtime headers (`libjruntime/Functions.h` - `Function`, `Consumer`, `Supplier`, `Predicate`).
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

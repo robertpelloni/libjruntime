@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.32
+- Created `libjruntime/Functions.h` implementing core functional interfaces under `java::util::function`:
+  - `Function<T, R>` with `R apply(T t)`
+  - `Consumer<T>` with `void accept(T t)`
+  - `Supplier<T>` with `T get()`
+  - `Predicate<T>` with `bool test(T t)`
+  - Adapter closures and factory helpers (`make_function`, `make_consumer`, `make_supplier`, `make_predicate`).
+- Updated `compiler-engine/visitor.go` type mappings to route `Function`, `Consumer`, `Supplier`, and `Predicate` to their corresponding `java::util::function::*` templates and automatically include `Functions.h`.
+- Added unit test `TestTranspileFunctionalInterfaces` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution test coverage for functional interfaces in `tests/e2e_test.sh`.
+- Bumped version to `1.0.32` in `VERSION`.
+
 ## 1.0.30
 - Implemented method reference syntax transpilation (`Type::method`, `expr::method`, `Type::new`) in `compiler-engine/visitor.go`.
 - Lowered method references into universal forwarding C++ lambda closures (`[=](auto&&... args) { ... }`).
