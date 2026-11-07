@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.24
+- Implemented primitive wrapper classes `Double` and `Float` in `libjruntime/Boxes.h` with `valueOf`, unboxing (`doubleValue()`, `floatValue()`, `intValue()`, `longValue()`), `hashCode()`, `equals()`, and `toString()`.
+- Updated `compiler-engine/visitor.go` with type mappings for `double`, `float`, `char`, `short`, `Double`, and `Float`, object creation, and static `Double.valueOf(...)` / `Float.valueOf(...)` call routing.
+- Added unit test `TestTranspileDoubleAndFloat` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime `Double` and `Float` boxing, unboxing, casting, and hashing.
+
 ## 1.0.23
 - Created `libjruntime/FileIO.h` implementing `java::io::File`, `java::io::FileInputStream`, and `java::io::FileOutputStream` backed by standard C/POSIX file streams and Boehm GC.
 - Updated `compiler-engine/visitor.go` to support `byte` (`int8_t`), `byte[]` (`Array<int8_t>*`), and File I/O types (`File`, `FileInputStream`, `FileOutputStream`) with automatic inclusion of `FileIO.h`.

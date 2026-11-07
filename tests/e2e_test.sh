@@ -148,6 +148,22 @@ public class BoxHelper {
     public static boolean unboxBool(Boolean boxed) {
         return boxed.booleanValue();
     }
+
+    public static Double boxDouble(double val) {
+        return new Double(val);
+    }
+
+    public static double unboxDouble(Double boxed) {
+        return boxed.doubleValue();
+    }
+
+    public static Float boxFloat(float val) {
+        return new Float(val);
+    }
+
+    public static float unboxFloat(Float boxed) {
+        return boxed.floatValue();
+    }
 }
 EOF
 
@@ -413,7 +429,7 @@ int main() {
     int32_t arrSum = ListHelper::sumArray(testArr);
     assert(arrSum == 45);
 
-    // Verify BoxHelper and java.lang.Integer / Boolean boxing & unboxing
+    // Verify BoxHelper and java.lang.Integer / Boolean / Double / Float boxing & unboxing
     java::lang::Integer* boxedInt = BoxHelper::boxInt(12345);
     assert(boxedInt != nullptr);
     assert(boxedInt->intValue() == 12345);
@@ -430,6 +446,16 @@ int main() {
     assert(boxedLong != nullptr);
     assert(boxedLong->longValue() == 9876543210LL);
     assert(boxedLong->intValue() == (int32_t)9876543210LL);
+
+    java::lang::Double* boxedD = BoxHelper::boxDouble(3.14159);
+    assert(boxedD != nullptr);
+    assert(BoxHelper::unboxDouble(boxedD) > 3.14 && BoxHelper::unboxDouble(boxedD) < 3.15);
+    assert(boxedD->intValue() == 3);
+
+    java::lang::Float* boxedF = BoxHelper::boxFloat(2.5f);
+    assert(boxedF != nullptr);
+    assert(BoxHelper::unboxFloat(boxedF) == 2.5f);
+    assert(boxedF->intValue() == 2);
 
     // Verify inheritance, polymorphism, and virtual method override
     // Verify constructor chaining with super() and this(...)

@@ -5,6 +5,7 @@
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
+- [x] Implement extended wrapper classes (`Double`, `Float`) in `libjruntime/Boxes.h` and visitor mappings.
 - [x] Implement File I/O classes (`File`, `FileInputStream`, `FileOutputStream`) in `libjruntime/FileIO.h`.
 - [x] Implement `throw` statement lowering in `compiler-engine/visitor.go` and exception string constructors.
 - [x] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration` with C++ member initializer lists.

@@ -1,20 +1,18 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.23 - File I/O Primitives (`File`, `FileInputStream`, `FileOutputStream`)
+## Milestone Reached: v1.0.24 - Extended Primitive Wrapper Types (`Double`, `Float`)
 
-### What Was Accomplished in v1.0.23
-1. **File I/O Runtime in `libjruntime/FileIO.h`**:
-   - `java::io::File`: paths, existence checks (`exists()`), length calculation (`length()`), and file deletion (`deleteFile()`).
-   - `java::io::FileInputStream`: binary/byte file reading (`read()`, buffer reads into `Array<int8_t>*` and `Array<int32_t>*`, `close()`).
-   - `java::io::FileOutputStream`: binary/byte file writing (`write(b)`, buffer writes from `Array<int8_t>*` and `Array<int32_t>*`, `flush()`, `close()`).
-   - Mapped `byte` to `int8_t` and `byte[]` to `java::lang::Array<int8_t>*`.
+### What Was Accomplished in v1.0.24
+1. **Extended Primitive Wrappers in `libjruntime/Boxes.h`**:
+   - `Double`: holds `double value`, provides `valueOf(double)`, `doubleValue()`, `floatValue()`, `intValue()`, `longValue()`, bit-wise `hashCode()`, `equals(Object*)`, and `toString()`.
+   - `Float`: holds `float value`, provides `valueOf(float)`, `floatValue()`, `doubleValue()`, `intValue()`, `longValue()`, bit-wise `hashCode()`, `equals(Object*)`, and `toString()`.
 2. **Compiler AST Transpilation**:
-   - Updated `mapType` in `compiler-engine/visitor.go` to support `byte`, `File`, `FileInputStream`, and `FileOutputStream`.
-   - Updated `VisitObjectCreationExpression` to instantiate `java_new<java::io::*>` instances.
-   - Generated headers include `#include "FileIO.h"`.
+   - Updated `mapType` in `compiler-engine/visitor.go` to support `double`, `float`, `char`, `short`, `Double`, and `Float`.
+   - Updated `VisitObjectCreationExpression` to instantiate `Double` and `Float` as `java_new<java::lang::*>` types.
+   - Updated `VisitMethodCallExpression` to route `Double.valueOf(...)` and `Float.valueOf(...)` directly to static C++ scopes.
 3. **Verification**:
-   - Added unit test `TestTranspileFileIO` in `compiler-engine/visitor_test.go`.
-   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting file creation, byte writing, reading back, and file cleanup with Boehm GC.
+   - Added unit test `TestTranspileDoubleAndFloat` in `compiler-engine/visitor_test.go`.
+   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime `Double` and `Float` boxing, unboxing, casting, and hashing with Boehm GC.
    - All tests passing cleanly.
 
 ### Context for Successor Agents
@@ -22,4 +20,4 @@
 - Runtime headers reside in `libjruntime/`.
 - Native executable tests link with `bdwgc/.libs/libgc.so` (`-lgc`).
 - Scripts for submodules and parser regeneration reside in `scripts/`.
-- Next roadmap milestones: concurrency primitives (`Thread`, `Runnable`), extended primitive wrapper types.
+- Next roadmap milestones: concurrency primitives (`Thread`, `Runnable`, `synchronized`).

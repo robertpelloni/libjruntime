@@ -55,12 +55,20 @@ func mapType(javaType string) string {
 	switch javaType {
 	case "byte":
 		return "int8_t"
+	case "short":
+		return "int16_t"
 	case "int":
 		return "int32_t"
 	case "boolean":
 		return "bool"
 	case "long":
 		return "int64_t"
+	case "float":
+		return "float"
+	case "double":
+		return "double"
+	case "char":
+		return "char16_t"
 	case "String":
 		return "java::lang::String*"
 	case "StringBuilder":
@@ -71,6 +79,10 @@ func mapType(javaType string) string {
 		return "java::lang::Boolean*"
 	case "Long":
 		return "java::lang::Long*"
+	case "Double":
+		return "java::lang::Double*"
+	case "Float":
+		return "java::lang::Float*"
 	case "ArrayList":
 		return "java::util::ArrayList<java::lang::Object*>*"
 	case "HashMap":
@@ -173,7 +185,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
-		"void": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "ArrayList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Object": true, "Exception": true,
+		"void": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "ArrayList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Object": true, "Exception": true,
 	}
 
 	for inc := range v.included {
@@ -828,6 +840,10 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::lang::Boolean"
              } else if className == "Long" {
                  className = "java::lang::Long"
+             } else if className == "Double" {
+                 className = "java::lang::Double"
+             } else if className == "Float" {
+                 className = "java::lang::Float"
              } else if className == "Exception" {
                  className = "java::lang::Exception"
              } else if className == "NullPointerException" {
@@ -918,7 +934,7 @@ func (v *CppTranspilerVisitor) VisitMethodCallExpression(ctx *parser.MethodCallE
                      methodCallRes = ctx.MethodCall().GetText()
                  }
                  objStr := fmt.Sprintf("%v", objRes)
-                 if objStr == "Integer" || objStr == "Boolean" || objStr == "Long" {
+                 if objStr == "Integer" || objStr == "Boolean" || objStr == "Long" || objStr == "Double" || objStr == "Float" {
                      return fmt.Sprintf("java::lang::%s::%v", objStr, methodCallRes)
                  }
                  if objStr == "Math" {

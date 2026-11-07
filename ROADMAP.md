@@ -34,8 +34,10 @@
 
 - [x] File I/O primitives (`File`, `FileInputStream`, `FileOutputStream`) in `libjruntime/FileIO.h`.
 
+- [x] Extended wrapper classes (`Double`, `Float`) in `libjruntime/Boxes.h`.
+
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
-- [ ] Extended wrapper classes (`Double`, `Float`, `Byte`, `Short`, `Character`).
+- [ ] Concurrency primitives (`Thread`, `Runnable`, `synchronized`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
 - [ ] `synchronized` block and method syntax translation backed by `std::mutex*` monitor.

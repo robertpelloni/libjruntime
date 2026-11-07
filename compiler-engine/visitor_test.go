@@ -270,6 +270,36 @@ public class ListTest {
 	}
 }
 
+func TestTranspileDoubleAndFloat(t *testing.T) {
+	javaSrc := `
+public class FloatTest {
+    public void run() {
+        Double d = new Double(3.14);
+        Float f = new Float(1.5);
+        double unboxedD = d.doubleValue();
+        float unboxedF = f.floatValue();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Boxes.h\"") {
+		t.Errorf("Expected #include \"Boxes.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::lang::Double* d = java_new<java::lang::Double>(3.14);") {
+		t.Errorf("Expected Double creation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::lang::Float* f = java_new<java::lang::Float>(1.5);") {
+		t.Errorf("Expected Float creation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(d)->doubleValue()") {
+		t.Errorf("Expected doubleValue call in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(f)->floatValue()") {
+		t.Errorf("Expected floatValue call in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspilePrimitiveWrappers(t *testing.T) {
 	javaSrc := `
 public class BoxTest {
