@@ -36,9 +36,10 @@
 
 - [x] Extended wrapper classes (`Double`, `Float`) in `libjruntime/Boxes.h`.
 
+- [x] `synchronized` block and method syntax translation backed by `Object` atomic monitor mutexes.
+
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
-- [ ] Concurrency primitives (`Thread`, `Runnable`, `synchronized`).
+- [ ] Concurrency primitives (`Thread`, `Runnable`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
-- [ ] `synchronized` block and method syntax translation backed by `std::mutex*` monitor.
 - [ ] Real-time transpilation dashboard and interactive developer CLI tools.

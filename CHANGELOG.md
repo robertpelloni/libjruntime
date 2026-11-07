@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.25
+- Implemented `synchronized` statement block transpilation (`synchronized (expr) { ... }`) lowering to `std::lock_guard<std::mutex> _java_sync_lock(*JAVA_NULL_CHECK(expr)->getMonitor());` using `Object` atomic monitor mutexes.
+- Implemented `synchronized` method modifier detection in `compiler-engine/visitor.go` injecting `this->getMonitor()` lock guards at the entry of synchronized methods.
+- Added unit test `TestTranspileSynchronized` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime synchronized block monitor acquisition and safe execution.
+
 ## 1.0.24
 - Implemented primitive wrapper classes `Double` and `Float` in `libjruntime/Boxes.h` with `valueOf`, unboxing (`doubleValue()`, `floatValue()`, `intValue()`, `longValue()`), `hashCode()`, `equals()`, and `toString()`.
 - Updated `compiler-engine/visitor.go` with type mappings for `double`, `float`, `char`, `short`, `Double`, and `Float`, object creation, and static `Double.valueOf(...)` / `Float.valueOf(...)` call routing.

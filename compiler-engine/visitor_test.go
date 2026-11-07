@@ -91,6 +91,32 @@ public class TernaryTest {
 	}
 }
 
+func TestTranspileSynchronized(t *testing.T) {
+	javaSrc := `
+public class SyncTest {
+    int count;
+
+    public synchronized void inc() {
+        count = count + 1;
+    }
+
+    public void syncBlock(Object lock) {
+        synchronized (lock) {
+            count = count + 2;
+        }
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "std::lock_guard<std::mutex> _java_sync_lock(*this->getMonitor());") {
+		t.Errorf("Expected synchronized method monitor lock in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "std::lock_guard<std::mutex> _java_sync_lock(*JAVA_NULL_CHECK(lock)->getMonitor());") {
+		t.Errorf("Expected synchronized block monitor lock in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

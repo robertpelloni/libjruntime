@@ -114,6 +114,14 @@ public class ListHelper {
         file.deleteFile();
         return b1 + b2;
     }
+
+    public static int syncExecution(Object lock) {
+        int count = 0;
+        synchronized (lock) {
+            count = count + 42;
+        }
+        return count;
+    }
 }
 EOF
 
@@ -412,6 +420,11 @@ int main() {
         assert(e != nullptr);
     }
     assert(customThrown);
+
+    // Verify synchronized statement block execution with monitor locking
+    java::lang::Object* syncLock = java_new<java::lang::Object>();
+    int32_t syncResult = ListHelper::syncExecution(syncLock);
+    assert(syncResult == 42);
 
     // Verify File and FileOutputStream / FileInputStream round-trip
     java::lang::String* tempFilePath = java_new<java::lang::String>("/tmp/j2cpp_test_io.txt");

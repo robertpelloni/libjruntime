@@ -12,15 +12,16 @@ import (
 
 type CppTranspilerVisitor struct {
 	*parser.BaseJavaParserVisitor
-	outDir          string
-	currentClass    string
-	currentSuper    string
-	headerCode      strings.Builder
-	cppCode         strings.Builder
-	included        map[string]bool
-	currentIsStatic bool
-	staticInitCount int
-	staticFields    map[string]bool
+	outDir               string
+	currentClass         string
+	currentSuper         string
+	headerCode           strings.Builder
+	cppCode              strings.Builder
+	included             map[string]bool
+	currentIsStatic      bool
+	currentIsSynchronized bool
+	staticInitCount      int
+	staticFields         map[string]bool
 }
 
 func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
@@ -320,12 +321,16 @@ func (v *CppTranspilerVisitor) VisitClassBody(ctx *parser.ClassBodyContext) inte
 
 func (v *CppTranspilerVisitor) VisitClassBodyDeclaration(ctx *parser.ClassBodyDeclarationContext) interface{} {
 	v.currentIsStatic = false
+	v.currentIsSynchronized = false
 	if ctx.STATIC() != nil {
 		v.currentIsStatic = true
 	}
 	for _, mod := range ctx.AllModifier() {
 		if mod.ClassOrInterfaceModifier() != nil && mod.ClassOrInterfaceModifier().STATIC() != nil {
 			v.currentIsStatic = true
+		}
+		if mod.SYNCHRONIZED() != nil {
+			v.currentIsSynchronized = true
 		}
 	}
 
@@ -336,6 +341,7 @@ func (v *CppTranspilerVisitor) VisitClassBodyDeclaration(ctx *parser.ClassBodyDe
 		v.Visit(ctx.Block())
 		v.cppCode.WriteString("    return true;\n}();\n\n")
 		v.currentIsStatic = false
+		v.currentIsSynchronized = false
 		return nil
 	}
 
@@ -345,6 +351,7 @@ func (v *CppTranspilerVisitor) VisitClassBodyDeclaration(ctx *parser.ClassBodyDe
 		}
 	}
 	v.currentIsStatic = false
+	v.currentIsSynchronized = false
 	return nil
 }
 
@@ -473,7 +480,14 @@ func (v *CppTranspilerVisitor) VisitMethodDeclaration(ctx *parser.MethodDeclarat
 	v.cppCode.WriteString(fmt.Sprintf("%s %s::%s(%s) {\n", returnType, v.currentClass, methodName, params))
 
 	if ctx.MethodBody().Block() != nil {
-		v.Visit(ctx.MethodBody().Block())
+		if v.currentIsSynchronized {
+			v.cppCode.WriteString("    std::lock_guard<std::mutex> _java_sync_lock(*this->getMonitor());\n")
+		}
+		for _, child := range ctx.MethodBody().Block().GetChildren() {
+			if payload, ok := child.(antlr.ParseTree); ok {
+				payload.Accept(v)
+			}
+		}
 	}
 
 	v.cppCode.WriteString("}\n\n")
@@ -539,7 +553,6 @@ func (v *CppTranspilerVisitor) VisitBlockStatement(ctx *parser.BlockStatementCon
         return nil
     }
 
-
     for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
 			payload.Accept(v)
@@ -556,6 +569,25 @@ func (v *CppTranspilerVisitor) VisitVariableInitializer(ctx *parser.VariableInit
 }
 
 func (v *CppTranspilerVisitor) VisitStatement(ctx *parser.StatementContext) interface{} {
+    // SYNCHRONIZED statement: synchronized (expr) block
+    if ctx.SYNCHRONIZED() != nil {
+        exprStr := "this"
+        if ctx.Expression(0) != nil {
+            res := v.Visit(ctx.Expression(0))
+            if res != nil {
+                exprStr = fmt.Sprintf("%v", res)
+            } else {
+                exprStr = ctx.Expression(0).GetText()
+            }
+        }
+        v.cppCode.WriteString(fmt.Sprintf("    {\n        std::lock_guard<std::mutex> _java_sync_lock(*JAVA_NULL_CHECK(%s)->getMonitor());\n", exprStr))
+        if ctx.Block() != nil {
+            v.Visit(ctx.Block())
+        }
+        v.cppCode.WriteString("    }\n")
+        return nil
+    }
+
     // Check for try block
     if ctx.TRY() != nil {
         v.cppCode.WriteString("    try {\n")
