@@ -34,6 +34,9 @@ func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
 }
 
 func mapType(javaType string) string {
+	if javaType == "auto" {
+		return "auto"
+	}
 	if strings.HasSuffix(javaType, "[]") {
 		elemType := mapType(strings.TrimSuffix(javaType, "[]"))
 		return fmt.Sprintf("java::lang::Array<%s>*", elemType)
@@ -194,7 +197,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
-		"void": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "ArrayList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true,
+		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "ArrayList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true,
 	}
 
 	for inc := range v.included {
@@ -1220,6 +1223,57 @@ func (v *CppTranspilerVisitor) VisitUnaryOperatorExpression(ctx *parser.UnaryOpe
 		}
 	}
 	return fmt.Sprintf("%s%s", prefix, exprStr)
+}
+
+func (v *CppTranspilerVisitor) VisitExpressionLambda(ctx *parser.ExpressionLambdaContext) interface{} {
+	if ctx.LambdaExpression() != nil {
+		return v.Visit(ctx.LambdaExpression())
+	}
+	return ctx.GetText()
+}
+
+func (v *CppTranspilerVisitor) VisitLambdaExpression(ctx *parser.LambdaExpressionContext) interface{} {
+	var paramParts []string
+	if ctx.LambdaParameters() != nil {
+		lp := ctx.LambdaParameters()
+		if lp.FormalParameterList() != nil {
+			fpl := lp.FormalParameterList()
+			for _, fp := range fpl.AllFormalParameter() {
+				typ := mapType(fp.TypeType().GetText())
+				name := fp.VariableDeclaratorId().GetText()
+				paramParts = append(paramParts, fmt.Sprintf("%s %s", typ, name))
+			}
+		} else if len(lp.AllIdentifier()) > 0 {
+			for _, id := range lp.AllIdentifier() {
+				paramParts = append(paramParts, fmt.Sprintf("auto %s", id.GetText()))
+			}
+		}
+	}
+	paramsStr := strings.Join(paramParts, ", ")
+
+	if ctx.LambdaBody() != nil {
+		lb := ctx.LambdaBody()
+		if lb.Expression() != nil {
+			res := v.Visit(lb.Expression())
+			exprStr := ""
+			if res != nil {
+				exprStr = fmt.Sprintf("%v", res)
+			} else {
+				exprStr = lb.Expression().GetText()
+			}
+			return fmt.Sprintf("[=](%s) { return %s; }", paramsStr, exprStr)
+		} else if lb.Block() != nil {
+			// buffer body statements
+			var bodyBuf strings.Builder
+			origCpp := v.cppCode
+			v.cppCode = bodyBuf
+			v.Visit(lb.Block())
+			bodyStr := v.cppCode.String()
+			v.cppCode = origCpp
+			return fmt.Sprintf("[=](%s) {\n%s}", paramsStr, bodyStr)
+		}
+	}
+	return ctx.GetText()
 }
 
 func (v *CppTranspilerVisitor) VisitSquareBracketExpression(ctx *parser.SquareBracketExpressionContext) interface{} {

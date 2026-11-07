@@ -1,8 +1,9 @@
 # TODO
 
 ## Immediate Next Steps
-- [ ] Add lambda expression syntax transpilation (`(a, b) -> expr`).
+- [x] Add lambda expression syntax transpilation (`(a, b) -> expr`).
 - [ ] Implement method references (`Class::method`).
+- [ ] Implement nested / inner classes and anonymous class support.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

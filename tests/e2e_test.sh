@@ -313,6 +313,12 @@ public class SampleApp {
             int done = 2;
         }
     }
+
+    public int applyLambda(int input) {
+        auto incrementer = (x) -> x + 5;
+        auto doubler = (int a) -> a * 2;
+        return doubler(incrementer(input));
+    }
 }
 EOF
 
@@ -556,6 +562,10 @@ int main() {
 
     int32_t branch2 = defaultApp->checkBranch(5);
     assert(branch2 == 0);
+
+    // Verify Lambda expression evaluation
+    int32_t lambdaResult = defaultApp->applyLambda(10);
+    assert(lambdaResult == 30); // (10 + 5) * 2 = 30
 
     // Verify array creation and indexing
     java::lang::Array<int32_t>* numbers = defaultApp->createArray(4);

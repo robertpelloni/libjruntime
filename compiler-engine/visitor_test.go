@@ -147,6 +147,25 @@ public class SyncTest {
 	}
 }
 
+func TestTranspileLambdaExpression(t *testing.T) {
+	javaSrc := `
+public class LambdaTest {
+    public void test() {
+        auto f1 = (x) -> x + 1;
+        auto f2 = (int a, int b) -> a + b;
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "[=](auto x) { return x + 1; }") {
+		t.Errorf("Expected single-parameter lambda in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "[=](int32_t a, int32_t b) { return a + b; }") {
+		t.Errorf("Expected typed multi-parameter lambda in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

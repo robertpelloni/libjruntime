@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.29
+- Added support for transpiling Java lambda expressions into C++20 lambda expressions (`[=](...) { ... }`).
+- Supported single and multi-parameter lambdas with explicit types and inferred (`auto`) types.
+- Supported expression-bodied and block-bodied lambdas.
+- Added unit test `TestTranspileLambdaExpression` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration test coverage for lambda expressions in `tests/e2e_test.sh`.
+- Bumped version to `1.0.29` in `VERSION`.
+
 ## 1.0.28
 - Added continuous integration workflow `.github/workflows/ci.yml` running Go unit tests and end-to-end native execution tests across pull requests and pushes.
 - Bumped version to `1.0.28` in `VERSION`.

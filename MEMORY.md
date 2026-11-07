@@ -57,3 +57,4 @@
 - Arrays map to `java::lang::Array<T>*` allocated via `java_new<java::lang::Array<T>>(size)` with internal storage allocated with `GC_MALLOC`.
 - `StringBuilder` maps to `java::lang::StringBuilder*` with internal dynamic resizing and `toString()` allocation via `java_new<String>`.
 - All native allocations must route through `java_new<T>` instead of raw `new` to remain visible to `bdwgc`.
+- Lambda expressions `(args) -> expr` / `(args) -> { ... }` map to C++20 lambda expressions `[=](params) { return expr; }` or `[=](params) { body; }` with explicit types or `auto` inferred parameters.

@@ -41,8 +41,8 @@
 - [x] Concurrency primitives (`Thread`, `Runnable`) in `libjruntime/Thread.h`.
 
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
-- [ ] Functional interfaces and lambda expressions.
-
+- [x] Functional interfaces and lambda expressions (`(args) -> expr / { ... }`).
+- [ ] Method references (`Class::method`).
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
