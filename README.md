@@ -53,28 +53,64 @@ Execute transpilation across any directory of `.java` source files:
 
 ## Building and Running
 
-### 1. Build Boehm GC Submodule
+### Prerequisites
+- **Go Toolchain**: 1.20+
+- **C++ Compiler**: GCC (g++ 10+) or Clang (clang++ 11+) with C++20 support
+- **Build Tools**: Autoconf, Automake, Libtool, Make
+- **Java Runtime**: JRE/JDK 11+ (for optional ANTLR4 parser regeneration)
+
+### Step 1: Initialize & Build Submodules
+Run the automated submodule preparation script to initialize Git submodules (`grammars-v4`, `bdwgc`) and build the Boehm Garbage Collector shared library:
 ```bash
-cd bdwgc
-./autogen.sh
-./configure
-make -j$(nproc)
-cd ..
+./scripts/build_submodules.sh
+```
+Or build manually:
+```bash
+git submodule update --init --recursive
+cd bdwgc && ./autogen.sh && ./configure --enable-threads=posix --enable-shared --disable-static && make -j$(nproc) && cd ..
 ```
 
-### 2. Build the Go Transpiler CLI
+### Step 2: Build the `j2cpp-engine` Transpiler CLI
+Compile the Go transpiler CLI into a standalone binary:
 ```bash
 cd compiler-engine
 go build -o j2cpp-engine .
 cd ..
 ```
 
-### 3. Transpile Java Sources
+To run transpiler unit tests:
+```bash
+cd compiler-engine && go test -v ./... && cd ..
+```
+
+### Step 3: Transpile Java Source Code
+Run `j2cpp-engine` to parse Java source files and generate C++20 header (`.h`) and implementation (`.cpp`) files:
 ```bash
 ./compiler-engine/j2cpp-engine -src=/path/to/java/source -out=./output
 ```
+Command options:
+- `-src`: Directory containing input `.java` source files (required).
+- `-out`: Target directory where transpiled `.h` and `.cpp` files are emitted (required).
 
-### 4. Compile Native App
+### Step 4: Compile Native C++ Application
+Compile the emitted C++ files linking against `libjruntime` and Boehm GC:
 ```bash
-g++ -std=c++20 output/*.cpp -I./libjruntime -I./bdwgc/include -L./bdwgc/.libs -lgc -Wl,-rpath,./bdwgc/.libs -o native_app
+g++ -std=c++20 output/*.cpp \
+    -I./libjruntime \
+    -I./bdwgc/include \
+    -L./bdwgc/.libs \
+    -lgc \
+    -Wl,-rpath,./bdwgc/.libs \
+    -o native_app
+```
+
+Run the compiled native executable:
+```bash
+./native_app
+```
+
+### Step 5: End-to-End Validation
+Execute the automated end-to-end integration and native execution test harness:
+```bash
+./tests/e2e_test.sh
 ```

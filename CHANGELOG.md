@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.27
+- Enhanced `README.md` with comprehensive step-by-step documentation for building `j2cpp-engine`, submodule preparation scripts, CLI flags, native compilation, and end-to-end testing.
+- Bumped version to `1.0.27` in `VERSION`.
+
 ## 1.0.26
 - Created `libjruntime/Thread.h` implementing `java::lang::Runnable` and `java::lang::Thread` with multi-threading support.
 - Registered worker threads with Boehm GC using `GC_allow_register_threads()`, `GC_register_my_thread()`, and `GC_unregister_my_thread()` for safe GC tracking across threads.
