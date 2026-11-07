@@ -2,7 +2,7 @@
 
 ## Immediate Next Steps
 - [x] Add lambda expression syntax transpilation (`(a, b) -> expr`).
-- [ ] Implement method references (`Class::method`).
+- [x] Implement method references (`Class::method`, `expr::method`, `Class::new`).
 - [ ] Implement nested / inner classes and anonymous class support.
 
 ## Maintenance & Optimization

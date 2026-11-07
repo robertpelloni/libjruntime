@@ -1276,6 +1276,67 @@ func (v *CppTranspilerVisitor) VisitLambdaExpression(ctx *parser.LambdaExpressio
 	return ctx.GetText()
 }
 
+func (v *CppTranspilerVisitor) VisitMethodReferenceExpression(ctx *parser.MethodReferenceExpressionContext) interface{} {
+	// 1. Constructor reference: Type::new
+	if ctx.NEW() != nil {
+		rawType := ""
+		if ctx.TypeType() != nil {
+			rawType = ctx.TypeType().GetText()
+		} else if ctx.ClassType() != nil {
+			rawType = ctx.ClassType().GetText()
+		}
+		if rawType != "" {
+			v.included[rawType] = true
+			targetType := mapType(rawType)
+			targetType = strings.TrimSuffix(targetType, "*")
+			return fmt.Sprintf("[=](auto&&... args) { return java_new<%s>(std::forward<decltype(args)>(args)...); }", targetType)
+		}
+	}
+
+	// 2. Type method reference: Type::method
+	if (ctx.TypeType() != nil || ctx.ClassType() != nil) && ctx.Identifier() != nil {
+		rawType := ""
+		if ctx.TypeType() != nil {
+			rawType = ctx.TypeType().GetText()
+		} else if ctx.ClassType() != nil {
+			rawType = ctx.ClassType().GetText()
+		}
+		methodName := ctx.Identifier().GetText()
+		v.included[rawType] = true
+		targetType := mapType(rawType)
+		targetType = strings.TrimSuffix(targetType, "*")
+		return fmt.Sprintf("[=](auto&&... args) { return %s::%s(std::forward<decltype(args)>(args)...); }", targetType, methodName)
+	}
+
+	// 3. Instance or Expression-based method reference: expr::method
+	if ctx.Expression() != nil && ctx.Identifier() != nil {
+		exprRes := v.Visit(ctx.Expression())
+		exprStr := ""
+		if exprRes != nil {
+			exprStr = fmt.Sprintf("%v", exprRes)
+		} else {
+			exprStr = ctx.Expression().GetText()
+		}
+		methodName := ctx.Identifier().GetText()
+
+		// Check if exprStr is actually a class name (e.g. Math, Integer, or any PascalCase identifier)
+		if exprStr == "Math" {
+			return fmt.Sprintf("[=](auto&&... args) { return java::lang::Math::%s(std::forward<decltype(args)>(args)...); }", methodName)
+		}
+		if exprStr == "Integer" || exprStr == "Boolean" || exprStr == "Long" || exprStr == "Double" || exprStr == "Float" {
+			return fmt.Sprintf("[=](auto&&... args) { return java::lang::%s::%s(std::forward<decltype(args)>(args)...); }", exprStr, methodName)
+		}
+		if len(exprStr) > 0 && exprStr[0] >= 'A' && exprStr[0] <= 'Z' && !strings.Contains(exprStr, "->") && !strings.Contains(exprStr, "::") && !strings.Contains(exprStr, " ") {
+			v.included[exprStr] = true
+			return fmt.Sprintf("[=](auto&&... args) { return %s::%s(std::forward<decltype(args)>(args)...); }", exprStr, methodName)
+		}
+
+		return fmt.Sprintf("[=](auto&&... args) { return JAVA_NULL_CHECK(%s)->%s(std::forward<decltype(args)>(args)...); }", exprStr, methodName)
+	}
+
+	return ctx.GetText()
+}
+
 func (v *CppTranspilerVisitor) VisitSquareBracketExpression(ctx *parser.SquareBracketExpressionContext) interface{} {
 	exprs := ctx.AllExpression()
 	if len(exprs) == 2 {

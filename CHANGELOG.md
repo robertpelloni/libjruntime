@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.30
+- Implemented method reference syntax transpilation (`Type::method`, `expr::method`, `Type::new`) in `compiler-engine/visitor.go`.
+- Lowered method references into universal forwarding C++ lambda closures (`[=](auto&&... args) { ... }`).
+- Added unit test `TestTranspileMethodReference` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution test coverage for method references in `tests/e2e_test.sh`.
+- Bumped version to `1.0.30` in `VERSION`.
+
 ## 1.0.29
 - Added support for transpiling Java lambda expressions into C++20 lambda expressions (`[=](...) { ... }`).
 - Supported single and multi-parameter lambdas with explicit types and inferred (`auto`) types.

@@ -166,6 +166,30 @@ public class LambdaTest {
 	}
 }
 
+func TestTranspileMethodReference(t *testing.T) {
+	javaSrc := `
+public class MethodRefTest {
+    public void test() {
+        auto ctor = String::new;
+        auto staticRef = Math::max;
+        String s = new String("hello");
+        auto instRef = s::length;
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "java_new<java::lang::String>(std::forward<decltype(args)>(args)...)") {
+		t.Errorf("Expected constructor reference in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::lang::Math::max(std::forward<decltype(args)>(args)...)") {
+		t.Errorf("Expected static method reference in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(s)->length(std::forward<decltype(args)>(args)...)") {
+		t.Errorf("Expected instance method reference in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

@@ -58,3 +58,4 @@
 - `StringBuilder` maps to `java::lang::StringBuilder*` with internal dynamic resizing and `toString()` allocation via `java_new<String>`.
 - All native allocations must route through `java_new<T>` instead of raw `new` to remain visible to `bdwgc`.
 - Lambda expressions `(args) -> expr` / `(args) -> { ... }` map to C++20 lambda expressions `[=](params) { return expr; }` or `[=](params) { body; }` with explicit types or `auto` inferred parameters.
+- Method references `Type::method`, `expr::method`, and `Type::new` map to universal forwarding C++ lambda closures `[=](auto&&... args) { return ...; }`.

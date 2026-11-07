@@ -319,6 +319,11 @@ public class SampleApp {
         auto doubler = (int a) -> a * 2;
         return doubler(incrementer(input));
     }
+
+    public int applyMethodRef(int a, int b) {
+        auto maxFn = Math::max;
+        return maxFn(a, b);
+    }
 }
 EOF
 
@@ -566,6 +571,10 @@ int main() {
     // Verify Lambda expression evaluation
     int32_t lambdaResult = defaultApp->applyLambda(10);
     assert(lambdaResult == 30); // (10 + 5) * 2 = 30
+
+    // Verify Method reference evaluation
+    int32_t methodRefResult = defaultApp->applyMethodRef(42, 99);
+    assert(methodRefResult == 99);
 
     // Verify array creation and indexing
     java::lang::Array<int32_t>* numbers = defaultApp->createArray(4);
