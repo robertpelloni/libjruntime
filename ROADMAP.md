@@ -25,6 +25,7 @@
 - [x] Ternary expressions (`cond ? a : b`).
 
 - [x] Constructor chaining (`this(...)`, `super(...)`) and C++ member initializer lowering.
+- [x] Explicit `throw` statements and parameterized exception constructor overloads.
 
 ## Milestone 2: Language Completeness (v1.1.0)
 - [ ] Field default initializers in generated constructors.

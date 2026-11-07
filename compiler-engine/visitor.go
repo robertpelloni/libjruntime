@@ -757,6 +757,21 @@ func (v *CppTranspilerVisitor) VisitStatement(ctx *parser.StatementContext) inte
         return nil
     }
 
+    // THROW statement
+    if ctx.THROW() != nil {
+        exprStr := ""
+        if ctx.Expression(0) != nil {
+            res := v.Visit(ctx.Expression(0))
+            if res != nil {
+                exprStr = fmt.Sprintf("%v", res)
+            } else {
+                exprStr = ctx.Expression(0).GetText()
+            }
+        }
+        v.cppCode.WriteString(fmt.Sprintf("    throw %s;\n", exprStr))
+        return nil
+    }
+
     if ctx.RETURN() != nil {
         v.cppCode.WriteString("    return")
         if ctx.Expression(0) != nil {
@@ -805,6 +820,12 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::lang::Boolean"
              } else if className == "Long" {
                  className = "java::lang::Long"
+             } else if className == "Exception" {
+                 className = "java::lang::Exception"
+             } else if className == "NullPointerException" {
+                 className = "java::lang::NullPointerException"
+             } else if className == "ArrayIndexOutOfBoundsException" {
+                 className = "java::lang::ArrayIndexOutOfBoundsException"
              } else if className == "ArrayList" || className == "ArrayList<>" {
                  className = "java::util::ArrayList<java::lang::Object*>"
              } else if strings.HasPrefix(className, "ArrayList<") && strings.HasSuffix(className, ">") {

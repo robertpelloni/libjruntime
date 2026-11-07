@@ -36,6 +36,7 @@
 - Enhanced for-each loops `for (Type x : iterable)` map to `for (Type x : *JAVA_NULL_CHECK(iterable))` leveraging C++ `begin()`/`end()` pointer ranges on `Array<T>` and `ArrayList<T>`.
 - Constructor chaining `this(...)` and `super(...)` inside constructor bodies translate into C++ constructor member initializer lists (`: Sibling(args)` or `: Super(args)`) and are omitted from the constructor body.
 - Ternary expressions map via `VisitTernaryExpression` to `cond ? thenVal : elseVal` with parenthesized group preservation.
+- `throw` statements map via `VisitStatement` to `throw expr;` with `Exception(String*)` constructor support in `Exceptions.h`.
 - `switch` statements map to C++ `switch (expr) { case ...: default: ... }` with `break;` and `continue;` statement support.
 - Unary expressions map via `VisitUnaryOperatorExpression` with prefix operators (`-`, `+`, `!`, `~`).
 - `instanceof` expressions map to `(dynamic_cast<TargetType*>(expr) != nullptr)`.

@@ -92,6 +92,12 @@ public class ListHelper {
         map.put("three", "3");
         return map;
     }
+
+    public static void checkPositive(int val) {
+        if (val < 0) {
+            throw new Exception("Value cannot be negative");
+        }
+    }
 }
 EOF
 
@@ -363,6 +369,16 @@ int main() {
     assert(vTwo->getStdString() == "2");
     assert(myMap->size() == 2);
     assert(!myMap->containsKey(kTwo));
+
+    // Verify throw statement and exception handling
+    bool customThrown = false;
+    try {
+        ListHelper::checkPositive(-42);
+    } catch (java::lang::Exception* e) {
+        customThrown = true;
+        assert(e != nullptr);
+    }
+    assert(customThrown);
 
     // Verify enhanced for-each loops over Array and ArrayList
     int32_t totalListItems = ListHelper::countListLength(myList);

@@ -6,6 +6,7 @@
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
 
 ## Maintenance & Optimization
+- [x] Implement `throw` statement lowering in `compiler-engine/visitor.go` and exception string constructors.
 - [x] Add constructor chaining (`this(...)`, `super(...)`) support in `VisitConstructorDeclaration` with C++ member initializer lists.
 - [x] Implement `java.util.HashMap` associative container in `libjruntime/HashMap.h` and visitor mappings.
 - [x] Add ternary operator (`condition ? a : b`) support in `VisitTernaryExpression`.

@@ -1,16 +1,16 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.21 - Constructor Chaining (`this(...)`, `super(...)`)
+## Milestone Reached: v1.0.22 - Explicit `throw` Statement & Parameterized Exceptions
 
-### What Was Accomplished in v1.0.21
-1. **Constructor Delegation & Chaining**:
-   - Tracked `currentSuper` class in `CppTranspilerVisitor`.
-   - In `VisitConstructorDeclaration`, detected leading `this(...)` (calling sibling constructor) or `super(...)` (calling superclass constructor) in constructor block statements.
-   - Extracted argument expressions and lowered them directly to C++ constructor member initializer list syntax (`: Sibling(args)` or `: Super(args)`).
-   - Omitted the explicit call statement from the C++ constructor body to prevent invalid or duplicate execution.
-2. **Verification**:
-   - Added unit test `TestTranspileConstructorChaining` in `compiler-engine/visitor_test.go`.
-   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime native constructor delegation (`Dog()` -> `Dog("Unknown Breed")` -> `Animal()`) with Boehm GC.
+### What Was Accomplished in v1.0.22
+1. **Throw Statement Transpilation**:
+   - Implemented `ctx.THROW()` in `VisitStatement` (`compiler-engine/visitor.go`) lowering `throw expr;`.
+   - Added exception class mappings (`Exception`, `NullPointerException`, `ArrayIndexOutOfBoundsException`) in `VisitObjectCreationExpression`.
+2. **Exception Runtime Constructor Support**:
+   - Extended `libjruntime/Exceptions.h` with constructor overloads taking `java::lang::String*` message arguments, converting them safely to `std::string message`.
+3. **Verification**:
+   - Added unit test `TestTranspileThrowStatement` in `compiler-engine/visitor_test.go`.
+   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime custom exception throwing and catching with Boehm GC.
    - All tests passing cleanly.
 
 ### Context for Successor Agents

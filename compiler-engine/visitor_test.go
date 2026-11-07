@@ -496,6 +496,23 @@ public class Person {
 	}
 }
 
+func TestTranspileThrowStatement(t *testing.T) {
+	javaSrc := `
+public class ThrowTest {
+    public void validate(int x) {
+        if (x < 0) {
+            throw new Exception("Negative value");
+        }
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "throw java_new<java::lang::Exception>(java_new<java::lang::String>(\"Negative value\"));") {
+		t.Errorf("Expected throw statement in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileTryCatchFinally(t *testing.T) {
 	javaSrc := `
 public class TryCatchTest {
