@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.26
+- Created `libjruntime/Thread.h` implementing `java::lang::Runnable` and `java::lang::Thread` with multi-threading support.
+- Registered worker threads with Boehm GC using `GC_allow_register_threads()`, `GC_register_my_thread()`, and `GC_unregister_my_thread()` for safe GC tracking across threads.
+- Implemented `start()`, `join()`, `run()`, `isAlive()`, and `Thread::sleep(millis)` methods.
+- Updated `compiler-engine/visitor.go` to map `Thread` and `Runnable` types, auto-include `Thread.h`, and support `implements Runnable`.
+- Added unit test `TestTranspileThreadAndRunnable` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime asynchronous worker thread execution with Boehm GC.
+
 ## 1.0.25
 - Implemented `synchronized` statement block transpilation (`synchronized (expr) { ... }`) lowering to `std::lock_guard<std::mutex> _java_sync_lock(*JAVA_NULL_CHECK(expr)->getMonitor());` using `Object` atomic monitor mutexes.
 - Implemented `synchronized` method modifier detection in `compiler-engine/visitor.go` injecting `this->getMonitor()` lock guards at the entry of synchronized methods.

@@ -91,6 +91,36 @@ public class TernaryTest {
 	}
 }
 
+func TestTranspileThreadAndRunnable(t *testing.T) {
+	javaSrc := `
+public class Worker implements Runnable {
+    public void run() {
+        int x = 1;
+    }
+
+    public void startThread() {
+        Thread t = new Thread(this);
+        t.start();
+        t.join();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Thread.h\"") {
+		t.Errorf("Expected #include \"Thread.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::lang::Thread* t = java_new<java::lang::Thread>(this);") {
+		t.Errorf("Expected Thread creation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(t)->start();") {
+		t.Errorf("Expected start call in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(t)->join();") {
+		t.Errorf("Expected join call in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSynchronized(t *testing.T) {
 	javaSrc := `
 public class SyncTest {

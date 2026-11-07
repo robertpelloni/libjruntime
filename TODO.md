@@ -1,10 +1,11 @@
 # TODO
 
 ## Immediate Next Steps
-- [ ] Implement concurrency primitives (`java.lang.Thread`, `Runnable`) in `libjruntime`.
 - [ ] Add continuous integration GitHub Actions workflow running `go test` and `tests/e2e_test.sh`.
+- [ ] Add lambda expression syntax transpilation (`(a, b) -> expr`).
 
 ## Maintenance & Optimization
+- [x] Implement concurrency primitives (`java.lang.Thread`, `Runnable`) in `libjruntime/Thread.h`.
 - [x] Implement `synchronized` block and method transpilation with `std::lock_guard` monitor locking.
 - [x] Implement extended wrapper classes (`Double`, `Float`) in `libjruntime/Boxes.h` and visitor mappings.
 - [x] Implement File I/O classes (`File`, `FileInputStream`, `FileOutputStream`) in `libjruntime/FileIO.h`.

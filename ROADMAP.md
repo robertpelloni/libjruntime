@@ -38,8 +38,10 @@
 
 - [x] `synchronized` block and method syntax translation backed by `Object` atomic monitor mutexes.
 
+- [x] Concurrency primitives (`Thread`, `Runnable`) in `libjruntime/Thread.h`.
+
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
-- [ ] Concurrency primitives (`Thread`, `Runnable`).
+- [ ] Functional interfaces and lambda expressions.
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
 - [ ] Real-time transpilation dashboard and interactive developer CLI tools.

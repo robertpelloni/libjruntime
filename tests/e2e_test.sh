@@ -28,6 +28,26 @@ public class Config {
 }
 EOF
 
+cat << 'EOF' > "${TEMP_DIR}/src/CounterTask.java"
+public class CounterTask implements Runnable {
+    int counter;
+
+    public CounterTask() {
+        this.counter = 0;
+    }
+
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            this.counter = this.counter + 1;
+        }
+    }
+
+    public int getCounter() {
+        return this.counter;
+    }
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/ListHelper.java"
 public class ListHelper {
     public static ArrayList createList() {
@@ -331,7 +351,9 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "ArrayList.h"
 #include "HashMap.h"
 #include "FileIO.h"
+#include "Thread.h"
 #include "ListHelper.h"
+#include "CounterTask.h"
 
 int main() {
     GC_INIT();
@@ -425,6 +447,15 @@ int main() {
     java::lang::Object* syncLock = java_new<java::lang::Object>();
     int32_t syncResult = ListHelper::syncExecution(syncLock);
     assert(syncResult == 42);
+
+    // Verify java.lang.Thread and Runnable execution with Boehm GC thread registration
+    CounterTask* task = java_new<CounterTask>();
+    java::lang::Thread* workerThread = java_new<java::lang::Thread>(task);
+    assert(!workerThread->isAlive());
+    workerThread->start();
+    workerThread->join();
+    assert(!workerThread->isAlive());
+    assert(task->getCounter() == 100);
 
     // Verify File and FileOutputStream / FileInputStream round-trip
     java::lang::String* tempFilePath = java_new<java::lang::String>("/tmp/j2cpp_test_io.txt");
