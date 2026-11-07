@@ -1,0 +1,6 @@
+[submodule "grammars-v4"]
+	path = grammars-v4
+	url = https://github.com/robertpelloni/grammars-v4
+[submodule "bdwgc"]
+	path = bdwgc
+	url = https://github.com/robertpelloni/bdwgc
