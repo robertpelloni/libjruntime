@@ -14,6 +14,7 @@
   - `Boxes.h`: Primitive wrapper types `java::lang::Integer`, `Boolean`, and `Long` with `valueOf`, unboxing methods, `equals`, `hashCode`, and `toString`.
   - `ArrayList.h`: Dynamic collection `java::util::ArrayList<T>` with GC-backed growth, add, get, set, remove, size, isEmpty, clear, and bounds checking.
   - `HashMap.h`: Key-value associative container `java::util::HashMap<K, V>` with dynamic rehashing, Object equals/hashCode dispatch, put, get, containsKey, remove, size, isEmpty, and clear.
+  - `FileIO.h`: File I/O primitives `java::io::File`, `java::io::FileInputStream`, and `java::io::FileOutputStream` backed by standard POSIX/C streams.
   - `System.h`: Standard I/O output stream wrapper (`PrintStream`) backing `java::lang::System::out`.
   - `GC.h`: Memory allocation via `GC_MALLOC` wrapped in `java_new<T>()`.
   - `Exceptions.h`: Native exception types `Exception`, `NullPointerException`, and `ArrayIndexOutOfBoundsException`.
@@ -33,6 +34,7 @@
 - Primitive wrappers `Integer`, `Boolean`, and `Long` map to `java::lang::Integer*`, `java::lang::Boolean*`, `java::lang::Long*`, auto-including `Boxes.h`.
 - Collections like `ArrayList` and `ArrayList<T>` map to `java::util::ArrayList<mappedT>*` with auto-inclusion of `ArrayList.h`.
 - `HashMap` and `HashMap<K, V>` map to `java::util::HashMap<mappedK, mappedV>*` with auto-inclusion of `HashMap.h`.
+- File I/O classes (`File`, `FileInputStream`, `FileOutputStream`) map to `java::io::*` with auto-inclusion of `FileIO.h`.
 - Enhanced for-each loops `for (Type x : iterable)` map to `for (Type x : *JAVA_NULL_CHECK(iterable))` leveraging C++ `begin()`/`end()` pointer ranges on `Array<T>` and `ArrayList<T>`.
 - Constructor chaining `this(...)` and `super(...)` inside constructor bodies translate into C++ constructor member initializer lists (`: Sibling(args)` or `: Super(args)`) and are omitted from the constructor body.
 - Ternary expressions map via `VisitTernaryExpression` to `cond ? thenVal : elseVal` with parenthesized group preservation.

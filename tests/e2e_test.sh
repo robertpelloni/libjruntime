@@ -98,6 +98,22 @@ public class ListHelper {
             throw new Exception("Value cannot be negative");
         }
     }
+
+    public static int testFileRoundTrip(String filepath) {
+        File file = new File(filepath);
+        FileOutputStream out = new FileOutputStream(file);
+        out.write(72);
+        out.write(105);
+        out.close();
+
+        FileInputStream in = new FileInputStream(file);
+        int b1 = in.read();
+        int b2 = in.read();
+        in.close();
+
+        file.deleteFile();
+        return b1 + b2;
+    }
 }
 EOF
 
@@ -290,6 +306,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "Boxes.h"
 #include "ArrayList.h"
 #include "HashMap.h"
+#include "FileIO.h"
 #include "ListHelper.h"
 
 int main() {
@@ -379,6 +396,11 @@ int main() {
         assert(e != nullptr);
     }
     assert(customThrown);
+
+    // Verify File and FileOutputStream / FileInputStream round-trip
+    java::lang::String* tempFilePath = java_new<java::lang::String>("/tmp/j2cpp_test_io.txt");
+    int32_t byteSum = ListHelper::testFileRoundTrip(tempFilePath);
+    assert(byteSum == 72 + 105); // 'H' (72) + 'i' (105) = 177
 
     // Verify enhanced for-each loops over Array and ArrayList
     int32_t totalListItems = ListHelper::countListLength(myList);

@@ -180,6 +180,43 @@ public class ForEachTest {
 	}
 }
 
+func TestTranspileFileIO(t *testing.T) {
+	javaSrc := `
+public class IOTest {
+    public void testFile(String path) {
+        File f = new File(path);
+        boolean exists = f.exists();
+        FileOutputStream out = new FileOutputStream(f);
+        out.write(65);
+        out.close();
+        FileInputStream in = new FileInputStream(f);
+        int b = in.read();
+        in.close();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"FileIO.h\"") {
+		t.Errorf("Expected #include \"FileIO.h\" in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::io::File* f = java_new<java::io::File>(path);") {
+		t.Errorf("Expected File creation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::io::FileOutputStream* out = java_new<java::io::FileOutputStream>(f);") {
+		t.Errorf("Expected FileOutputStream creation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::io::FileInputStream* in = java_new<java::io::FileInputStream>(f);") {
+		t.Errorf("Expected FileInputStream creation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(out)->write(65);") {
+		t.Errorf("Expected write call in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(in)->read();") {
+		t.Errorf("Expected read call in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileHashMap(t *testing.T) {
 	javaSrc := `
 public class MapTest {

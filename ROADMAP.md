@@ -32,8 +32,9 @@
 
 - [x] Key-value associative container: `java.util.HashMap<K, V>` in `libjruntime/HashMap.h`.
 
+- [x] File I/O primitives (`File`, `FileInputStream`, `FileOutputStream`) in `libjruntime/FileIO.h`.
+
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
-- [ ] File I/O (`FileInputStream`, `FileOutputStream`, `File`).
 - [ ] Extended wrapper classes (`Double`, `Float`, `Byte`, `Short`, `Character`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

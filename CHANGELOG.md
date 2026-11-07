@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.23
+- Created `libjruntime/FileIO.h` implementing `java::io::File`, `java::io::FileInputStream`, and `java::io::FileOutputStream` backed by standard C/POSIX file streams and Boehm GC.
+- Updated `compiler-engine/visitor.go` to support `byte` (`int8_t`), `byte[]` (`Array<int8_t>*`), and File I/O types (`File`, `FileInputStream`, `FileOutputStream`) with automatic inclusion of `FileIO.h`.
+- Added unit test `TestTranspileFileIO` in `compiler-engine/visitor_test.go`.
+- Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime file creation, byte writing, byte reading, and file deletion.
+
 ## 1.0.22
 - Implemented `throw` statement transpilation (`throw expr;`) in `compiler-engine/visitor.go`.
 - Added constructor overloads in `libjruntime/Exceptions.h` accepting `java::lang::String*` message arguments across `Exception`, `NullPointerException`, and `ArrayIndexOutOfBoundsException`.
