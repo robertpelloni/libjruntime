@@ -139,6 +139,14 @@ public class ListHelper {
         Collections.sort(list);
     }
 
+    public static LinkedList createLinkedList() {
+        LinkedList ll = new LinkedList();
+        ll.add("Head");
+        ll.add("Middle");
+        ll.add("Tail");
+        return ll;
+    }
+
     public static int syncExecution(Object lock) {
         int count = 0;
         synchronized (lock) {
@@ -453,6 +461,26 @@ int main() {
     java::lang::String* elem1 = dynamic_cast<java::lang::String*>(myList->get(1));
     assert(elem1 != nullptr);
     assert(elem1->getStdString() == "Second");
+
+    // Test LinkedList functionality
+    java::util::LinkedList<java::lang::Object*>* myLinkedList = ListHelper::createLinkedList();
+    assert(myLinkedList != nullptr);
+    assert(myLinkedList->size() == 3);
+    assert(!myLinkedList->isEmpty());
+
+    java::lang::String* llHead = dynamic_cast<java::lang::String*>(myLinkedList->getFirst());
+    assert(llHead != nullptr && llHead->getStdString() == "Head");
+
+    java::lang::String* llTail = dynamic_cast<java::lang::String*>(myLinkedList->getLast());
+    assert(llTail != nullptr && llTail->getStdString() == "Tail");
+
+    myLinkedList->addFirst(java_new<java::lang::String>("NewHead"));
+    assert(myLinkedList->size() == 4);
+    assert(dynamic_cast<java::lang::String*>(myLinkedList->getFirst())->getStdString() == "NewHead");
+
+    java::lang::String* popped = dynamic_cast<java::lang::String*>(myLinkedList->removeFirst());
+    assert(popped != nullptr && popped->getStdString() == "NewHead");
+    assert(myLinkedList->size() == 3);
 
     java::lang::Object* removed = myList->remove(1);
     assert(removed == elem1);

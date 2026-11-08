@@ -67,3 +67,4 @@
 - Set collection `HashSet<E>` is implemented in `libjruntime/HashSet.h` backed by `HashMap<E, Object*>` for O(1) membership operations and a dynamic flat array for enhanced for-each iteration (`begin()`, `end()`).
 - Embedded interactive web dashboard studio is built into `compiler-engine` via `-dashboard` (defaulting to port 8080) with HTTP API endpoints `/api/transpile` and `/api/status`, providing real-time side-by-side Java to C++ transpilation in the browser.
 - Collection algorithms utility `java::util::Collections` is implemented in `libjruntime/Collections.h` with `sort`, `reverse`, `shuffle`, `min`, `max`, `fill`, and `frequency` operating on `ArrayList<T>*`.
+- Sequential and deque container `LinkedList<T>` is implemented in `libjruntime/LinkedList.h` via `java::util::LinkedList<T>` backed by doubly linked GC-managed nodes with `addFirst`, `addLast`, `getFirst`, `getLast`, `removeFirst`, `removeLast`, and range iterators.

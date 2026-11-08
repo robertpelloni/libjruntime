@@ -944,3 +944,31 @@ public class CollectionsTest {
 		t.Errorf("Expected Collections::fill in cpp, got:\n%s", cpp)
 	}
 }
+
+func TestTranspileLinkedList(t *testing.T) {
+	javaSrc := `
+public class ListQueueTest {
+    public void process() {
+        LinkedList<String> queue = new LinkedList<String>();
+        queue.addFirst("front");
+        queue.addLast("back");
+        String f = queue.getFirst();
+        String b = queue.removeLast();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"LinkedList.h\"") {
+		t.Errorf("Expected LinkedList.h include in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::util::LinkedList<java::lang::String*>* queue = java_new<java::util::LinkedList<java::lang::String*>>();") {
+		t.Errorf("Expected LinkedList allocation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(queue)->addFirst(") {
+		t.Errorf("Expected addFirst call in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(queue)->removeLast()") {
+		t.Errorf("Expected removeLast call in cpp, got:\n%s", cpp)
+	}
+}

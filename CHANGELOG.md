@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.40
+- Implemented `libjruntime/LinkedList.h` providing `java::util::LinkedList<T>`:
+  - Backed by doubly linked nodes allocated with `GC_MALLOC`.
+  - Sequential, queue, and deque methods: `add`, `addFirst`, `addLast`, `get`, `getFirst`, `getLast`, `remove`, `removeFirst`, `removeLast`, `size`, `isEmpty`, `clear`, `contains`.
+  - Forward range-based iterator support (`begin()`, `end()`).
+- Updated `compiler-engine/visitor.go` type mappings and header includes for `LinkedList<T>`.
+- Added unit test `TestTranspileLinkedList` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration test coverage for `LinkedList` in `tests/e2e_test.sh`.
+- Bumped version to `1.0.40` in `VERSION`.
+
 ## 1.0.39
 - Implemented `libjruntime/Collections.h` providing standard `java::util::Collections` algorithms:
   - `sort(ArrayList<T>*)` using `std::sort`.
