@@ -997,3 +997,22 @@ public class DefaultFields {
 		t.Errorf("Expected default nullptr initializer for label, got:\n%s", header)
 	}
 }
+
+func TestTranspileCharacterAndByteWrappers(t *testing.T) {
+	javaSrc := `
+public class CharByteTest {
+    public void run() {
+        Byte b = Byte.valueOf((byte) 65);
+        Character c = Character.valueOf('A');
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "java::lang::Byte::valueOf(") {
+		t.Errorf("Expected Byte::valueOf call in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::lang::Character::valueOf(") {
+		t.Errorf("Expected Character::valueOf call in cpp, got:\n%s", cpp)
+	}
+}

@@ -194,5 +194,69 @@ public:
     }
 };
 
+class Byte : public Object {
+private:
+    int8_t value;
+
+public:
+    Byte(int8_t val) : value(val) {}
+
+    static Byte* valueOf(int8_t val) {
+        return java_new<Byte>(val);
+    }
+
+    int8_t byteValue() const {
+        return value;
+    }
+
+    int32_t intValue() const {
+        return static_cast<int32_t>(value);
+    }
+
+    virtual int hashCode() override {
+        return static_cast<int>(value);
+    }
+
+    virtual bool equals(Object* obj) override {
+        Byte* other = dynamic_cast<Byte*>(obj);
+        if (other == nullptr) return false;
+        return this->value == other->value;
+    }
+
+    virtual String* toString() override {
+        return java_new<String>(std::to_string(static_cast<int32_t>(value)));
+    }
+};
+
+class Character : public Object {
+private:
+    char16_t value;
+
+public:
+    Character(char16_t val) : value(val) {}
+
+    static Character* valueOf(char16_t val) {
+        return java_new<Character>(val);
+    }
+
+    char16_t charValue() const {
+        return value;
+    }
+
+    virtual int hashCode() override {
+        return static_cast<int>(value);
+    }
+
+    virtual bool equals(Object* obj) override {
+        Character* other = dynamic_cast<Character*>(obj);
+        if (other == nullptr) return false;
+        return this->value == other->value;
+    }
+
+    virtual String* toString() override {
+        return java_new<String>(std::string(1, static_cast<char>(value)));
+    }
+};
+
 } // namespace lang
 } // namespace java

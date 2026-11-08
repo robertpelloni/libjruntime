@@ -213,6 +213,22 @@ public class BoxHelper {
     public static float unboxFloat(Float boxed) {
         return boxed.floatValue();
     }
+
+    public static Byte boxByte(byte val) {
+        return Byte.valueOf(val);
+    }
+
+    public static byte unboxByte(Byte boxed) {
+        return boxed.byteValue();
+    }
+
+    public static Character boxChar(char val) {
+        return Character.valueOf(val);
+    }
+
+    public static char unboxChar(Character boxed) {
+        return boxed.charValue();
+    }
 }
 EOF
 
@@ -606,6 +622,14 @@ int main() {
     assert(boxedF != nullptr);
     assert(BoxHelper::unboxFloat(boxedF) == 2.5f);
     assert(boxedF->intValue() == 2);
+
+    java::lang::Byte* boxedB = BoxHelper::boxByte((int8_t)65);
+    assert(boxedB != nullptr);
+    assert(BoxHelper::unboxByte(boxedB) == 65);
+
+    java::lang::Character* boxedC = BoxHelper::boxChar('Z');
+    assert(boxedC != nullptr);
+    assert(BoxHelper::unboxChar(boxedC) == 'Z');
 
     // Verify inheritance, polymorphism, and virtual method override
     // Verify constructor chaining with super() and this(...)

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.44
+- Implemented `Byte` and `Character` primitive wrapper classes in `libjruntime/Boxes.h`:
+  - `Byte`: wrapping `int8_t` with `valueOf`, `byteValue`, `intValue`, `hashCode`, `equals`, and `toString`.
+  - `Character`: wrapping `char16_t` with `valueOf`, `charValue`, `hashCode`, `equals`, and `toString`.
+- Updated `compiler-engine/visitor.go` type mappings, built-in types, static method call routing, and method references for `Byte` and `Character`.
+- Added unit test `TestTranspileCharacterAndByteWrappers` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution tests in `tests/e2e_test.sh`.
+- Bumped version to `1.0.44` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.43
 - Created `SUBMODULES.md` providing an in-depth integration guide for:
   - `bdwgc`: Autotools configuration, POSIX thread flags (`--enable-threads=posix`), dynamic linking (`libgc.so`), memory allocation wrappers (`GC_MALLOC`), and thread stack registration (`GC_register_my_thread`).

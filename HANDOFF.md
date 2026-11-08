@@ -1,15 +1,21 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.43 - Submodule Integration Deep Dive (`SUBMODULES.md`)
+## Milestone Reached: v1.0.44 - Primitive Wrapper Expansion (`Byte`, `Character`)
 
-### What Was Accomplished in v1.0.43
-1. **Submodule Architecture & Integration Guide (`SUBMODULES.md`)**:
-   - Analyzed and documented `bdwgc` (Autotools build, `--enable-threads=posix` signal handlers, shared library dynamic linking, `GC_MALLOC`, `GC_register_my_thread`, and incremental collection possibilities).
-   - Analyzed and documented `grammars-v4` (lexer/parser G4 specifications, Go parser code generation, AST lowerings in `visitor.go`, receiver predicate normalization, and future grammar evolutions like records and pattern matching).
-2. **Comprehensive Verification**:
+### What Was Accomplished in v1.0.44
+1. **Byte and Character Wrappers (`libjruntime/Boxes.h`)**:
+   - Implemented `java::lang::Byte` wrapping `int8_t` with `valueOf(int8_t)`, `byteValue()`, `intValue()`, `hashCode()`, `equals()`, and `toString()`.
+   - Implemented `java::lang::Character` wrapping `char16_t` with `valueOf(char16_t)`, `charValue()`, `hashCode()`, `equals()`, and `toString()`.
+2. **Visitor & Type Mappings (`compiler-engine/visitor.go`)**:
+   - Added `Byte` and `Character` to type mappings (`java::lang::Byte*`, `java::lang::Character*`).
+   - Added `Byte` and `Character` to built-in types to avoid incorrect local header imports.
+   - Handled static call routing (`Byte.valueOf(...)`, `Character.valueOf(...)`) and method references.
+3. **Comprehensive Verification**:
+   - Added unit test `TestTranspileCharacterAndByteWrappers` in `compiler-engine/visitor_test.go`.
+   - Added boxing/unboxing tests and assertions in `tests/e2e_test.sh`.
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
-3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.43`.
+4. **Workspace Governance**:
+   - Bumped `VERSION` to `1.0.44`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

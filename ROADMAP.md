@@ -34,7 +34,7 @@
 
 - [x] File I/O primitives (`File`, `FileInputStream`, `FileOutputStream`) in `libjruntime/FileIO.h`.
 
-- [x] Extended wrapper classes (`Double`, `Float`) in `libjruntime/Boxes.h`.
+- [x] Extended wrapper classes (`Double`, `Float`, `Byte`, `Character`) in `libjruntime/Boxes.h`.
 
 - [x] `synchronized` block and method syntax translation backed by `Object` atomic monitor mutexes.
 

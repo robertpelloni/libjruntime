@@ -144,6 +144,10 @@ func mapType(javaType string) string {
 		return "java::lang::Double*"
 	case "Float":
 		return "java::lang::Float*"
+	case "Byte":
+		return "java::lang::Byte*"
+	case "Character":
+		return "java::lang::Character*"
 	case "ArrayList":
 		return "java::util::ArrayList<java::lang::Object*>*"
 	case "LinkedList":
@@ -272,7 +276,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
-		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "ArrayList": true, "LinkedList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true, "Function": true, "Consumer": true, "Supplier": true, "Predicate": true, "Stream": true, "Class": true, "Optional": true, "HashSet": true, "Set": true, "Collections": true,
+		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "Byte": true, "Character": true, "ArrayList": true, "LinkedList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true, "Function": true, "Consumer": true, "Supplier": true, "Predicate": true, "Stream": true, "Class": true, "Optional": true, "HashSet": true, "Set": true, "Collections": true,
 	}
 
 	for inc := range v.included {
@@ -1036,6 +1040,10 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::lang::Double"
              } else if className == "Float" {
                  className = "java::lang::Float"
+             } else if className == "Byte" {
+                 className = "java::lang::Byte"
+             } else if className == "Character" {
+                 className = "java::lang::Character"
              } else if className == "Exception" {
                  className = "java::lang::Exception"
              } else if className == "NullPointerException" {
@@ -1137,7 +1145,7 @@ func (v *CppTranspilerVisitor) VisitMethodCallExpression(ctx *parser.MethodCallE
                      methodCallRes = ctx.MethodCall().GetText()
                  }
                  objStr := fmt.Sprintf("%v", objRes)
-                 if objStr == "Integer" || objStr == "Boolean" || objStr == "Long" || objStr == "Double" || objStr == "Float" {
+                 if objStr == "Integer" || objStr == "Boolean" || objStr == "Long" || objStr == "Double" || objStr == "Float" || objStr == "Byte" || objStr == "Character" {
                      return fmt.Sprintf("java::lang::%s::%v", objStr, methodCallRes)
                  }
                  if objStr == "Math" {
@@ -1199,6 +1207,17 @@ func (v *CppTranspilerVisitor) VisitMemberReferenceExpression(ctx *parser.Member
                          methodCallRes = ctx.MethodCall().GetText()
                      }
                      return fmt.Sprintf("java::util::Collections::%v", methodCallRes)
+                 }
+             }
+             if objStr == "Integer" || objStr == "Boolean" || objStr == "Long" || objStr == "Double" || objStr == "Float" || objStr == "Byte" || objStr == "Character" {
+                 if ctx.Identifier() != nil {
+                     return fmt.Sprintf("java::lang::%s::%v", objStr, ctx.Identifier().GetText())
+                 } else if ctx.MethodCall() != nil {
+                     methodCallRes := v.Visit(ctx.MethodCall())
+                     if methodCallRes == nil {
+                         methodCallRes = ctx.MethodCall().GetText()
+                     }
+                     return fmt.Sprintf("java::lang::%s::%v", objStr, methodCallRes)
                  }
              }
              isClass := len(objStr) > 0 && objStr[0] >= 'A' && objStr[0] <= 'Z' && !strings.Contains(objStr, "->") && !strings.Contains(objStr, "::")
@@ -1503,7 +1522,7 @@ func (v *CppTranspilerVisitor) VisitMethodReferenceExpression(ctx *parser.Method
 		if exprStr == "Math" {
 			return fmt.Sprintf("[=](auto&&... args) { return java::lang::Math::%s(std::forward<decltype(args)>(args)...); }", methodName)
 		}
-		if exprStr == "Integer" || exprStr == "Boolean" || exprStr == "Long" || exprStr == "Double" || exprStr == "Float" {
+		if exprStr == "Integer" || exprStr == "Boolean" || exprStr == "Long" || exprStr == "Double" || exprStr == "Float" || exprStr == "Byte" || exprStr == "Character" {
 			return fmt.Sprintf("[=](auto&&... args) { return java::lang::%s::%s(std::forward<decltype(args)>(args)...); }", exprStr, methodName)
 		}
 		if len(exprStr) > 0 && exprStr[0] >= 'A' && exprStr[0] <= 'Z' && !strings.Contains(exprStr, "->") && !strings.Contains(exprStr, "::") && !strings.Contains(exprStr, " ") {
