@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.43
+- Created `SUBMODULES.md` providing an in-depth integration guide for:
+  - `bdwgc`: Autotools configuration, POSIX thread flags (`--enable-threads=posix`), dynamic linking (`libgc.so`), memory allocation wrappers (`GC_MALLOC`), and thread stack registration (`GC_register_my_thread`).
+  - `grammars-v4`: Java lexical/syntactic specifications (`JavaLexer.g4`, `JavaParser.g4`), Go parser code generation, AST lowerings, and future expansion paths.
+- Referenced `SUBMODULES.md` in `README.md`.
+- Bumped version to `1.0.43` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.42
 - Implemented automatic Java field default initializers in `compiler-engine/visitor.go`:
   - `bool` initialized to `false`.

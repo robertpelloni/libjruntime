@@ -1,21 +1,16 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.42 - Field Default Initializers
+## Milestone Reached: v1.0.43 - Submodule Integration Deep Dive (`SUBMODULES.md`)
 
-### What Was Accomplished in v1.0.42
-1. **Deterministic Field Default Initializers (`compiler-engine/visitor.go`)**:
-   - Synthesized default values for uninitialized instance and static fields according to the Java Language Specification:
-     - `bool`: `false`
-     - Integer/Character types (`int32_t`, `int64_t`, `int8_t`, `int16_t`, `char16_t`): `0`
-     - Floating point types (`float`, `double`): `0.0f` and `0.0`
-     - Pointer/Reference types (`*`): `nullptr`
+### What Was Accomplished in v1.0.43
+1. **Submodule Architecture & Integration Guide (`SUBMODULES.md`)**:
+   - Analyzed and documented `bdwgc` (Autotools build, `--enable-threads=posix` signal handlers, shared library dynamic linking, `GC_MALLOC`, `GC_register_my_thread`, and incremental collection possibilities).
+   - Analyzed and documented `grammars-v4` (lexer/parser G4 specifications, Go parser code generation, AST lowerings in `visitor.go`, receiver predicate normalization, and future grammar evolutions like records and pattern matching).
 2. **Comprehensive Verification**:
-   - Added unit test `TestTranspileFieldDefaultInitializers` in `compiler-engine/visitor_test.go`.
-   - Added `UninitializedProbe` test class and verification in `tests/e2e_test.sh`.
-   - Ran `go test -v -race ./...` and `tests/e2e_test.sh` with 100% pass rate.
+   - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.42`.
-   - Updated `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
+   - Bumped `VERSION` to `1.0.43`.
+   - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
 - Project compiles clean with Go and modern C++20.
