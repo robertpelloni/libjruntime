@@ -66,3 +66,4 @@
 - Container abstraction `Optional<T>` is implemented in `libjruntime/Optional.h` with static factories `of`, `ofNullable`, `empty`, predicates `isPresent`, `isEmpty`, accessors `get`, `orElse`, and transformations `map`, `filter`.
 - Set collection `HashSet<E>` is implemented in `libjruntime/HashSet.h` backed by `HashMap<E, Object*>` for O(1) membership operations and a dynamic flat array for enhanced for-each iteration (`begin()`, `end()`).
 - Embedded interactive web dashboard studio is built into `compiler-engine` via `-dashboard` (defaulting to port 8080) with HTTP API endpoints `/api/transpile` and `/api/status`, providing real-time side-by-side Java to C++ transpilation in the browser.
+- Collection algorithms utility `java::util::Collections` is implemented in `libjruntime/Collections.h` with `sort`, `reverse`, `shuffle`, `min`, `max`, `fill`, and `frequency` operating on `ArrayList<T>*`.

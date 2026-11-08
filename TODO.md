@@ -11,6 +11,7 @@
 - [x] Implement `java.util.Optional<T>` container in `libjruntime/Optional.h` and visitor mappings.
 - [x] Implement `java.util.HashSet<E>` in `libjruntime/HashSet.h` and visitor mappings.
 - [x] Implement live interactive web dashboard studio (`-dashboard`) in `compiler-engine/dashboard.go`.
+- [x] Implement `java.util.Collections` algorithm utility in `libjruntime/Collections.h` and visitor mappings.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

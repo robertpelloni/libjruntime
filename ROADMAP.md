@@ -50,6 +50,7 @@
 - [x] Reflection basics (`java.lang.Class<T>` runtime header and class literal transpilation).
 - [x] Container abstractions (`java.util.Optional<T>` runtime header and transpiler mappings).
 - [x] Set collections (`java.util.HashSet<E>` runtime header and transpiler mappings).
+- [x] Collection algorithms (`java.util.Collections` in `libjruntime/Collections.h` - `sort`, `reverse`, `shuffle`, `min`, `max`, `fill`, `frequency`).
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

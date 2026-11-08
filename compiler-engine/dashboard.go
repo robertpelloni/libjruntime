@@ -337,20 +337,33 @@ func handleTranspileSnippet(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func getProjectVersion() string {
+	for _, p := range []string{"../VERSION", "VERSION"} {
+		if data, err := os.ReadFile(p); err == nil {
+			v := strings.TrimSpace(string(data))
+			if v != "" {
+				return "v" + v
+			}
+		}
+	}
+	return "v1.0.39"
+}
+
 func handleStatus(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(StatusResponse{
-		Version: "v1.0.38",
+		Version: getProjectVersion(),
 		RuntimeHeaders: []string{
 			"Object.h", "String.h", "StringBuilder.h", "Array.h", "ArrayList.h",
-			"HashMap.h", "HashSet.h", "Boxes.h", "Math.h", "System.h",
+			"Collections.h", "HashMap.h", "HashSet.h", "Boxes.h", "Math.h", "System.h",
 			"Exceptions.h", "FinallyGuard.h", "Thread.h", "Functions.h",
 			"Stream.h", "Class.h", "Optional.h",
 		},
 		Features: []string{
 			"Class & Interface Inheritance", "Constructors & Chaining",
 			"Exception Handling (try-catch-finally)", "Lambdas & Method References",
-			"Streams & Functional Interfaces", "Reflection (Class<T>)", "Boehm GC (libgc)",
+			"Streams & Functional Interfaces", "Reflection (Class<T>)",
+			"Collections Algorithms (sort, reverse, etc.)", "Boehm GC (libgc)",
 		},
 	})
 }
@@ -359,7 +372,8 @@ func startDashboardServer(port int) error {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Write([]byte(dashboardHTML))
+		html := strings.ReplaceAll(dashboardHTML, "v1.0.38", getProjectVersion())
+		w.Write([]byte(html))
 	})
 	mux.HandleFunc("/api/transpile", handleTranspileSnippet)
 	mux.HandleFunc("/api/status", handleStatus)

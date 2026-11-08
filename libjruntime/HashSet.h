@@ -50,7 +50,7 @@ public:
         if (map->containsKey(element)) {
             return false;
         }
-        map->put(element, reinterpret_cast<::java::lang::Object*>(1));
+        map->put(element, nullptr);
         ensureCapacity(listSize + 1);
         elementList[listSize++] = element;
         return true;

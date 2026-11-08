@@ -918,3 +918,29 @@ public class FlowTest {
 		t.Errorf("Expected for loop in cpp, got:\n%s", cpp)
 	}
 }
+
+func TestTranspileCollections(t *testing.T) {
+	javaSrc := `
+public class CollectionsTest {
+    public void sortList(ArrayList<Integer> nums) {
+        Collections.sort(nums);
+        Collections.reverse(nums);
+        Collections.fill(nums, 0);
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Collections.h\"") {
+		t.Errorf("Expected Collections.h include in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::util::Collections::sort(nums);") {
+		t.Errorf("Expected Collections::sort in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::util::Collections::reverse(nums);") {
+		t.Errorf("Expected Collections::reverse in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::util::Collections::fill(nums, 0);") {
+		t.Errorf("Expected Collections::fill in cpp, got:\n%s", cpp)
+	}
+}

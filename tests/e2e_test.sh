@@ -135,6 +135,10 @@ public class ListHelper {
         return b1 + b2;
     }
 
+    public static void testCollections(ArrayList list) {
+        Collections.sort(list);
+    }
+
     public static int syncExecution(Object lock) {
         int count = 0;
         synchronized (lock) {
@@ -417,6 +421,34 @@ int main() {
     java::lang::String* elem0 = dynamic_cast<java::lang::String*>(myList->get(0));
     assert(elem0 != nullptr);
     assert(elem0->getStdString() == "First");
+
+    // Test Collections algorithms
+    java::util::ArrayList<int32_t>* sortList = java_new<java::util::ArrayList<int32_t>>();
+    sortList->add(40);
+    sortList->add(10);
+    sortList->add(50);
+    sortList->add(20);
+    sortList->add(30);
+
+    java::util::Collections::sort(sortList);
+    assert(sortList->get(0) == 10);
+    assert(sortList->get(1) == 20);
+    assert(sortList->get(2) == 30);
+    assert(sortList->get(3) == 40);
+    assert(sortList->get(4) == 50);
+
+    java::util::Collections::reverse(sortList);
+    assert(sortList->get(0) == 50);
+    assert(sortList->get(4) == 10);
+
+    assert(java::util::Collections::min(sortList) == 10);
+    assert(java::util::Collections::max(sortList) == 50);
+    assert(java::util::Collections::frequency(sortList, 30) == 1);
+
+    java::util::Collections::fill(sortList, 99);
+    assert(sortList->get(0) == 99);
+    assert(sortList->get(4) == 99);
+    assert(java::util::Collections::frequency(sortList, 99) == 5);
 
     java::lang::String* elem1 = dynamic_cast<java::lang::String*>(myList->get(1));
     assert(elem1 != nullptr);

@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.39
+- Implemented `libjruntime/Collections.h` providing standard `java::util::Collections` algorithms:
+  - `sort(ArrayList<T>*)` using `std::sort`.
+  - `sort(ArrayList<T>*, Compare)` with custom comparator lambda support.
+  - `reverse(ArrayList<T>*)` using `std::reverse`.
+  - `shuffle(ArrayList<T>*)` using pseudo-random swap shuffle.
+  - `min(ArrayList<T>*)` and `max(ArrayList<T>*)` elements with empty check safety.
+  - `fill(ArrayList<T>*, T)` element population.
+  - `frequency(ArrayList<T>*, T)` count calculation.
+- Integrated `Collections` into `compiler-engine/visitor.go` type mappings and header includes.
+- Added unit test `TestTranspileCollections` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration test coverage for `Collections` algorithms in `tests/e2e_test.sh`.
+- Bumped version to `1.0.39` in `VERSION`.
+
 ## 1.0.38
 - Implemented embedded interactive web dashboard studio in `compiler-engine`:
   - Added `-dashboard` and `-port` flags in `compiler-engine/main.go`.
