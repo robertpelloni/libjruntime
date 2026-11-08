@@ -229,6 +229,14 @@ public class BoxHelper {
     public static char unboxChar(Character boxed) {
         return boxed.charValue();
     }
+
+    public static Short boxShort(short val) {
+        return Short.valueOf(val);
+    }
+
+    public static short unboxShort(Short boxed) {
+        return boxed.shortValue();
+    }
 }
 EOF
 
@@ -630,6 +638,11 @@ int main() {
     java::lang::Character* boxedC = BoxHelper::boxChar('Z');
     assert(boxedC != nullptr);
     assert(BoxHelper::unboxChar(boxedC) == 'Z');
+
+    java::lang::Short* boxedS = BoxHelper::boxShort((int16_t)1234);
+    assert(boxedS != nullptr);
+    assert(BoxHelper::unboxShort(boxedS) == 1234);
+    assert(boxedS->intValue() == 1234);
 
     // Verify inheritance, polymorphism, and virtual method override
     // Verify constructor chaining with super() and this(...)

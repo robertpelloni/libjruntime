@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.46
+- Implemented `Short` primitive wrapper class in `libjruntime/Boxes.h`:
+  - Wrapping `int16_t` with `valueOf`, `shortValue`, `intValue`, `doubleValue`, `hashCode`, `equals`, and `toString`.
+- Updated `compiler-engine/visitor.go` type mappings, built-in types set, and static call routing for `Short`.
+- Added unit test `TestTranspileShortWrapper` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution tests in `tests/e2e_test.sh`.
+- Bumped version to `1.0.46` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.45
 - Created `compiler-engine/ARCHITECTURE.md` documenting the Go transpiler CLI internal blueprint:
   - ANTLR4 lexer and parser generation pipeline.

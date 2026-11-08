@@ -18,6 +18,7 @@
 - [x] Create dedicated submodule integration guide `SUBMODULES.md` covering `bdwgc` and `grammars-v4`.
 - [x] Implement `Byte` and `Character` wrapper types in `libjruntime/Boxes.h` and visitor mappings.
 - [x] Create `compiler-engine/ARCHITECTURE.md` blueprint guide.
+- [x] Implement `Short` wrapper type in `libjruntime/Boxes.h` and visitor mappings.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

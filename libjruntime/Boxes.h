@@ -258,5 +258,43 @@ public:
     }
 };
 
+class Short : public Object {
+private:
+    int16_t value;
+
+public:
+    Short(int16_t val) : value(val) {}
+
+    static Short* valueOf(int16_t val) {
+        return java_new<Short>(val);
+    }
+
+    int16_t shortValue() const {
+        return value;
+    }
+
+    int32_t intValue() const {
+        return static_cast<int32_t>(value);
+    }
+
+    double doubleValue() const {
+        return static_cast<double>(value);
+    }
+
+    virtual int hashCode() override {
+        return static_cast<int>(value);
+    }
+
+    virtual bool equals(Object* obj) override {
+        Short* other = dynamic_cast<Short*>(obj);
+        if (other == nullptr) return false;
+        return this->value == other->value;
+    }
+
+    virtual String* toString() override {
+        return java_new<String>(std::to_string(static_cast<int32_t>(value)));
+    }
+};
+
 } // namespace lang
 } // namespace java

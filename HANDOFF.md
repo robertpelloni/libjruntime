@@ -1,17 +1,21 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.45 - Compiler Engine Blueprint & Architecture Guide
+## Milestone Reached: v1.0.46 - Primitive Wrapper Completeness (`Short`)
 
-### What Was Accomplished in v1.0.45
-1. **Transpiler Architecture Guide (`compiler-engine/ARCHITECTURE.md`)**:
-   - Documented compiler pipeline from Java inputs, ANTLR4 lexer/parser processing, AST visitation to C++20 header/implementation file generation.
-   - Detailed `CppTranspilerVisitor` state management, symbol resolution, and AST lowering hooks.
-   - Outlined batch CLI execution and interactive Web Dashboard Studio IDE modes.
-2. **Comprehensive Verification**:
+### What Was Accomplished in v1.0.46
+1. **Short Wrapper Class (`libjruntime/Boxes.h`)**:
+   - Implemented `java::lang::Short` wrapping `int16_t` with `valueOf(int16_t)`, `shortValue()`, `intValue()`, `doubleValue()`, `hashCode()`, `equals(Object*)`, and `toString()`.
+2. **Visitor & Type Mappings (`compiler-engine/visitor.go`)**:
+   - Added `Short` to type mappings (`java::lang::Short*`).
+   - Added `Short` to built-in type set to prevent unnecessary local file `#include` statements.
+   - Handled static call routing (`Short.valueOf(...)`) and method reference forwarding lambdas.
+3. **Comprehensive Verification**:
+   - Added unit test `TestTranspileShortWrapper` in `compiler-engine/visitor_test.go`.
+   - Added boxing/unboxing tests and assertions in `tests/e2e_test.sh`.
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
-3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.45`.
-   - Updated `compiler-engine/dashboard.go`, `README.md`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
+4. **Workspace Governance**:
+   - Bumped `VERSION` to `1.0.46`.
+   - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
 - Project compiles clean with Go and modern C++20.

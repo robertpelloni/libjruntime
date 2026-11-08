@@ -1016,3 +1016,18 @@ public class CharByteTest {
 		t.Errorf("Expected Character::valueOf call in cpp, got:\n%s", cpp)
 	}
 }
+
+func TestTranspileShortWrapper(t *testing.T) {
+	javaSrc := `
+public class ShortTest {
+    public void run() {
+        Short s = Short.valueOf((short) 1234);
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "java::lang::Short::valueOf(") {
+		t.Errorf("Expected Short::valueOf call in cpp, got:\n%s", cpp)
+	}
+}

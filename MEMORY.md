@@ -11,7 +11,7 @@
   - `StringBuilder.h`: Mutable string builder backing `java::lang::StringBuilder` with chained appends.
   - `Array.h`: Standard array wrapper `java::lang::Array<T>` with length field, bounds checking, and `GC_MALLOC` buffer allocation.
   - `Math.h`: Mathematical functions (`abs`, `min`, `max`, `sqrt`, `pow`, etc.) and constants (`PI`, `E`).
-  - `Boxes.h`: Primitive wrapper types `java::lang::Integer`, `Boolean`, `Long`, `Double`, `Float`, `Byte`, and `Character` with `valueOf`, unboxing methods, `equals`, `hashCode`, and `toString`.
+  - `Boxes.h`: Primitive wrapper types `java::lang::Integer`, `Boolean`, `Long`, `Double`, `Float`, `Byte`, `Character`, and `Short` with `valueOf`, unboxing methods, `equals`, `hashCode`, and `toString`.
   - `ArrayList.h`: Dynamic collection `java::util::ArrayList<T>` with GC-backed growth, add, get, set, remove, size, isEmpty, clear, and bounds checking.
   - `HashMap.h`: Key-value associative container `java::util::HashMap<K, V>` with dynamic rehashing, Object equals/hashCode dispatch, put, get, containsKey, remove, size, isEmpty, and clear.
   - `FileIO.h`: File I/O primitives `java::io::File`, `java::io::FileInputStream`, and `java::io::FileOutputStream` backed by standard POSIX/C streams.
@@ -32,7 +32,7 @@
 ## Key Design Patterns & Invariants
 - Class transpilation produces two files per Java class: `<ClassName>.h` and `<ClassName>.cpp`.
 - `Math` calls map directly to `java::lang::Math::method` without allocating instances or checking null pointers.
-- Primitive wrappers `Integer`, `Boolean`, `Long`, `Double`, `Float`, `Byte`, and `Character` map to `java::lang::*` pointers, auto-including `Boxes.h`.
+- Primitive wrappers `Integer`, `Boolean`, `Long`, `Double`, `Float`, `Byte`, `Character`, and `Short` map to `java::lang::*` pointers, auto-including `Boxes.h`.
 - Collections like `ArrayList` and `ArrayList<T>` map to `java::util::ArrayList<mappedT>*` with auto-inclusion of `ArrayList.h`.
 - `HashMap` and `HashMap<K, V>` map to `java::util::HashMap<mappedK, mappedV>*` with auto-inclusion of `HashMap.h`.
 - File I/O classes (`File`, `FileInputStream`, `FileOutputStream`) map to `java::io::*` with auto-inclusion of `FileIO.h`.
