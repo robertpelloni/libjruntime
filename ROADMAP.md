@@ -45,6 +45,7 @@
 - [x] Method references (`Class::method`, `expr::method`, `Class::new`).
 - [x] Nested / inner classes and anonymous class support.
 - [x] Functional interfaces runtime headers (`libjruntime/Functions.h` - `Function`, `Consumer`, `Supplier`, `Predicate`).
+- [x] Stream API runtime headers (`libjruntime/Stream.h` - `java.util.stream.Stream<T>`).
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

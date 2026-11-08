@@ -220,6 +220,24 @@ public class FunctionalTest {
 	}
 }
 
+func TestTranspileStreamAPI(t *testing.T) {
+	javaSrc := `
+public class StreamTest {
+    public Stream<String> process(Stream<String> input) {
+        return input;
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "java::util::stream::Stream<java::lang::String*>* process(java::util::stream::Stream<java::lang::String*>* input)") {
+		t.Errorf("Expected Stream<String> in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "return input;") {
+		t.Errorf("Expected return input in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

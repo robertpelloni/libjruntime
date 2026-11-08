@@ -5,6 +5,7 @@
 - [x] Implement method references (`Class::method`, `expr::method`, `Class::new`).
 - [x] Implement nested / inner classes and anonymous class support.
 - [x] Implement functional interfaces (`java.util.function.*` - `Consumer`, `Supplier`, `Function`, `Predicate`) in `libjruntime/Functions.h`.
+- [x] Implement Stream API (`java.util.stream.Stream<T>`) in `libjruntime/Stream.h`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

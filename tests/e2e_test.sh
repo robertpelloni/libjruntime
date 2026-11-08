@@ -364,6 +364,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "FileIO.h"
 #include "Thread.h"
 #include "Functions.h"
+#include "Stream.h"
 #include "ListHelper.h"
 #include "CounterTask.h"
 
@@ -596,6 +597,29 @@ int main() {
         java::util::function::make_predicate<int32_t>([](int32_t x) { return x > 50; });
     assert(predicate->test(100) == true);
     assert(predicate->test(20) == false);
+
+    // Verify Stream pipeline: filter, map, limit, count, toList
+    java::util::ArrayList<int32_t>* intList = java_new<java::util::ArrayList<int32_t>>();
+    intList->add(1);
+    intList->add(2);
+    intList->add(3);
+    intList->add(4);
+    intList->add(5);
+    intList->add(6);
+
+    auto isEvenPred = java::util::function::make_predicate<int32_t>([](int32_t n) { return n % 2 == 0; });
+    auto timesTenFn = java::util::function::make_function<int32_t, int32_t>([](int32_t n) { return n * 10; });
+
+    java::util::stream::Stream<int32_t>* streamPipeline = intList->stream()
+        ->filter(isEvenPred)
+        ->map(timesTenFn)
+        ->limit(2);
+
+    assert(streamPipeline->count() == 2);
+    java::util::ArrayList<int32_t>* streamResult = streamPipeline->toList();
+    assert(streamResult->size() == 2);
+    assert(streamResult->get(0) == 20);
+    assert(streamResult->get(1) == 40);
 
     // Verify array creation and indexing
     java::lang::Array<int32_t>* numbers = defaultApp->createArray(4);

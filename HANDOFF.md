@@ -1,19 +1,19 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.32 - Functional Interfaces (`java.util.function.*`)
+## Milestone Reached: v1.0.33 - Stream API (`java.util.stream.Stream<T>`)
 
-### What Was Accomplished in v1.0.32
-1. **Functional Interfaces Runtime**:
-   - Created `libjruntime/Functions.h` implementing `java::util::function::Function<T, R>`, `Consumer<T>`, `Supplier<T>`, and `Predicate<T>`.
-   - Implemented GC-backed template adapters and factory functions (`make_function`, `make_consumer`, `make_supplier`, `make_predicate`) bridging C++ lambdas to Java functional interface pointers.
+### What Was Accomplished in v1.0.33
+1. **Stream API Implementation**:
+   - Created `libjruntime/Stream.h` implementing `java::util::stream::Stream<T>` with intermediate operations (`filter`, `map`, `limit`, `skip`) and terminal operations (`count`, `forEach`, `toList`).
+   - Implemented `ArrayList<T>::stream()` returning `Stream<T>*` allocated via `java_new`.
 2. **Transpiler Routing & Auto-Includes**:
-   - Updated `compiler-engine/visitor.go` type mappings to route parameterized and raw `Function`, `Consumer`, `Supplier`, and `Predicate` types to `java::util::function::*`.
-   - Automatically included `Functions.h` in all transpiled class and interface headers.
+   - Updated `compiler-engine/visitor.go` type mappings for `Stream<T>` routing to `java::util::stream::Stream<T>*`.
+   - Added `#include "Stream.h"` to all generated class and interface headers.
 3. **Comprehensive Verification**:
-   - Added unit test `TestTranspileFunctionalInterfaces` in `compiler-engine/visitor_test.go`.
-   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime functional interface invocation with Boehm GC.
+   - Added unit test `TestTranspileStreamAPI` in `compiler-engine/visitor_test.go`.
+   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting full runtime Stream pipeline execution with Boehm GC.
 4. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.32`.
+   - Bumped `VERSION` to `1.0.33`.
    - Updated `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
@@ -21,4 +21,4 @@
 - Runtime headers reside in `libjruntime/`.
 - Native executable tests link with `bdwgc/.libs/libgc.so` (`-lgc`).
 - Scripts for submodules and parser regeneration reside in `scripts/`.
-- Next roadmap milestones: Streams API (`java.util.stream.*`), default interface methods, reflection basics.
+- Next roadmap milestones: default interface methods, reflection basics, interactive dashboard studio.

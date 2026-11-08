@@ -10,6 +10,14 @@
 
 namespace java {
 namespace util {
+namespace stream {
+    template<typename T> class Stream;
+}
+}
+}
+
+namespace java {
+namespace util {
 
 template<typename T>
 class ArrayList : public ::java::lang::Object {
@@ -130,6 +138,8 @@ public:
     const T* end() const noexcept { return data + currentSize; }
     const T* cbegin() const noexcept { return data; }
     const T* cend() const noexcept { return data + currentSize; }
+
+    virtual ::java::util::stream::Stream<T>* stream();
 };
 
 } // namespace util

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.33
+- Created `libjruntime/Stream.h` implementing `java::util::stream::Stream<T>` with intermediate and terminal operations:
+  - `filter`, `map`, `limit`, `skip`, `count`, `forEach`, and `toList`.
+- Added `stream()` member function to `java::util::ArrayList<T>`.
+- Updated `compiler-engine/visitor.go` type mappings and header inclusions for `Stream`.
+- Added unit test `TestTranspileStreamAPI` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution test coverage for Stream pipelines in `tests/e2e_test.sh`.
+- Bumped version to `1.0.33` in `VERSION`.
+
 ## 1.0.32
 - Created `libjruntime/Functions.h` implementing core functional interfaces under `java::util::function`:
   - `Function<T, R>` with `R apply(T t)`

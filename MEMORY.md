@@ -60,3 +60,4 @@
 - Lambda expressions `(args) -> expr` / `(args) -> { ... }` map to C++20 lambda expressions `[=](params) { return expr; }` or `[=](params) { body; }` with explicit types or `auto` inferred parameters.
 - Method references `Type::method`, `expr::method`, and `Type::new` map to universal forwarding C++ lambda closures `[=](auto&&... args) { return ...; }`.
 - Functional interfaces (`Function<T, R>`, `Consumer<T>`, `Supplier<T>`, `Predicate<T>`) map to `java::util::function::*` templates in `libjruntime/Functions.h` with adapter helpers (`make_function`, `make_consumer`, `make_supplier`, `make_predicate`).
+- Stream API (`Stream<T>`) is implemented in `libjruntime/Stream.h` with lazy-compatible intermediate operations (`filter`, `map`, `limit`, `skip`) and terminal operations (`count`, `forEach`, `toList`), and `ArrayList<T>::stream()`.
