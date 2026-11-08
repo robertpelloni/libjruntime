@@ -6,6 +6,7 @@
 - [x] Implement nested / inner classes and anonymous class support.
 - [x] Implement functional interfaces (`java.util.function.*` - `Consumer`, `Supplier`, `Function`, `Predicate`) in `libjruntime/Functions.h`.
 - [x] Implement Stream API (`java.util.stream.Stream<T>`) in `libjruntime/Stream.h`.
+- [x] Implement default and static interface methods in `compiler-engine/visitor.go`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

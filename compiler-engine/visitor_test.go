@@ -238,6 +238,31 @@ public class StreamTest {
 	}
 }
 
+func TestTranspileDefaultInterfaceMethod(t *testing.T) {
+	javaSrc := `
+public interface Service {
+    int getMultiplier();
+    default int calculate(int val) {
+        return val * getMultiplier();
+    }
+    static int getVersion() {
+        return 42;
+    }
+}
+`
+	header, _ := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "virtual int32_t getMultiplier() = 0;") {
+		t.Errorf("Expected pure virtual method, got:\n%s", header)
+	}
+	if !strings.Contains(header, "virtual int32_t calculate(int32_t val) {") {
+		t.Errorf("Expected default method with body, got:\n%s", header)
+	}
+	if !strings.Contains(header, "static int32_t getVersion() {") {
+		t.Errorf("Expected static interface method with body, got:\n%s", header)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

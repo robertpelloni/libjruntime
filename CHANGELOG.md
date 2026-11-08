@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.34
+- Implemented default interface methods (`default ReturnType method(...) { ... }`) and static interface methods (`static ReturnType method(...) { ... }`) in `compiler-engine/visitor.go`.
+- Emitted inlined implementations in interface headers while preserving pure virtual declarations for abstract interface methods.
+- Added unit test `TestTranspileDefaultInterfaceMethod` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution test coverage for default and static interface methods in `tests/e2e_test.sh`.
+- Bumped version to `1.0.34` in `VERSION`.
+
 ## 1.0.33
 - Created `libjruntime/Stream.h` implementing `java::util::stream::Stream<T>` with intermediate and terminal operations:
   - `filter`, `map`, `limit`, `skip`, `count`, `forEach`, and `toList`.

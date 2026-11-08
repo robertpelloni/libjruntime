@@ -15,8 +15,8 @@ type CppTranspilerVisitor struct {
 	outDir               string
 	currentClass         string
 	currentSuper         string
-	headerCode           strings.Builder
-	cppCode              strings.Builder
+	headerCode           *strings.Builder
+	cppCode              *strings.Builder
 	included             map[string]bool
 	currentIsStatic      bool
 	currentIsSynchronized bool
@@ -27,7 +27,9 @@ type CppTranspilerVisitor struct {
 func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
 	return &CppTranspilerVisitor{
 		BaseJavaParserVisitor: &parser.BaseJavaParserVisitor{},
-		outDir:                outDir,
+		outDir:                 outDir,
+		headerCode:            &strings.Builder{},
+		cppCode:               &strings.Builder{},
 		included:              make(map[string]bool),
 		staticFields:          make(map[string]bool),
 	}
@@ -223,7 +225,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	var bodyCode strings.Builder
 	// swap headerCode to temporary builder for class body
 	origHeader := v.headerCode
-	v.headerCode = bodyCode
+	v.headerCode = &bodyCode
 
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
@@ -311,11 +313,18 @@ func (v *CppTranspilerVisitor) VisitInterfaceBody(ctx *parser.InterfaceBodyConte
 }
 
 func (v *CppTranspilerVisitor) VisitInterfaceBodyDeclaration(ctx *parser.InterfaceBodyDeclarationContext) interface{} {
+	v.currentIsStatic = false
+	for _, mod := range ctx.AllModifier() {
+		if mod.ClassOrInterfaceModifier() != nil && mod.ClassOrInterfaceModifier().STATIC() != nil {
+			v.currentIsStatic = true
+		}
+	}
 	for _, child := range ctx.GetChildren() {
 		if payload, ok := child.(antlr.ParseTree); ok {
 			payload.Accept(v)
 		}
 	}
+	v.currentIsStatic = false
 	return nil
 }
 
@@ -357,7 +366,58 @@ func (v *CppTranspilerVisitor) VisitInterfaceMethodDeclaration(ctx *parser.Inter
 	}
 	params := strings.Join(pList, ", ")
 
-	v.headerCode.WriteString(fmt.Sprintf("    virtual %s %s(%s) = 0;\n", returnType, methodName, params))
+	isDefault := false
+	isStatic := v.currentIsStatic
+	for _, mod := range ctx.AllInterfaceMethodModifier() {
+		text := mod.GetText()
+		if text == "default" || mod.DEFAULT() != nil {
+			isDefault = true
+		}
+		if text == "static" || mod.STATIC() != nil {
+			isStatic = true
+		}
+	}
+	if ctx.GetParent() != nil {
+		if ibd, ok := ctx.GetParent().GetParent().(*parser.InterfaceBodyDeclarationContext); ok {
+			for _, mod := range ibd.AllModifier() {
+				if mod.GetText() == "static" {
+					isStatic = true
+				}
+				if mod.GetText() == "default" {
+					isDefault = true
+				}
+			}
+		}
+	}
+
+	// Check if this interface method has a default or static body implementation
+	if cb.MethodBody() != nil && cb.MethodBody().Block() != nil {
+		if isStatic {
+			v.headerCode.WriteString(fmt.Sprintf("    static %s %s(%s) {\n", returnType, methodName, params))
+		} else {
+			v.headerCode.WriteString(fmt.Sprintf("    virtual %s %s(%s) {\n", returnType, methodName, params))
+		}
+		var methodBuf strings.Builder
+		origCpp := v.cppCode
+		v.cppCode = &methodBuf
+		for _, child := range cb.MethodBody().Block().GetChildren() {
+			if payload, ok := child.(antlr.ParseTree); ok {
+				payload.Accept(v)
+			}
+		}
+		v.headerCode.WriteString(methodBuf.String())
+		v.cppCode = origCpp
+		v.headerCode.WriteString("    }\n")
+		return nil
+	}
+
+	if isDefault {
+		v.headerCode.WriteString(fmt.Sprintf("    virtual %s %s(%s) {}\n", returnType, methodName, params))
+	} else if isStatic {
+		v.headerCode.WriteString(fmt.Sprintf("    static %s %s(%s);\n", returnType, methodName, params))
+	} else {
+		v.headerCode.WriteString(fmt.Sprintf("    virtual %s %s(%s) = 0;\n", returnType, methodName, params))
+	}
 	return nil
 }
 
@@ -1306,9 +1366,9 @@ func (v *CppTranspilerVisitor) VisitLambdaExpression(ctx *parser.LambdaExpressio
 			// buffer body statements
 			var bodyBuf strings.Builder
 			origCpp := v.cppCode
-			v.cppCode = bodyBuf
+			v.cppCode = &bodyBuf
 			v.Visit(lb.Block())
-			bodyStr := v.cppCode.String()
+			bodyStr := bodyBuf.String()
 			v.cppCode = origCpp
 			return fmt.Sprintf("[=](%s) {\n%s}", paramsStr, bodyStr)
 		}

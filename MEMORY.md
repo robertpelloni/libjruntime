@@ -61,3 +61,4 @@
 - Method references `Type::method`, `expr::method`, and `Type::new` map to universal forwarding C++ lambda closures `[=](auto&&... args) { return ...; }`.
 - Functional interfaces (`Function<T, R>`, `Consumer<T>`, `Supplier<T>`, `Predicate<T>`) map to `java::util::function::*` templates in `libjruntime/Functions.h` with adapter helpers (`make_function`, `make_consumer`, `make_supplier`, `make_predicate`).
 - Stream API (`Stream<T>`) is implemented in `libjruntime/Stream.h` with lazy-compatible intermediate operations (`filter`, `map`, `limit`, `skip`) and terminal operations (`count`, `forEach`, `toList`), and `ArrayList<T>::stream()`.
+- Default interface methods (`default ReturnType method(...) { ... }`) and static interface methods (`static ReturnType method(...) { ... }`) are transpiled in `compiler-engine/visitor.go` into inlined method implementations directly inside the C++ interface header class definition.

@@ -198,6 +198,18 @@ EOF
 cat << 'EOF' > "${TEMP_DIR}/src/Describable.java"
 public interface Describable {
     String describe();
+
+    default String getDetailedDescription(String prefix) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefix);
+        sb.append(": ");
+        sb.append(this.describe());
+        return sb.toString();
+    }
+
+    static int getInterfaceVersion() {
+        return 101;
+    }
 }
 EOF
 
@@ -548,6 +560,14 @@ int main() {
     java::lang::String* description = desc->describe();
     assert(description != nullptr);
     assert(description->getStdString() == "A loyal dog");
+
+    // Verify default interface method execution
+    java::lang::String* detailed = desc->getDetailedDescription(java_new<java::lang::String>("Canine"));
+    assert(detailed != nullptr);
+    assert(detailed->getStdString() == "Canine: A loyal dog");
+
+    // Verify static interface method execution
+    assert(Describable::getInterfaceVersion() == 101);
 
     // Verify default and parameterized constructor
     SampleApp* defaultApp = java_new<SampleApp>();

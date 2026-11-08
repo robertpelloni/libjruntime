@@ -1,19 +1,17 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.33 - Stream API (`java.util.stream.Stream<T>`)
+## Milestone Reached: v1.0.34 - Default and Static Interface Methods
 
-### What Was Accomplished in v1.0.33
-1. **Stream API Implementation**:
-   - Created `libjruntime/Stream.h` implementing `java::util::stream::Stream<T>` with intermediate operations (`filter`, `map`, `limit`, `skip`) and terminal operations (`count`, `forEach`, `toList`).
-   - Implemented `ArrayList<T>::stream()` returning `Stream<T>*` allocated via `java_new`.
-2. **Transpiler Routing & Auto-Includes**:
-   - Updated `compiler-engine/visitor.go` type mappings for `Stream<T>` routing to `java::util::stream::Stream<T>*`.
-   - Added `#include "Stream.h"` to all generated class and interface headers.
-3. **Comprehensive Verification**:
-   - Added unit test `TestTranspileStreamAPI` in `compiler-engine/visitor_test.go`.
-   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting full runtime Stream pipeline execution with Boehm GC.
-4. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.33`.
+### What Was Accomplished in v1.0.34
+1. **Default and Static Interface Method Lowering**:
+   - Updated `VisitInterfaceMethodDeclaration` in `compiler-engine/visitor.go` to inspect method bodies and interface method modifiers (`default`, `static`).
+   - Inlined method implementations directly inside the C++ interface class definition in the generated header (`<Interface>.h`).
+   - Maintained pure virtual method declarations (`= 0`) for abstract interface methods.
+2. **Comprehensive Verification**:
+   - Added unit test `TestTranspileDefaultInterfaceMethod` in `compiler-engine/visitor_test.go`.
+   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime default method invocation (`desc->getDetailedDescription(...)`) and static method invocation (`Describable::getInterfaceVersion()`) linking with Boehm GC.
+3. **Workspace Governance**:
+   - Bumped `VERSION` to `1.0.34`.
    - Updated `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
@@ -21,4 +19,4 @@
 - Runtime headers reside in `libjruntime/`.
 - Native executable tests link with `bdwgc/.libs/libgc.so` (`-lgc`).
 - Scripts for submodules and parser regeneration reside in `scripts/`.
-- Next roadmap milestones: default interface methods, reflection basics, interactive dashboard studio.
+- Next roadmap milestones: reflection basics (`java.lang.Class`), interactive dashboard studio.
