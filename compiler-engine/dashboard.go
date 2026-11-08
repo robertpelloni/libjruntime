@@ -346,7 +346,7 @@ func getProjectVersion() string {
 			}
 		}
 	}
-	return "v1.0.51"
+	return "v1.0.52"
 }
 
 func handleStatus(w http.ResponseWriter, r *http.Request) {

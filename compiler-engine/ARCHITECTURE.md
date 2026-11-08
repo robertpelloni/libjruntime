@@ -74,6 +74,10 @@ tokenStream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 
 // 3. Syntactic analysis: construct parser instance
 javaParser := parser.NewJavaParser(tokenStream)
+javaParser.BuildParseTrees = true
+
+// Optional error listener hook for diagnostics
+// javaParser.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
 
 // 4. Parse starting from root rule compilationUnit
 tree := javaParser.CompilationUnit()

@@ -33,14 +33,44 @@ The Go-based transpiler front-end relies on the official Java ANTLR4 grammar spe
 └─────────────────────────────────┘
 ```
 
-#### 1.2 Initial Transpiler CLI Stream Setup
-The Go CLI initializes the ANTLR4 input stream, token stream, and parser using standard Go runtime bindings:
+#### 1.2 Initial Transpiler CLI Stream Setup & Bootstrap Code
+The Go CLI initializes the ANTLR4 input stream, token stream, and parser using standard Go runtime bindings. Here is the concrete setup used to parse arbitrary Java source strings:
+
 ```go
-input := antlr.NewInputStream(javaSource)
-lexer := parser.NewJavaLexer(input)
-tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
-p := parser.NewJavaParser(tokens)
-tree := p.CompilationUnit()
+package main
+
+import (
+    "fmt"
+    "github.com/antlr4-go/antlr/v4"
+    "github.com/user/j2cpp-engine/parser"
+)
+
+// TranspileJava parses Java source and emits C++20 header and body code
+func TranspileJava(javaSource, className, superName string) (headerCode, cppCode string, err error) {
+    // 1. Initialize character input stream
+    input := antlr.NewInputStream(javaSource)
+
+    // 2. Tokenize input with JavaLexer
+    lexer := parser.NewJavaLexer(input)
+    tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+
+    // 3. Construct JavaParser instance
+    p := parser.NewJavaParser(tokens)
+    p.BuildParseTrees = true
+
+    // 4. Attach error listeners if strict syntax checking is desired
+    // p.RemoveErrorListeners()
+    // p.AddErrorListener(antlr.NewConsoleErrorListener())
+
+    // 5. Parse starting at compilationUnit rule
+    tree := p.CompilationUnit()
+
+    // 6. Execute AST reduction with CppTranspilerVisitor
+    visitor := NewCppTranspilerVisitor(className, superName)
+    visitor.Visit(tree)
+
+    return visitor.GetHeaderCode(), visitor.GetCppCode(), nil
+}
 ```
 
 #### 1.3 Visitor vs. Listener Design Pattern

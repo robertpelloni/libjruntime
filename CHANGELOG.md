@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.52
+- Deepened Section 1 in `README.md` and `compiler-engine/ARCHITECTURE.md` with complete Go bootstrap code:
+  - Documented explicit parser setup (`InputStream`, `JavaLexer`, `CommonTokenStream`, `JavaParser`).
+  - Documented error listener hooks (`ConsoleErrorListener`, `DiagnosticErrorListener`).
+  - Outlined modular pipeline reduction with `CppTranspilerVisitor`.
+- Bumped version to `1.0.52` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.51
 - Expanded Section 1: Go Transpiler CLI Implementation Details in `README.md` and `compiler-engine/ARCHITECTURE.md`:
   - Added comprehensive Type Conversion & Lowering Matrix.

@@ -24,6 +24,7 @@
 - [x] Document Section 1 ANTLR4 grammar stream setup and visitor architecture in `README.md`.
 - [x] Implement `ReentrantLock` in `libjruntime/Lock.h` and visitor mappings.
 - [x] Document type conversion and symbol resolution matrix in `compiler-engine/ARCHITECTURE.md`.
+- [x] Document concrete Go bootstrap and parser stream setup in `README.md`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

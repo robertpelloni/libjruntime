@@ -1,15 +1,15 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.51 - Type Conversion & Lowering Matrix Blueprint
+## Milestone Reached: v1.0.52 - ANTLR4 Go Parser Stream Bootstrap Documentation
 
-### What Was Accomplished in v1.0.51
-1. **Type Conversion & Lowering Matrix**:
-   - Added complete type lowering table to `README.md` and detailed `mapType` implementation in `compiler-engine/ARCHITECTURE.md`.
-   - Documented memory mappings, headers, and C++ equivalents for primitives, arrays, collections, atomics, and locks.
+### What Was Accomplished in v1.0.52
+1. **ANTLR4 Go Bootstrap Documentation**:
+   - Added complete, copy-pasteable Go source code demonstrating how to construct input streams, token streams, parsers, and invoke `CppTranspilerVisitor` in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+   - Documented error listener hooks and parse tree construction flags.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.51`.
+   - Bumped `VERSION` to `1.0.52`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
