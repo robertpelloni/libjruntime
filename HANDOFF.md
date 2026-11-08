@@ -1,20 +1,21 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.46 - Primitive Wrapper Completeness (`Short`)
+## Milestone Reached: v1.0.47 - Atomic Concurrency Primitives (`AtomicInteger`, `AtomicBoolean`)
 
-### What Was Accomplished in v1.0.46
-1. **Short Wrapper Class (`libjruntime/Boxes.h`)**:
-   - Implemented `java::lang::Short` wrapping `int16_t` with `valueOf(int16_t)`, `shortValue()`, `intValue()`, `doubleValue()`, `hashCode()`, `equals(Object*)`, and `toString()`.
+### What Was Accomplished in v1.0.47
+1. **Atomic Concurrency Primitives (`libjruntime/Atomic.h`)**:
+   - Implemented `java::util::concurrent::atomic::AtomicInteger` backed by `std::atomic<int32_t>` with `get`, `set`, `getAndSet`, `getAndIncrement`, `getAndDecrement`, `getAndAdd`, `addAndGet`, `incrementAndGet`, `decrementAndGet`, and `compareAndSet`.
+   - Implemented `java::util::concurrent::atomic::AtomicBoolean` backed by `std::atomic<bool>` with `get`, `set`, `getAndSet`, and `compareAndSet`.
 2. **Visitor & Type Mappings (`compiler-engine/visitor.go`)**:
-   - Added `Short` to type mappings (`java::lang::Short*`).
-   - Added `Short` to built-in type set to prevent unnecessary local file `#include` statements.
-   - Handled static call routing (`Short.valueOf(...)`) and method reference forwarding lambdas.
+   - Added `AtomicInteger` and `AtomicBoolean` to type mappings (`::java::util::concurrent::atomic::AtomicInteger*`, `AtomicBoolean*`).
+   - Automatically included `Atomic.h` in transpiled headers.
+   - Handled instantiation in `VisitPrimaryExpression`.
 3. **Comprehensive Verification**:
-   - Added unit test `TestTranspileShortWrapper` in `compiler-engine/visitor_test.go`.
-   - Added boxing/unboxing tests and assertions in `tests/e2e_test.sh`.
+   - Added unit test `TestTranspileAtomicTypes` in `compiler-engine/visitor_test.go`.
+   - Added `AtomicProbe` class and native execution assertions in `tests/e2e_test.sh`.
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 4. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.46`.
+   - Bumped `VERSION` to `1.0.47`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

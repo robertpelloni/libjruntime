@@ -69,3 +69,4 @@
 - Collection algorithms utility `java::util::Collections` is implemented in `libjruntime/Collections.h` with `sort`, `reverse`, `shuffle`, `min`, `max`, `fill`, and `frequency` operating on `ArrayList<T>*`.
 - Sequential and deque container `LinkedList<T>` is implemented in `libjruntime/LinkedList.h` via `java::util::LinkedList<T>` backed by doubly linked GC-managed nodes with `addFirst`, `addLast`, `getFirst`, `getLast`, `removeFirst`, `removeLast`, and range iterators.
 - Uninitialized instance and static fields automatically receive Java specification default values (`bool` -> `false`, integers -> `0`, floats -> `0.0`, pointers -> `nullptr`) in emitted C++ header declarations.
+- Atomic concurrency variables `AtomicInteger` and `AtomicBoolean` are implemented in `libjruntime/Atomic.h` under namespace `java::util::concurrent::atomic`, backed by `std::atomic` and mapped in `compiler-engine/visitor.go`.

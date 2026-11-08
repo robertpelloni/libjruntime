@@ -1031,3 +1031,33 @@ public class ShortTest {
 		t.Errorf("Expected Short::valueOf call in cpp, got:\n%s", cpp)
 	}
 }
+
+func TestTranspileAtomicTypes(t *testing.T) {
+	javaSrc := `
+public class AtomicTest {
+    public void run() {
+        AtomicInteger count = new AtomicInteger(10);
+        AtomicBoolean flag = new AtomicBoolean(true);
+        count.incrementAndGet();
+        flag.compareAndSet(true, false);
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Atomic.h\"") {
+		t.Errorf("Expected Atomic.h include in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::util::concurrent::atomic::AtomicInteger* count = java_new<java::util::concurrent::atomic::AtomicInteger>(10);") {
+		t.Errorf("Expected AtomicInteger allocation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::util::concurrent::atomic::AtomicBoolean* flag = java_new<java::util::concurrent::atomic::AtomicBoolean>(true);") {
+		t.Errorf("Expected AtomicBoolean allocation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(count)->incrementAndGet()") {
+		t.Errorf("Expected incrementAndGet call in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(flag)->compareAndSet(true, false)") {
+		t.Errorf("Expected compareAndSet call in cpp, got:\n%s", cpp)
+	}
+}

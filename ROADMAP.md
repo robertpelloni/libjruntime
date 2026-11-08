@@ -39,6 +39,7 @@
 - [x] `synchronized` block and method syntax translation backed by `Object` atomic monitor mutexes.
 
 - [x] Concurrency primitives (`Thread`, `Runnable`) in `libjruntime/Thread.h`.
+- [x] Atomic variables (`AtomicInteger`, `AtomicBoolean`) in `libjruntime/Atomic.h`.
 
 ## Milestone 3: Runtime Library Expansion (v1.2.0)
 - [x] Functional interfaces and lambda expressions (`(args) -> expr / { ... }`).

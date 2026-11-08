@@ -150,6 +150,10 @@ func mapType(javaType string) string {
 		return "java::lang::Character*"
 	case "Short":
 		return "java::lang::Short*"
+	case "AtomicInteger":
+		return "java::util::concurrent::atomic::AtomicInteger*"
+	case "AtomicBoolean":
+		return "java::util::concurrent::atomic::AtomicBoolean*"
 	case "ArrayList":
 		return "java::util::ArrayList<java::lang::Object*>*"
 	case "LinkedList":
@@ -278,7 +282,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
-		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "Byte": true, "Character": true, "Short": true, "ArrayList": true, "LinkedList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true, "Function": true, "Consumer": true, "Supplier": true, "Predicate": true, "Stream": true, "Class": true, "Optional": true, "HashSet": true, "Set": true, "Collections": true,
+		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "Byte": true, "Character": true, "Short": true, "AtomicInteger": true, "AtomicBoolean": true, "ArrayList": true, "LinkedList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true, "Function": true, "Consumer": true, "Supplier": true, "Predicate": true, "Stream": true, "Class": true, "Optional": true, "HashSet": true, "Set": true, "Collections": true,
 	}
 
 	for inc := range v.included {
@@ -289,7 +293,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	}
 
 	extraIncludeStr = strings.Join(extraIncludes, "")
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"LinkedList.h\"\n#include \"Collections.h\"\n#include \"HashMap.h\"\n#include \"HashSet.h\"\n#include \"FileIO.h\"\n#include \"Thread.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n#include \"Functions.h\"\n#include \"Stream.h\"\n#include \"Class.h\"\n#include \"Optional.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"LinkedList.h\"\n#include \"Collections.h\"\n#include \"HashMap.h\"\n#include \"HashSet.h\"\n#include \"FileIO.h\"\n#include \"Thread.h\"\n#include \"Atomic.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n#include \"Functions.h\"\n#include \"Stream.h\"\n#include \"Class.h\"\n#include \"Optional.h\"\n%s\nclass %s : %s {\npublic:\n", extraIncludeStr, className, baseClassesStr))
 	v.headerCode.WriteString(classBodyStr)
 	v.headerCode.WriteString("};\n")
 
@@ -327,7 +331,7 @@ func (v *CppTranspilerVisitor) VisitInterfaceDeclaration(ctx *parser.InterfaceDe
 	v.cppCode.Reset()
 	v.included = make(map[string]bool)
 
-	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"LinkedList.h\"\n#include \"Collections.h\"\n#include \"HashMap.h\"\n#include \"HashSet.h\"\n#include \"FileIO.h\"\n#include \"Thread.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n#include \"Functions.h\"\n#include \"Stream.h\"\n#include \"Class.h\"\n#include \"Optional.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
+	v.headerCode.WriteString(fmt.Sprintf("#pragma once\n\n#include <cstdint>\n#include \"Object.h\"\n#include \"String.h\"\n#include \"GC.h\"\n#include \"Runtime.h\"\n#include \"FinallyGuard.h\"\n#include \"System.h\"\n#include \"Array.h\"\n#include \"ArrayList.h\"\n#include \"LinkedList.h\"\n#include \"Collections.h\"\n#include \"HashMap.h\"\n#include \"HashSet.h\"\n#include \"FileIO.h\"\n#include \"Thread.h\"\n#include \"Atomic.h\"\n#include \"StringBuilder.h\"\n#include \"Math.h\"\n#include \"Boxes.h\"\n#include \"Functions.h\"\n#include \"Stream.h\"\n#include \"Class.h\"\n#include \"Optional.h\"\n\nclass %s {\npublic:\n    virtual ~%s() = default;\n", ifaceName, ifaceName))
 
 	if ctx.InterfaceBody() != nil {
 		v.Visit(ctx.InterfaceBody())
@@ -1048,6 +1052,10 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::lang::Character"
              } else if className == "Short" {
                  className = "java::lang::Short"
+             } else if className == "AtomicInteger" {
+                 className = "java::util::concurrent::atomic::AtomicInteger"
+             } else if className == "AtomicBoolean" {
+                 className = "java::util::concurrent::atomic::AtomicBoolean"
              } else if className == "Exception" {
                  className = "java::lang::Exception"
              } else if className == "NullPointerException" {

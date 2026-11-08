@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.47
+- Implemented `libjruntime/Atomic.h` providing thread-safe atomic primitives in `java::util::concurrent::atomic`:
+  - `AtomicInteger`: backed by `std::atomic<int32_t>` with `get`, `set`, `getAndSet`, `getAndIncrement`, `getAndDecrement`, `getAndAdd`, `addAndGet`, `incrementAndGet`, `decrementAndGet`, and `compareAndSet`.
+  - `AtomicBoolean`: backed by `std::atomic<bool>` with `get`, `set`, `getAndSet`, and `compareAndSet`.
+- Updated `compiler-engine/visitor.go` type mappings and header templates for `AtomicInteger` and `AtomicBoolean`.
+- Added unit test `TestTranspileAtomicTypes` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution tests in `tests/e2e_test.sh`.
+- Bumped version to `1.0.47` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.46
 - Implemented `Short` primitive wrapper class in `libjruntime/Boxes.h`:
   - Wrapping `int16_t` with `valueOf`, `shortValue`, `intValue`, `doubleValue`, `hashCode`, `equals`, and `toString`.

@@ -37,6 +37,22 @@ public class UninitializedProbe {
 }
 EOF
 
+cat << 'EOF' > "${TEMP_DIR}/src/AtomicProbe.java"
+public class AtomicProbe {
+    public static int testAtomicOps() {
+        AtomicInteger ai = new AtomicInteger(100);
+        ai.addAndGet(50);
+        ai.incrementAndGet();
+        AtomicBoolean ab = new AtomicBoolean(false);
+        ab.compareAndSet(false, true);
+        if (ab.get()) {
+            return ai.get();
+        }
+        return 0;
+    }
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/CounterTask.java"
 public class CounterTask implements Runnable {
     int counter;
@@ -405,6 +421,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include <cassert>
 #include "Config.h"
 #include "UninitializedProbe.h"
+#include "AtomicProbe.h"
 #include "MathHelper.h"
 #include "BoxHelper.h"
 #include "Describable.h"
@@ -456,6 +473,10 @@ int main() {
     assert(probe->flag == false);
     assert(probe->score == 0.0);
     assert(probe->message == nullptr);
+
+    // Verify Atomic operations
+    int32_t atomicVal = AtomicProbe::testAtomicOps();
+    assert(atomicVal == 151);
 
     // Verify static fields and static method invocation
     assert(MathHelper::FACTOR == 7);
