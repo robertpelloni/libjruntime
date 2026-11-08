@@ -346,7 +346,7 @@ func getProjectVersion() string {
 			}
 		}
 	}
-	return "v1.0.49"
+	return "v1.0.50"
 }
 
 func handleStatus(w http.ResponseWriter, r *http.Request) {
@@ -356,7 +356,7 @@ func handleStatus(w http.ResponseWriter, r *http.Request) {
 		RuntimeHeaders: []string{
 			"Object.h", "String.h", "StringBuilder.h", "Array.h", "ArrayList.h",
 			"LinkedList.h", "Collections.h", "HashMap.h", "HashSet.h", "Boxes.h", "Math.h", "System.h",
-			"Exceptions.h", "FinallyGuard.h", "Thread.h", "Atomic.h", "Functions.h",
+			"Exceptions.h", "FinallyGuard.h", "Thread.h", "Atomic.h", "Lock.h", "Functions.h",
 			"Stream.h", "Class.h", "Optional.h",
 		},
 		Features: []string{

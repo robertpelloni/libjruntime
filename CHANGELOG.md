@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.50
+- Implemented `libjruntime/Lock.h` providing `java::util::concurrent::locks::ReentrantLock`:
+  - Backed by `std::recursive_mutex` with `lock()`, `unlock()`, `tryLock()`, and `isLocked()`.
+- Updated `compiler-engine/visitor.go` type mappings, built-in types set, and header emission templates for `ReentrantLock`.
+- Added unit test `TestTranspileReentrantLock` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution tests in `tests/e2e_test.sh`.
+- Bumped version to `1.0.50` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.49
 - Detailed Section 1: ANTLR4 Grammar Integration & Transpiler CLI Setup in `README.md` and `compiler-engine/ARCHITECTURE.md`:
   - Outlined initial Go stream, lexer, and parser token stream setup.

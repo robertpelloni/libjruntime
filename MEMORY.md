@@ -70,3 +70,4 @@
 - Sequential and deque container `LinkedList<T>` is implemented in `libjruntime/LinkedList.h` via `java::util::LinkedList<T>` backed by doubly linked GC-managed nodes with `addFirst`, `addLast`, `getFirst`, `getLast`, `removeFirst`, `removeLast`, and range iterators.
 - Uninitialized instance and static fields automatically receive Java specification default values (`bool` -> `false`, integers -> `0`, floats -> `0.0`, pointers -> `nullptr`) in emitted C++ header declarations.
 - Atomic concurrency variables `AtomicInteger`, `AtomicBoolean`, and `AtomicLong` are implemented in `libjruntime/Atomic.h` under namespace `java::util::concurrent::atomic`, backed by `std::atomic` and mapped in `compiler-engine/visitor.go`.
+- Explicit synchronization lock `ReentrantLock` is implemented in `libjruntime/Lock.h` under namespace `java::util::concurrent::locks` backed by `std::recursive_mutex`.

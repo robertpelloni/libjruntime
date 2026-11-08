@@ -22,6 +22,7 @@
 - [x] Implement `AtomicInteger` and `AtomicBoolean` in `libjruntime/Atomic.h` and visitor mappings.
 - [x] Implement `AtomicLong` in `libjruntime/Atomic.h` and visitor mappings.
 - [x] Document Section 1 ANTLR4 grammar stream setup and visitor architecture in `README.md`.
+- [x] Implement `ReentrantLock` in `libjruntime/Lock.h` and visitor mappings.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

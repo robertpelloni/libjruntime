@@ -1080,3 +1080,29 @@ public class AtomicLongTest {
 		t.Errorf("Expected incrementAndGet call in cpp, got:\n%s", cpp)
 	}
 }
+
+func TestTranspileReentrantLock(t *testing.T) {
+	javaSrc := `
+public class LockTest {
+    public void run() {
+        ReentrantLock lock = new ReentrantLock();
+        lock.lock();
+        lock.unlock();
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "#include \"Lock.h\"") {
+		t.Errorf("Expected Lock.h include in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "java::util::concurrent::locks::ReentrantLock* lock = java_new<java::util::concurrent::locks::ReentrantLock>();") {
+		t.Errorf("Expected ReentrantLock allocation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(lock)->lock()") {
+		t.Errorf("Expected lock call in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(lock)->unlock()") {
+		t.Errorf("Expected unlock call in cpp, got:\n%s", cpp)
+	}
+}

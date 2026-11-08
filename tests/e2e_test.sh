@@ -58,6 +58,19 @@ public class AtomicProbe {
         al.incrementAndGet();
         return al.get();
     }
+
+    public static boolean testReentrantLock() {
+        ReentrantLock lock = new ReentrantLock();
+        lock.lock();
+        boolean lockedInside = lock.isLocked();
+        lock.unlock();
+        boolean lockedAfter = lock.isLocked();
+        boolean acquired = lock.tryLock();
+        if (acquired) {
+            lock.unlock();
+        }
+        return lockedInside && !lockedAfter && acquired;
+    }
 }
 EOF
 
@@ -487,6 +500,10 @@ int main() {
     assert(atomicVal == 151);
     int64_t atomicLongVal = AtomicProbe::testAtomicLong();
     assert(atomicLongVal == 10000000001LL);
+
+    // Verify ReentrantLock
+    bool lockSuccess = AtomicProbe::testReentrantLock();
+    assert(lockSuccess == true);
 
     // Verify static fields and static method invocation
     assert(MathHelper::FACTOR == 7);
