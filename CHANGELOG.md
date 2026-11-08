@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.53
+- Documented verified `CppTranspilerVisitor` struct definition and constructor:
+  - Added exact struct fields from `visitor.go` in `compiler-engine/ARCHITECTURE.md`.
+  - Detailed `NewCppTranspilerVisitor(outDir string)` constructor and initialization logic.
+  - Aligned code samples in `README.md` and `ARCHITECTURE.md`.
+- Bumped version to `1.0.53` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.52
 - Deepened Section 1 in `README.md` and `compiler-engine/ARCHITECTURE.md` with complete Go bootstrap code:
   - Documented explicit parser setup (`InputStream`, `JavaLexer`, `CommonTokenStream`, `JavaParser`).

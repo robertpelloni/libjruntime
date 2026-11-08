@@ -82,8 +82,8 @@ javaParser.BuildParseTrees = true
 // 4. Parse starting from root rule compilationUnit
 tree := javaParser.CompilationUnit()
 
-// 5. Walk tree with custom transpiler visitor
-visitor := NewCppTranspilerVisitor(className, superName)
+// 5. Walk tree with custom transpiler visitor configured with output directory
+visitor := NewCppTranspilerVisitor(outDir)
 visitor.Visit(tree)
 ```
 
@@ -96,15 +96,28 @@ Defined in `compiler-engine/visitor.go`, `CppTranspilerVisitor` walks the AST an
 ### State & Buffers
 ```go
 type CppTranspilerVisitor struct {
-    parser.BaseJavaParserVisitor
-    headerCode       strings.Builder
-    cppCode          strings.Builder
-    currentClass     string
-    currentSuper     string
-    currentIsStatic  bool
-    staticFields     map[string]bool
-    included         map[string]bool
-    currentLoopDepth int
+    *parser.BaseJavaParserVisitor
+    outDir                string
+    currentClass          string
+    currentSuper          string
+    headerCode            *strings.Builder
+    cppCode               *strings.Builder
+    included              map[string]bool
+    currentIsStatic       bool
+    currentIsSynchronized bool
+    staticInitCount       int
+    staticFields          map[string]bool
+}
+
+func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
+    return &CppTranspilerVisitor{
+        BaseJavaParserVisitor: &parser.BaseJavaParserVisitor{},
+        outDir:                outDir,
+        headerCode:           &strings.Builder{},
+        cppCode:              &strings.Builder{},
+        included:             make(map[string]bool),
+        staticFields:         make(map[string]bool),
+    }
 }
 ```
 

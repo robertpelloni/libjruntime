@@ -65,8 +65,8 @@ func TranspileJava(javaSource, className, superName string) (headerCode, cppCode
     // 5. Parse starting at compilationUnit rule
     tree := p.CompilationUnit()
 
-    // 6. Execute AST reduction with CppTranspilerVisitor
-    visitor := NewCppTranspilerVisitor(className, superName)
+    // 6. Execute AST reduction with CppTranspilerVisitor configured with output directory
+    visitor := NewCppTranspilerVisitor(outDir)
     visitor.Visit(tree)
 
     return visitor.GetHeaderCode(), visitor.GetCppCode(), nil
