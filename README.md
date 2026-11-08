@@ -65,6 +65,24 @@ ANTLR4 provides two primary tree traversal paradigms:
    - `VisitExpression`: Translates arithmetic, comparisons, ternary expressions (`cond ? a : b`), method invocations, and object allocations (`new T(...)` ➔ `java_new<T>(...)`).
    - `VisitLambdaExpression` & `VisitMethodReferenceExpression`: Lowers Java lambdas and method references into C++20 universal generic forwarding closures `[=](auto&&... args) { ... }`.
 
+#### 1.5 Type Conversion & Lowering Matrix
+The transpiler maps Java types to modern C++20 types and garbage-collected pointers:
+| Java Source Type | Transpiled C++20 Type | Header Dependency |
+|:---|:---|:---|
+| `int`, `long`, `boolean` | `int32_t`, `int64_t`, `bool` | `<cstdint>` |
+| `byte`, `short`, `char` | `int8_t`, `int16_t`, `char16_t` | `<cstdint>` |
+| `float`, `double` | `float`, `double` | Standard scalar |
+| `String` | `java::lang::String*` | `String.h` |
+| `StringBuilder` | `java::lang::StringBuilder*` | `StringBuilder.h` |
+| `T[]` (arrays) | `java::lang::Array<T>*` | `Array.h` |
+| `ArrayList<T>` | `java::util::ArrayList<T>*` | `ArrayList.h` |
+| `LinkedList<T>` | `java::util::LinkedList<T>*` | `LinkedList.h` |
+| `HashMap<K, V>` | `java::util::HashMap<K, V>*` | `HashMap.h` |
+| `HashSet<E>` | `java::util::HashSet<E>*` | `HashSet.h` |
+| Boxed Primitives (`Integer`, `Long`, etc.) | `java::lang::*` pointers | `Boxes.h` |
+| `AtomicInteger`, `AtomicLong`, `AtomicBoolean` | `java::util::concurrent::atomic::*` | `Atomic.h` |
+| `ReentrantLock` | `java::util::concurrent::locks::ReentrantLock*` | `Lock.h` |
+
 #### Automated Parser Regeneration
 Parser Go bindings can be re-generated at any time using `scripts/generate_parser.sh`:
 ```bash

@@ -143,6 +143,49 @@ type CppTranspilerVisitor struct {
 
 ---
 
+## 3.1 Type System & Symbol Resolution Matrix
+
+`CppTranspilerVisitor` uses deterministic type mapping functions (`mapType`) to maintain strict C++20 equivalence:
+
+```go
+func mapType(javaType string) string {
+    // Array types: T[] -> java::lang::Array<T>*
+    if strings.HasSuffix(javaType, "[]") {
+        elem := mapType(strings.TrimSuffix(javaType, "[]"))
+        return fmt.Sprintf("java::lang::Array<%s>*", elem)
+    }
+
+    // Generic collection types: List<T>, Map<K, V>, Set<E>
+    if strings.HasPrefix(javaType, "ArrayList<") { ... }
+    if strings.HasPrefix(javaType, "LinkedList<") { ... }
+    if strings.HasPrefix(javaType, "HashMap<") { ... }
+    if strings.HasPrefix(javaType, "HashSet<") { ... }
+
+    // Primitive & standard mappings
+    switch javaType {
+    case "int": return "int32_t"
+    case "boolean": return "bool"
+    case "long": return "int64_t"
+    case "byte": return "int8_t"
+    case "short": return "int16_t"
+    case "char": return "char16_t"
+    case "float": return "float"
+    case "double": return "double"
+    case "String": return "java::lang::String*"
+    case "StringBuilder": return "java::lang::StringBuilder*"
+    case "AtomicInteger": return "java::util::concurrent::atomic::AtomicInteger*"
+    case "AtomicBoolean": return "java::util::concurrent::atomic::AtomicBoolean*"
+    case "AtomicLong": return "java::util::concurrent::atomic::AtomicLong*"
+    case "ReentrantLock": return "java::util::concurrent::locks::ReentrantLock*"
+    default:
+        // User-defined class types map to pointer references
+        return javaType + "*"
+    }
+}
+```
+
+---
+
 ## 4. Execution Modes & CLI
 
 The CLI (`compiler-engine/main.go`) operates in two modes:

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.51
+- Expanded Section 1: Go Transpiler CLI Implementation Details in `README.md` and `compiler-engine/ARCHITECTURE.md`:
+  - Added comprehensive Type Conversion & Lowering Matrix.
+  - Documented symbol resolution and deterministic `mapType` implementation.
+  - Documented memory mappings and header dependencies for primitives, wrappers, collections, atomics, and locks.
+- Bumped version to `1.0.51` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.50
 - Implemented `libjruntime/Lock.h` providing `java::util::concurrent::locks::ReentrantLock`:
   - Backed by `std::recursive_mutex` with `lock()`, `unlock()`, `tryLock()`, and `isLocked()`.

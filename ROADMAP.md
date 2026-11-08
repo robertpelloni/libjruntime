@@ -58,6 +58,7 @@
 - [x] In-depth submodule architecture and integration guide (`SUBMODULES.md`).
 - [x] Compiler engine architecture & visitor blueprint (`compiler-engine/ARCHITECTURE.md`).
 - [x] Section 1 ANTLR4 grammar stream setup and visitor architecture documentation.
+- [x] Type conversion and symbol resolution matrix in `README.md` and `compiler-engine/ARCHITECTURE.md`.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

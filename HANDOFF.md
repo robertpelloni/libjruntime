@@ -1,21 +1,15 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.50 - Explicit Concurrency Locks (`ReentrantLock`)
+## Milestone Reached: v1.0.51 - Type Conversion & Lowering Matrix Blueprint
 
-### What Was Accomplished in v1.0.50
-1. **ReentrantLock Primitive (`libjruntime/Lock.h`)**:
-   - Implemented `java::util::concurrent::locks::ReentrantLock` backed by `std::recursive_mutex`.
-   - Provided standard locking methods: `lock()`, `unlock()`, `tryLock()`, and `isLocked()`.
-2. **Visitor & Type Mappings (`compiler-engine/visitor.go`)**:
-   - Added `ReentrantLock` to type mappings (`::java::util::concurrent::locks::ReentrantLock*`).
-   - Automatically included `Lock.h` in class and interface header templates.
-   - Handled object allocation in `VisitPrimaryExpression`.
-3. **Comprehensive Verification**:
-   - Added unit test `TestTranspileReentrantLock` in `compiler-engine/visitor_test.go`.
-   - Added `testReentrantLock` integration test method and assertions in `tests/e2e_test.sh`.
+### What Was Accomplished in v1.0.51
+1. **Type Conversion & Lowering Matrix**:
+   - Added complete type lowering table to `README.md` and detailed `mapType` implementation in `compiler-engine/ARCHITECTURE.md`.
+   - Documented memory mappings, headers, and C++ equivalents for primitives, arrays, collections, atomics, and locks.
+2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
-4. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.50`.
+3. **Workspace Governance**:
+   - Bumped `VERSION` to `1.0.51`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
