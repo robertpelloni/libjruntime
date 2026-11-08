@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.36
+- Created `libjruntime/Optional.h` implementing `java::util::Optional<T>`:
+  - Static factory methods `of`, `ofNullable`, `empty`.
+  - Value accessors and checks `isPresent`, `isEmpty`, `get`, `orElse`, `ifPresent`.
+  - Transformation and filtering methods `filter`, `map`.
+- Updated `compiler-engine/visitor.go` type mappings and header auto-inclusion for `Optional<T>`.
+- Added unit test `TestTranspileOptional` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution test coverage for `Optional<T>` in `tests/e2e_test.sh`.
+- Bumped version to `1.0.36` in `VERSION`.
+
 ## 1.0.35
 - Created `libjruntime/Class.h` implementing reflection basics (`java::lang::Class<T>`):
   - `getName()`, `getSimpleName()`, `isInstance(Object*)`, and static factory `Class<T>::forType(...)`.

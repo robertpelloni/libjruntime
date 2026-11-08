@@ -378,6 +378,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "Functions.h"
 #include "Stream.h"
 #include "Class.h"
+#include "Optional.h"
 #include "ListHelper.h"
 #include "CounterTask.h"
 
@@ -653,6 +654,23 @@ int main() {
     java::lang::Class<java::lang::Object>* objClass = defaultApp->getClass();
     assert(objClass != nullptr);
     assert(objClass->getName()->getStdString() == "java.lang.Object");
+
+    // Verify java.util.Optional functionality
+    java::util::Optional<int32_t>* optVal = java::util::Optional<int32_t>::of(123);
+    assert(optVal->isPresent());
+    assert(!optVal->isEmpty());
+    assert(optVal->get() == 123);
+    assert(optVal->orElse(999) == 123);
+
+    java::util::Optional<int32_t>* optEmpty = java::util::Optional<int32_t>::empty();
+    assert(!optEmpty->isPresent());
+    assert(optEmpty->isEmpty());
+    assert(optEmpty->orElse(999) == 999);
+
+    auto addOneFn = java::util::function::make_function<int32_t, int32_t>([](int32_t x) { return x + 1; });
+    java::util::Optional<int32_t>* optMapped = optVal->map(addOneFn);
+    assert(optMapped->isPresent());
+    assert(optMapped->get() == 124);
 
     // Verify array creation and indexing
     java::lang::Array<int32_t>* numbers = defaultApp->createArray(4);

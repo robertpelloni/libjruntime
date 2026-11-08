@@ -8,6 +8,7 @@
 - [x] Implement Stream API (`java.util.stream.Stream<T>`) in `libjruntime/Stream.h`.
 - [x] Implement default and static interface methods in `compiler-engine/visitor.go`.
 - [x] Implement reflection basics (`java.lang.Class<T>` and class literals `type.class`) in `libjruntime/Class.h` and `compiler-engine/visitor.go`.
+- [x] Implement `java.util.Optional<T>` container in `libjruntime/Optional.h` and visitor mappings.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

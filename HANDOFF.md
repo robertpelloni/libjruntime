@@ -1,19 +1,20 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.35 - Reflection Basics (`java.lang.Class`)
+## Milestone Reached: v1.0.36 - Container Abstractions (`java.util.Optional<T>`)
 
-### What Was Accomplished in v1.0.35
-1. **Reflection Basics Runtime (`Class<T>`)**:
-   - Created `libjruntime/Class.h` implementing `java::lang::Class<T>` with `getName()`, `getSimpleName()`, `isInstance(Object*)`, and `forType(...)`.
-   - Added `getClass()` virtual member function to `java::lang::Object` in `libjruntime/Object.h`.
-2. **Class Literal Expression Lowering**:
-   - Updated `compiler-engine/visitor.go` in `VisitPrimary` to transpile Java class literals (`Type.class`) into `java::lang::Class<MappedType>::forType("Type")`.
-   - Automatically included `Class.h` in all transpiled class and interface headers.
+### What Was Accomplished in v1.0.36
+1. **Optional Implementation**:
+   - Created `libjruntime/Optional.h` implementing `java::util::Optional<T>` with static factories `of`, `ofNullable`, `empty`.
+   - Implemented inspection and extraction methods `isPresent`, `isEmpty`, `get`, `orElse`, `ifPresent`.
+   - Implemented monadic operations `filter` and `map` leveraging functional interfaces.
+2. **Transpiler Routing & Auto-Includes**:
+   - Updated `compiler-engine/visitor.go` type mappings for `Optional<T>` routing to `java::util::Optional<T>*`.
+   - Added `#include "Optional.h"` to all generated class and interface headers.
 3. **Comprehensive Verification**:
-   - Added unit test `TestTranspileClassLiteral` in `compiler-engine/visitor_test.go`.
-   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime reflection inspection (`dogClass->getName()`, `dogClass->isInstance(dog)`, `app->getClass()`) linking with Boehm GC.
+   - Added unit test `TestTranspileOptional` in `compiler-engine/visitor_test.go`.
+   - Expanded end-to-end integration test runner `tests/e2e_test.sh` asserting runtime `Optional` execution (`of`, `empty`, `map`, `orElse`) linking with Boehm GC.
 4. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.35`.
+   - Bumped `VERSION` to `1.0.36`.
    - Updated `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

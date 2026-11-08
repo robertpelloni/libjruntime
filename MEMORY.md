@@ -63,3 +63,4 @@
 - Stream API (`Stream<T>`) is implemented in `libjruntime/Stream.h` with lazy-compatible intermediate operations (`filter`, `map`, `limit`, `skip`) and terminal operations (`count`, `forEach`, `toList`), and `ArrayList<T>::stream()`.
 - Default interface methods (`default ReturnType method(...) { ... }`) and static interface methods (`static ReturnType method(...) { ... }`) are transpiled in `compiler-engine/visitor.go` into inlined method implementations directly inside the C++ interface header class definition.
 - Reflection basics (`Class<T>`) are implemented in `libjruntime/Class.h` with `getName()`, `getSimpleName()`, `isInstance(Object*)`, and `Object::getClass()`, with class literals (`Type.class`) transpiled via `VisitPrimary`.
+- Container abstraction `Optional<T>` is implemented in `libjruntime/Optional.h` with static factories `of`, `ofNullable`, `empty`, predicates `isPresent`, `isEmpty`, accessors `get`, `orElse`, and transformations `map`, `filter`.

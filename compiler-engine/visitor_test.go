@@ -285,6 +285,27 @@ public class ReflectionTest {
 	}
 }
 
+func TestTranspileOptional(t *testing.T) {
+	javaSrc := `
+public class OptionalTest {
+    public Optional<String> findName(String input) {
+        return Optional.ofNullable(input);
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "java::util::Optional<java::lang::String*>* findName") {
+		t.Errorf("Expected Optional<String> in header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "Optional.h") {
+		t.Errorf("Expected Optional.h in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "Optional::ofNullable(input)") {
+		t.Errorf("Expected ofNullable in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

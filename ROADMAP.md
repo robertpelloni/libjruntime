@@ -48,6 +48,7 @@
 - [x] Stream API runtime headers (`libjruntime/Stream.h` - `java.util.stream.Stream<T>`).
 - [x] Default and static interface methods transpilation.
 - [x] Reflection basics (`java.lang.Class<T>` runtime header and class literal transpilation).
+- [x] Container abstractions (`java.util.Optional<T>` runtime header and transpiler mappings).
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
