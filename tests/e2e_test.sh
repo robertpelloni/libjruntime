@@ -379,6 +379,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "Stream.h"
 #include "Class.h"
 #include "Optional.h"
+#include "HashSet.h"
 #include "ListHelper.h"
 #include "CounterTask.h"
 
@@ -671,6 +672,34 @@ int main() {
     java::util::Optional<int32_t>* optMapped = optVal->map(addOneFn);
     assert(optMapped->isPresent());
     assert(optMapped->get() == 124);
+
+    // Verify java.util.HashSet functionality
+    java::util::HashSet<java::lang::String*>* set = java_new<java::util::HashSet<java::lang::String*>>();
+    java::lang::String* itemA = java_new<java::lang::String>("Alpha");
+    java::lang::String* itemB = java_new<java::lang::String>("Beta");
+    java::lang::String* itemC = java_new<java::lang::String>("Gamma");
+
+    assert(set->isEmpty());
+    assert(set->size() == 0);
+    assert(set->add(itemA) == true);
+    assert(set->add(itemB) == true);
+    assert(set->add(itemA) == false); // Duplicate rejected
+    assert(set->size() == 2);
+    assert(set->contains(itemA) == true);
+    assert(set->contains(itemC) == false);
+
+    assert(set->remove(itemA) == true);
+    assert(set->size() == 1);
+    assert(set->contains(itemA) == false);
+
+    // Verify range-based iteration over HashSet
+    set->add(itemC);
+    int32_t setIterCount = 0;
+    for (java::lang::String* elem : *set) {
+        assert(elem != nullptr);
+        setIterCount++;
+    }
+    assert(setIterCount == 2);
 
     // Verify array creation and indexing
     java::lang::Array<int32_t>* numbers = defaultApp->createArray(4);

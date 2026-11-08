@@ -306,6 +306,30 @@ public class OptionalTest {
 	}
 }
 
+func TestTranspileHashSet(t *testing.T) {
+	javaSrc := `
+public class SetTest {
+    public HashSet<String> createSet() {
+        HashSet<String> set = new HashSet<>();
+        set.add(new String("apple"));
+        set.contains(new String("apple"));
+        return set;
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "java::util::HashSet<java::lang::String*>* createSet()") {
+		t.Errorf("Expected HashSet<String> return type in header, got:\n%s", header)
+	}
+	if !strings.Contains(header, "HashSet.h") {
+		t.Errorf("Expected HashSet.h include in header, got:\n%s", header)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(set)->add") {
+		t.Errorf("Expected set.add in cpp, got:\n%s", cpp)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

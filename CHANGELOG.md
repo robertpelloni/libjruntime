@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.37
+- Created `libjruntime/HashSet.h` implementing `java::util::HashSet<E>`:
+  - Backed by an internal `java::util::HashMap<E, Object*>` for O(1) membership operations.
+  - Dynamically maintained flat array for `begin()` and `end()` range-based iteration support.
+  - Methods: `add`, `contains`, `remove`, `size`, `isEmpty`, `clear`.
+- Updated `compiler-engine/visitor.go` type mappings and header auto-inclusion for `HashSet<T>` and `Set<T>`.
+- Added unit test `TestTranspileHashSet` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution test coverage for `HashSet<T>` in `tests/e2e_test.sh`.
+- Bumped version to `1.0.37` in `VERSION`.
+
 ## 1.0.36
 - Created `libjruntime/Optional.h` implementing `java::util::Optional<T>`:
   - Static factory methods `of`, `ofNullable`, `empty`.
