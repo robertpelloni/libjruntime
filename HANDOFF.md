@@ -1,20 +1,16 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.48 - AtomicLong Support
+## Milestone Reached: v1.0.49 - ANTLR4 Stream Pipeline & Section 1 Blueprint Documentation
 
-### What Was Accomplished in v1.0.48
-1. **AtomicLong Primitive (`libjruntime/Atomic.h`)**:
-   - Implemented `java::util::concurrent::atomic::AtomicLong` backed by `std::atomic<int64_t>` with `get`, `set`, `getAndSet`, `compareAndSet`, `getAndIncrement`, `getAndDecrement`, `getAndAdd`, `addAndGet`, `incrementAndGet`, and `decrementAndGet`.
-2. **Visitor & Type Mappings (`compiler-engine/visitor.go`)**:
-   - Added `AtomicLong` to type mappings (`::java::util::concurrent::atomic::AtomicLong*`).
-   - Added `AtomicLong` to built-in types set.
-   - Handled object allocation in `VisitPrimaryExpression`.
-3. **Comprehensive Verification**:
-   - Added unit test `TestTranspileAtomicLong` in `compiler-engine/visitor_test.go`.
-   - Added `testAtomicLong` integration test method and 64-bit atomic assertions in `tests/e2e_test.sh`.
+### What Was Accomplished in v1.0.49
+1. **Section 1 Blueprint Documentation (`README.md` & `compiler-engine/ARCHITECTURE.md`)**:
+   - Detailed ANTLR4 character stream, token stream, and parser initialization sequence.
+   - Evaluated parse tree listener vs. visitor architectures, detailing why `CppTranspilerVisitor` was selected for deterministic tree reduction and localized code synthesis.
+   - Documented production rules and code emission pipeline.
+2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
-4. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.48`.
+3. **Workspace Governance**:
+   - Bumped `VERSION` to `1.0.49`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

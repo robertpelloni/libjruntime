@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.49
+- Detailed Section 1: ANTLR4 Grammar Integration & Transpiler CLI Setup in `README.md` and `compiler-engine/ARCHITECTURE.md`:
+  - Outlined initial Go stream, lexer, and parser token stream setup.
+  - Documented Visitor vs. Listener architectural tradeoffs in ANTLR4.
+  - Added code generation pipeline breakdown and tree reduction semantics.
+- Bumped version to `1.0.49` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.48
 - Implemented `AtomicLong` in `libjruntime/Atomic.h`:
   - Backed by `std::atomic<int64_t>` with `get`, `set`, `getAndSet`, `compareAndSet`, `getAndIncrement`, `getAndDecrement`, `getAndAdd`, `addAndGet`, `incrementAndGet`, and `decrementAndGet`.

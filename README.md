@@ -9,13 +9,13 @@ Goal: Run unmodified Java source code natively by transpiling it to C++20.
 ### Submodules & Dependencies
 For deep architectural insights, build configuration flags, memory management hooks, and grammar details, see the dedicated [SUBMODULES.md](SUBMODULES.md) guide. For internal transpiler design, ANTLR4 AST visitor lowerings, and symbol resolution mechanics, see [compiler-engine/ARCHITECTURE.md](compiler-engine/ARCHITECTURE.md).
 
-### ANTLR4 Grammar Integration & Transpiler CLI Setup
+### SECTION 1: ANTLR4 Grammar Integration & Transpiler CLI Setup
 
 The Go-based transpiler front-end relies on the official Java ANTLR4 grammar specifications maintained in the `grammars-v4` git submodule (`grammars-v4/java/java`):
 - `JavaLexer.g4`: Complete lexical specifications defining token patterns, unicode escapes, identifiers, operators, keywords, and numeric/string/character literals.
 - `JavaParser.g4`: Context-free grammar rules defining Java compilation units, class and interface declarations, member fields, constructors, methods, control flow statements, and expression trees.
 
-#### Grammar Integration Architecture
+#### 1.1 Grammar Integration Architecture
 ```
 ┌─────────────────────────────────┐       ┌────────────────────────────────┐
 │   grammars-v4/java/java/*.g4    │ ────> │ scripts/generate_parser.sh     │
@@ -33,7 +33,22 @@ The Go-based transpiler front-end relies on the official Java ANTLR4 grammar spe
 └─────────────────────────────────┘
 ```
 
-#### ANTLR4 Parsing & Code Generation Pipeline
+#### 1.2 Initial Transpiler CLI Stream Setup
+The Go CLI initializes the ANTLR4 input stream, token stream, and parser using standard Go runtime bindings:
+```go
+input := antlr.NewInputStream(javaSource)
+lexer := parser.NewJavaLexer(input)
+tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+p := parser.NewJavaParser(tokens)
+tree := p.CompilationUnit()
+```
+
+#### 1.3 Visitor vs. Listener Design Pattern
+ANTLR4 provides two primary tree traversal paradigms:
+- **Parse Tree Listeners (`JavaParserListener`)**: Passive, event-driven callbacks triggered as a walker enters and exits tree nodes. Listeners do not control traversal flow and cannot easily synthesize values up the tree.
+- **Parse Tree Visitors (`CppTranspilerVisitor`)**: Explicit, active reduction where `visitor.Visit(node)` returns intermediate string expressions and AST values. This enables localized code generation (e.g. evaluating an `ExpressionList` or constructor arguments before emitting the enclosing method call).
+
+#### 1.4 ANTLR4 Parsing & Code Generation Pipeline
 1. **Lexical Analysis (`JavaLexer`)**: Stream of raw Java code is tokenized into typed tokens (`IDENTIFIER`, `INT`, `RETURN`, `IF`, etc.).
 2. **Syntactic Analysis (`JavaParser`)**: Tokens form a parse tree starting from root rule `compilationUnit`:
    - `typeDeclaration` ➔ `classDeclaration` | `interfaceDeclaration`

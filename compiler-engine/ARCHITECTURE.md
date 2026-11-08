@@ -62,6 +62,27 @@ The output Go package in `compiler-engine/parser/` exposes:
 - `JavaParserVisitor`: Interface defining visitor callbacks for every grammar production.
 - `BaseJavaParserVisitor`: Default no-op implementation embedded by `CppTranspilerVisitor`.
 
+### Initializing the ANTLR4 Parser Stream
+The parsing entrypoint in `compiler-engine` sets up the lexer and parser pipeline as follows:
+```go
+// 1. Create character stream from input source code
+inputStream := antlr.NewInputStream(javaSource)
+
+// 2. Lexical analysis: generate token stream
+lexer := parser.NewJavaLexer(inputStream)
+tokenStream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+
+// 3. Syntactic analysis: construct parser instance
+javaParser := parser.NewJavaParser(tokenStream)
+
+// 4. Parse starting from root rule compilationUnit
+tree := javaParser.CompilationUnit()
+
+// 5. Walk tree with custom transpiler visitor
+visitor := NewCppTranspilerVisitor(className, superName)
+visitor.Visit(tree)
+```
+
 ---
 
 ## 3. Core Visitor: `CppTranspilerVisitor`
