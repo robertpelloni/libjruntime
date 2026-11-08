@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.48
+- Implemented `AtomicLong` in `libjruntime/Atomic.h`:
+  - Backed by `std::atomic<int64_t>` with `get`, `set`, `getAndSet`, `compareAndSet`, `getAndIncrement`, `getAndDecrement`, `getAndAdd`, `addAndGet`, `incrementAndGet`, and `decrementAndGet`.
+- Updated `compiler-engine/visitor.go` type mappings and built-in type set for `AtomicLong`.
+- Added unit test `TestTranspileAtomicLong` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution tests in `tests/e2e_test.sh`.
+- Bumped version to `1.0.48` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.47
 - Implemented `libjruntime/Atomic.h` providing thread-safe atomic primitives in `java::util::concurrent::atomic`:
   - `AtomicInteger`: backed by `std::atomic<int32_t>` with `get`, `set`, `getAndSet`, `getAndIncrement`, `getAndDecrement`, `getAndAdd`, `addAndGet`, `incrementAndGet`, `decrementAndGet`, and `compareAndSet`.

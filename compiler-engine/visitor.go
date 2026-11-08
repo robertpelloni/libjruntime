@@ -154,6 +154,8 @@ func mapType(javaType string) string {
 		return "java::util::concurrent::atomic::AtomicInteger*"
 	case "AtomicBoolean":
 		return "java::util::concurrent::atomic::AtomicBoolean*"
+	case "AtomicLong":
+		return "java::util::concurrent::atomic::AtomicLong*"
 	case "ArrayList":
 		return "java::util::ArrayList<java::lang::Object*>*"
 	case "LinkedList":
@@ -282,7 +284,7 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
 	primitives := map[string]bool{
 		"int": true, "boolean": true, "long": true, "byte": true,
 		"short": true, "char": true, "float": true, "double": true,
-		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "Byte": true, "Character": true, "Short": true, "AtomicInteger": true, "AtomicBoolean": true, "ArrayList": true, "LinkedList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true, "Function": true, "Consumer": true, "Supplier": true, "Predicate": true, "Stream": true, "Class": true, "Optional": true, "HashSet": true, "Set": true, "Collections": true,
+		"void": true, "auto": true, "String": true, "StringBuilder": true, "Math": true, "Integer": true, "Boolean": true, "Long": true, "Double": true, "Float": true, "Byte": true, "Character": true, "Short": true, "AtomicInteger": true, "AtomicBoolean": true, "AtomicLong": true, "ArrayList": true, "LinkedList": true, "HashMap": true, "File": true, "FileInputStream": true, "FileOutputStream": true, "Thread": true, "Runnable": true, "Object": true, "Exception": true, "Function": true, "Consumer": true, "Supplier": true, "Predicate": true, "Stream": true, "Class": true, "Optional": true, "HashSet": true, "Set": true, "Collections": true,
 	}
 
 	for inc := range v.included {
@@ -1056,6 +1058,8 @@ func (v *CppTranspilerVisitor) VisitObjectCreationExpression(ctx *parser.ObjectC
                  className = "java::util::concurrent::atomic::AtomicInteger"
              } else if className == "AtomicBoolean" {
                  className = "java::util::concurrent::atomic::AtomicBoolean"
+             } else if className == "AtomicLong" {
+                 className = "java::util::concurrent::atomic::AtomicLong"
              } else if className == "Exception" {
                  className = "java::lang::Exception"
              } else if className == "NullPointerException" {

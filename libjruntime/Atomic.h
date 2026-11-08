@@ -84,6 +84,55 @@ public:
     }
 };
 
+class AtomicLong : public ::java::lang::Object {
+private:
+    std::atomic<int64_t> val;
+
+public:
+    AtomicLong() : val(0) {}
+    AtomicLong(int64_t initialValue) : val(initialValue) {}
+
+    int64_t get() const noexcept {
+        return val.load();
+    }
+
+    void set(int64_t newValue) noexcept {
+        val.store(newValue);
+    }
+
+    int64_t getAndSet(int64_t newValue) noexcept {
+        return val.exchange(newValue);
+    }
+
+    bool compareAndSet(int64_t expect, int64_t update) noexcept {
+        return val.compare_exchange_strong(expect, update);
+    }
+
+    int64_t getAndIncrement() noexcept {
+        return val.fetch_add(1);
+    }
+
+    int64_t getAndDecrement() noexcept {
+        return val.fetch_sub(1);
+    }
+
+    int64_t getAndAdd(int64_t delta) noexcept {
+        return val.fetch_add(delta);
+    }
+
+    int64_t incrementAndGet() noexcept {
+        return val.fetch_add(1) + 1;
+    }
+
+    int64_t decrementAndGet() noexcept {
+        return val.fetch_sub(1) - 1;
+    }
+
+    int64_t addAndGet(int64_t delta) noexcept {
+        return val.fetch_add(delta) + delta;
+    }
+};
+
 } // namespace atomic
 } // namespace concurrent
 } // namespace util

@@ -1061,3 +1061,22 @@ public class AtomicTest {
 		t.Errorf("Expected compareAndSet call in cpp, got:\n%s", cpp)
 	}
 }
+
+func TestTranspileAtomicLong(t *testing.T) {
+	javaSrc := `
+public class AtomicLongTest {
+    public void run() {
+        AtomicLong counter = new AtomicLong(9999999999L);
+        counter.incrementAndGet();
+    }
+}
+`
+	_, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "java::util::concurrent::atomic::AtomicLong* counter = java_new<java::util::concurrent::atomic::AtomicLong>(9999999999L);") {
+		t.Errorf("Expected AtomicLong allocation in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "JAVA_NULL_CHECK(counter)->incrementAndGet()") {
+		t.Errorf("Expected incrementAndGet call in cpp, got:\n%s", cpp)
+	}
+}

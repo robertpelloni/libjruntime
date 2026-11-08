@@ -45,10 +45,18 @@ public class AtomicProbe {
         ai.incrementAndGet();
         AtomicBoolean ab = new AtomicBoolean(false);
         ab.compareAndSet(false, true);
+        AtomicLong al = new AtomicLong(5000000000L);
+        al.addAndGet(1000000000L);
         if (ab.get()) {
             return ai.get();
         }
         return 0;
+    }
+
+    public static long testAtomicLong() {
+        AtomicLong al = new AtomicLong(10000000000L);
+        al.incrementAndGet();
+        return al.get();
     }
 }
 EOF
@@ -477,6 +485,8 @@ int main() {
     // Verify Atomic operations
     int32_t atomicVal = AtomicProbe::testAtomicOps();
     assert(atomicVal == 151);
+    int64_t atomicLongVal = AtomicProbe::testAtomicLong();
+    assert(atomicLongVal == 10000000001LL);
 
     // Verify static fields and static method invocation
     assert(MathHelper::FACTOR == 7);
