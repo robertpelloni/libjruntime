@@ -10,6 +10,7 @@
 - [x] Implement reflection basics (`java.lang.Class<T>` and class literals `type.class`) in `libjruntime/Class.h` and `compiler-engine/visitor.go`.
 - [x] Implement `java.util.Optional<T>` container in `libjruntime/Optional.h` and visitor mappings.
 - [x] Implement `java.util.HashSet<E>` in `libjruntime/HashSet.h` and visitor mappings.
+- [x] Implement live interactive web dashboard studio (`-dashboard`) in `compiler-engine/dashboard.go`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.38
+- Implemented embedded interactive web dashboard studio in `compiler-engine`:
+  - Added `-dashboard` and `-port` flags in `compiler-engine/main.go`.
+  - Added single-page responsive Web UI with live side-by-side Java-to-C++ playground editor in `compiler-engine/dashboard.go`.
+  - Implemented `/api/transpile` and `/api/status` HTTP endpoints for on-the-fly code generation and runtime health inspection.
+  - Added unit tests in `compiler-engine/dashboard_test.go` (`TestDashboardStatus`, `TestDashboardTranspile`).
+- Bumped version to `1.0.38` in `VERSION`.
+
 ## 1.0.37
 - Created `libjruntime/HashSet.h` implementing `java::util::HashSet<E>`:
   - Backed by an internal `java::util::HashMap<E, Object*>` for O(1) membership operations.

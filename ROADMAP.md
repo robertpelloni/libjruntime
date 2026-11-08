@@ -53,4 +53,4 @@
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
-- [ ] Real-time transpilation dashboard and interactive developer CLI tools.
+- [x] Real-time transpilation dashboard and interactive developer CLI tools (`compiler-engine -dashboard`).
