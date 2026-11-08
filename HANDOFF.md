@@ -1,22 +1,17 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.40 - Sequential & Deque Collections (`java.util.LinkedList`)
+## Milestone Reached: v1.0.41 - ANTLR4 Grammar Pipeline & CLI Architecture Documentation
 
-### What Was Accomplished in v1.0.40
-1. **LinkedList Runtime Header (`libjruntime/LinkedList.h`)**:
-   - Implemented `java::util::LinkedList<T>` backed by doubly linked nodes allocated via `GC_MALLOC`.
-   - Provided sequential and deque APIs: `add`, `addFirst`, `addLast`, `get`, `getFirst`, `getLast`, `remove`, `removeFirst`, `removeLast`, `size`, `isEmpty`, `clear`, `contains`.
-   - Forward range-based iterator support (`begin()`, `end()`).
-2. **Visitor & Type Mappings (`compiler-engine/visitor.go`)**:
-   - Added `LinkedList` to built-in type sets.
-   - Handled generic instantiation `LinkedList<T>` and raw `LinkedList`.
-   - Automatically included `LinkedList.h` in transpiled headers.
-3. **Comprehensive Verification**:
-   - Added unit test `TestTranspileLinkedList` in `compiler-engine/visitor_test.go`.
-   - Added end-to-end integration test assertions in `tests/e2e_test.sh`.
+### What Was Accomplished in v1.0.41
+1. **Grammar & Compiler Architecture Documentation (`README.md`)**:
+   - Detailed integration of `grammars-v4` ANTLR4 lexer and parser definitions (`JavaLexer.g4`, `JavaParser.g4`).
+   - Added ASCII architecture diagram showing code flow from `.g4` rules to Go bindings and C++20 emission.
+   - Documented `CppTranspilerVisitor` hooks for compilation units, classes, interfaces, constructors, methods, expressions, lambdas, and method references.
+   - Documented Web Dashboard Studio usage via `-dashboard -port=...`.
+2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
-4. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.40`.
+3. **Workspace Governance**:
+   - Bumped `VERSION` to `1.0.41`.
    - Updated `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

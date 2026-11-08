@@ -13,6 +13,7 @@
 - [x] Implement live interactive web dashboard studio (`-dashboard`) in `compiler-engine/dashboard.go`.
 - [x] Implement `java.util.Collections` algorithm utility in `libjruntime/Collections.h` and visitor mappings.
 - [x] Implement `java.util.LinkedList<T>` in `libjruntime/LinkedList.h` and visitor mappings.
+- [x] Document ANTLR4 grammar pipeline and AST lowerings in `README.md`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

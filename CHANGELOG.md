@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.41
+- Enhanced README.md documentation:
+  - Documented ANTLR4 grammar pipeline architecture (`JavaLexer.g4`, `JavaParser.g4`).
+  - Added ASCII diagram of grammar compilation and code emission pipeline.
+  - Outlined visitor AST traversal mechanics (`CppTranspilerVisitor`).
+  - Added examples of syntax tree lowering and interactive Web Dashboard Studio execution.
+- Bumped version to `1.0.41` in `VERSION`.
+
 ## 1.0.40
 - Implemented `libjruntime/LinkedList.h` providing `java::util::LinkedList<T>`:
   - Backed by doubly linked nodes allocated with `GC_MALLOC`.

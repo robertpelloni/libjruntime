@@ -52,6 +52,7 @@
 - [x] Set collections (`java.util.HashSet<E>` runtime header and transpiler mappings).
 - [x] Sequential and Deque collections (`java.util.LinkedList<T>` in `libjruntime/LinkedList.h`).
 - [x] Collection algorithms (`java.util.Collections` in `libjruntime/Collections.h` - `sort`, `reverse`, `shuffle`, `min`, `max`, `fill`, `frequency`).
+- [x] Comprehensive ANTLR4 grammar architecture documentation in `README.md`.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
