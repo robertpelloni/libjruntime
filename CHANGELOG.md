@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.35
+- Created `libjruntime/Class.h` implementing reflection basics (`java::lang::Class<T>`):
+  - `getName()`, `getSimpleName()`, `isInstance(Object*)`, and static factory `Class<T>::forType(...)`.
+  - Added `getClass()` virtual member method on `java::lang::Object`.
+- Updated `compiler-engine/visitor.go` type mappings and header auto-inclusion for `Class<T>`.
+- Added support in `VisitPrimary` for Java class literal expressions (`TypeName.class`).
+- Added unit test `TestTranspileClassLiteral` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration and native execution test coverage for class literals and reflection in `tests/e2e_test.sh`.
+- Bumped version to `1.0.35` in `VERSION`.
+
 ## 1.0.34
 - Implemented default interface methods (`default ReturnType method(...) { ... }`) and static interface methods (`static ReturnType method(...) { ... }`) in `compiler-engine/visitor.go`.
 - Emitted inlined implementations in interface headers while preserving pure virtual declarations for abstract interface methods.

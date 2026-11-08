@@ -263,6 +263,28 @@ public interface Service {
 	}
 }
 
+func TestTranspileClassLiteral(t *testing.T) {
+	javaSrc := `
+public class ReflectionTest {
+    public void test() {
+        Class<String> sc = String.class;
+        Class<Integer> ic = Integer.class;
+    }
+}
+`
+	header, cpp := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(cpp, "java::lang::Class<java::lang::String>::forType(\"String\")") {
+		t.Errorf("Expected String.class literal in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(cpp, "java::lang::Class<java::lang::Integer>::forType(\"Integer\")") {
+		t.Errorf("Expected Integer.class literal in cpp, got:\n%s", cpp)
+	}
+	if !strings.Contains(header, "Class.h") {
+		t.Errorf("Expected Class.h include in header, got:\n%s", header)
+	}
+}
+
 func TestTranspileSwitchStatement(t *testing.T) {
 	javaSrc := `
 public class SwitchTest {

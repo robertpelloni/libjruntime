@@ -377,6 +377,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include "Thread.h"
 #include "Functions.h"
 #include "Stream.h"
+#include "Class.h"
 #include "ListHelper.h"
 #include "CounterTask.h"
 
@@ -640,6 +641,18 @@ int main() {
     assert(streamResult->size() == 2);
     assert(streamResult->get(0) == 20);
     assert(streamResult->get(1) == 40);
+
+    // Verify java.lang.Class and reflection basics
+    java::lang::Class<Dog>* dogClass = java::lang::Class<Dog>::forType("Dog");
+    assert(dogClass != nullptr);
+    assert(dogClass->getName()->getStdString() == "Dog");
+    assert(dogClass->getSimpleName()->getStdString() == "Dog");
+    assert(dogClass->isInstance(dog) == true);
+    assert(dogClass->isInstance(myList) == false);
+
+    java::lang::Class<java::lang::Object>* objClass = defaultApp->getClass();
+    assert(objClass != nullptr);
+    assert(objClass->getName()->getStdString() == "java.lang.Object");
 
     // Verify array creation and indexing
     java::lang::Array<int32_t>* numbers = defaultApp->createArray(4);
