@@ -54,6 +54,7 @@
 - [x] Collection algorithms (`java.util.Collections` in `libjruntime/Collections.h` - `sort`, `reverse`, `shuffle`, `min`, `max`, `fill`, `frequency`).
 - [x] Comprehensive ANTLR4 grammar architecture documentation in `README.md`.
 - [x] In-depth submodule architecture and integration guide (`SUBMODULES.md`).
+- [x] Compiler engine architecture & visitor blueprint (`compiler-engine/ARCHITECTURE.md`).
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

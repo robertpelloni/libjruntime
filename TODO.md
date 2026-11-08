@@ -17,6 +17,7 @@
 - [x] Implement deterministic field default initializers (`0`, `false`, `0.0`, `nullptr`) in `compiler-engine/visitor.go`.
 - [x] Create dedicated submodule integration guide `SUBMODULES.md` covering `bdwgc` and `grammars-v4`.
 - [x] Implement `Byte` and `Character` wrapper types in `libjruntime/Boxes.h` and visitor mappings.
+- [x] Create `compiler-engine/ARCHITECTURE.md` blueprint guide.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

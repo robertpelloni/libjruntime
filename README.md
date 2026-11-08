@@ -7,7 +7,7 @@ A Go-based Transpiler CLI and a modern C++20 Native Runtime Library designed to 
 Goal: Run unmodified Java source code natively by transpiling it to C++20.
 
 ### Submodules & Dependencies
-For deep architectural insights, build configuration flags, memory management hooks, and grammar details, see the dedicated [SUBMODULES.md](SUBMODULES.md) guide.
+For deep architectural insights, build configuration flags, memory management hooks, and grammar details, see the dedicated [SUBMODULES.md](SUBMODULES.md) guide. For internal transpiler design, ANTLR4 AST visitor lowerings, and symbol resolution mechanics, see [compiler-engine/ARCHITECTURE.md](compiler-engine/ARCHITECTURE.md).
 
 ### ANTLR4 Grammar Integration & Transpiler CLI Setup
 

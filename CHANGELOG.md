@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.45
+- Created `compiler-engine/ARCHITECTURE.md` documenting the Go transpiler CLI internal blueprint:
+  - ANTLR4 lexer and parser generation pipeline.
+  - `CppTranspilerVisitor` state, AST traversal hooks, and symbol resolution.
+  - C++20 code lowerings (constructors, chaining, default initializers, lambdas, method references, RAII finally guards).
+  - Batch compilation and interactive Web Dashboard Studio execution modes.
+- Referenced `compiler-engine/ARCHITECTURE.md` in `README.md`.
+- Bumped version to `1.0.45` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.44
 - Implemented `Byte` and `Character` primitive wrapper classes in `libjruntime/Boxes.h`:
   - `Byte`: wrapping `int8_t` with `valueOf`, `byteValue`, `intValue`, `hashCode`, `equals`, and `toString`.
