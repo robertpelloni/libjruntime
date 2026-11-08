@@ -653,6 +653,22 @@ func (v *CppTranspilerVisitor) VisitFieldDeclaration(ctx *parser.FieldDeclaratio
 			} else {
 				initVal = fmt.Sprintf(" = %s", decl.VariableInitializer().GetText())
 			}
+		} else {
+			// Java default initializers for uninitialized fields
+			switch fieldType {
+			case "bool":
+				initVal = " = false"
+			case "int32_t", "int64_t", "int8_t", "int16_t", "char16_t":
+				initVal = " = 0"
+			case "float":
+				initVal = " = 0.0f"
+			case "double":
+				initVal = " = 0.0"
+			default:
+				if strings.HasSuffix(fieldType, "*") {
+					initVal = " = nullptr"
+				}
+			}
 		}
 		if v.currentIsStatic {
 			v.staticFields[fieldName] = true

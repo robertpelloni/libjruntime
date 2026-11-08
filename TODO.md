@@ -14,6 +14,7 @@
 - [x] Implement `java.util.Collections` algorithm utility in `libjruntime/Collections.h` and visitor mappings.
 - [x] Implement `java.util.LinkedList<T>` in `libjruntime/LinkedList.h` and visitor mappings.
 - [x] Document ANTLR4 grammar pipeline and AST lowerings in `README.md`.
+- [x] Implement deterministic field default initializers (`0`, `false`, `0.0`, `nullptr`) in `compiler-engine/visitor.go`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

@@ -28,6 +28,15 @@ public class Config {
 }
 EOF
 
+cat << 'EOF' > "${TEMP_DIR}/src/UninitializedProbe.java"
+public class UninitializedProbe {
+    public int count;
+    public boolean flag;
+    public double score;
+    public String message;
+}
+EOF
+
 cat << 'EOF' > "${TEMP_DIR}/src/CounterTask.java"
 public class CounterTask implements Runnable {
     int counter;
@@ -371,6 +380,7 @@ cat << 'EOF' > "${TEMP_DIR}/out/main_entry.cpp"
 #include <iostream>
 #include <cassert>
 #include "Config.h"
+#include "UninitializedProbe.h"
 #include "MathHelper.h"
 #include "BoxHelper.h"
 #include "Describable.h"
@@ -414,6 +424,14 @@ int main() {
     assert(clamped == 100);
     int32_t clampedLow = MathHelper::getClampedValue(-50, 0, 100);
     assert(clampedLow == 0);
+
+    // Verify uninitialized field default initializers
+    UninitializedProbe* probe = java_new<UninitializedProbe>();
+    assert(probe != nullptr);
+    assert(probe->count == 0);
+    assert(probe->flag == false);
+    assert(probe->score == 0.0);
+    assert(probe->message == nullptr);
 
     // Verify static fields and static method invocation
     assert(MathHelper::FACTOR == 7);

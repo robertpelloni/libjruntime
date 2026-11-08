@@ -1,17 +1,20 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.41 - ANTLR4 Grammar Pipeline & CLI Architecture Documentation
+## Milestone Reached: v1.0.42 - Field Default Initializers
 
-### What Was Accomplished in v1.0.41
-1. **Grammar & Compiler Architecture Documentation (`README.md`)**:
-   - Detailed integration of `grammars-v4` ANTLR4 lexer and parser definitions (`JavaLexer.g4`, `JavaParser.g4`).
-   - Added ASCII architecture diagram showing code flow from `.g4` rules to Go bindings and C++20 emission.
-   - Documented `CppTranspilerVisitor` hooks for compilation units, classes, interfaces, constructors, methods, expressions, lambdas, and method references.
-   - Documented Web Dashboard Studio usage via `-dashboard -port=...`.
+### What Was Accomplished in v1.0.42
+1. **Deterministic Field Default Initializers (`compiler-engine/visitor.go`)**:
+   - Synthesized default values for uninitialized instance and static fields according to the Java Language Specification:
+     - `bool`: `false`
+     - Integer/Character types (`int32_t`, `int64_t`, `int8_t`, `int16_t`, `char16_t`): `0`
+     - Floating point types (`float`, `double`): `0.0f` and `0.0`
+     - Pointer/Reference types (`*`): `nullptr`
 2. **Comprehensive Verification**:
-   - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
+   - Added unit test `TestTranspileFieldDefaultInitializers` in `compiler-engine/visitor_test.go`.
+   - Added `UninitializedProbe` test class and verification in `tests/e2e_test.sh`.
+   - Ran `go test -v -race ./...` and `tests/e2e_test.sh` with 100% pass rate.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.41`.
+   - Bumped `VERSION` to `1.0.42`.
    - Updated `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

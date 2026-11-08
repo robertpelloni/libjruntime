@@ -28,7 +28,7 @@
 - [x] Explicit `throw` statements and parameterized exception constructor overloads.
 
 ## Milestone 2: Language Completeness (v1.1.0)
-- [ ] Field default initializers in generated constructors.
+- [x] Field default initializers in generated constructors and class field declarations.
 
 - [x] Key-value associative container: `java.util.HashMap<K, V>` in `libjruntime/HashMap.h`.
 

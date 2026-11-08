@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.42
+- Implemented automatic Java field default initializers in `compiler-engine/visitor.go`:
+  - `bool` initialized to `false`.
+  - Numeric integer/character types (`int32_t`, `int64_t`, `int8_t`, `int16_t`, `char16_t`) initialized to `0`.
+  - Floating point types (`float`, `double`) initialized to `0.0f` and `0.0`.
+  - Pointer/reference types (`*`) initialized to `nullptr`.
+- Added unit test `TestTranspileFieldDefaultInitializers` in `compiler-engine/visitor_test.go`.
+- Added end-to-end integration test coverage for uninitialized field defaults in `tests/e2e_test.sh`.
+- Bumped version to `1.0.42` in `VERSION`.
+
 ## 1.0.41
 - Enhanced README.md documentation:
   - Documented ANTLR4 grammar pipeline architecture (`JavaLexer.g4`, `JavaParser.g4`).

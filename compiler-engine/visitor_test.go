@@ -62,7 +62,7 @@ public class Calculator {
 	if !strings.Contains(header, "virtual int32_t add(int32_t a, int32_t b);") {
 		t.Errorf("Expected virtual add method in header, got:\n%s", header)
 	}
-	if !strings.Contains(header, "int32_t total;") {
+	if !strings.Contains(header, "int32_t total = 0;") {
 		t.Errorf("Expected total field declaration in header, got:\n%s", header)
 	}
 	if !strings.Contains(cpp, "int32_t Calculator::add(int32_t a, int32_t b) {") {
@@ -970,5 +970,30 @@ public class ListQueueTest {
 	}
 	if !strings.Contains(cpp, "JAVA_NULL_CHECK(queue)->removeLast()") {
 		t.Errorf("Expected removeLast call in cpp, got:\n%s", cpp)
+	}
+}
+
+func TestTranspileFieldDefaultInitializers(t *testing.T) {
+	javaSrc := `
+public class DefaultFields {
+    private int counter;
+    private boolean active;
+    private double ratio;
+    private String label;
+}
+`
+	header, _ := transpileJavaSnippet(t, javaSrc)
+
+	if !strings.Contains(header, "int32_t counter = 0;") {
+		t.Errorf("Expected default 0 initializer for counter, got:\n%s", header)
+	}
+	if !strings.Contains(header, "bool active = false;") {
+		t.Errorf("Expected default false initializer for active, got:\n%s", header)
+	}
+	if !strings.Contains(header, "double ratio = 0.0;") {
+		t.Errorf("Expected default 0.0 initializer for ratio, got:\n%s", header)
+	}
+	if !strings.Contains(header, "java::lang::String* label = nullptr;") {
+		t.Errorf("Expected default nullptr initializer for label, got:\n%s", header)
 	}
 }
