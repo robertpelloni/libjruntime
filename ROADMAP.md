@@ -77,6 +77,7 @@
 - [x] Documented submodule structure and commit message conventions.
 - [x] Expanded Section 1 with step-by-step transpiler CLI stream setup.
 - [x] Documented ANTLR4 Go parser bindings generation and architecture.
+- [x] Deepened submodules exploration and state verification.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

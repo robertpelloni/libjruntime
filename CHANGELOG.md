@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.70
+- Deepened Submodules Exploration & State Verification in `SUBMODULES.md`:
+  - Added explicit commit hash references for `bdwgc` and `grammars-v4` submodules.
+  - Documented verification procedures using `git submodule status`.
+- Bumped version to `1.0.70` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.69
 - Documented ANTLR4 Go Parser Bindings Generation and Architecture in `README.md`:
   - Detailed generated files in `compiler-engine/parser/` (`java_lexer.go`, `java_parser.go`, `java_parser_base_visitor.go`, `java_parser_visitor.go`).

@@ -100,6 +100,10 @@ make -j$(nproc)
   Boehm GC utilizes signals (`SIGPWR` / `SIGXCPU`) to pause worker threads during root inspection and collection sweeps.
 - **Memory Diagnostics & Leaks**:
   Boehm GC provides diagnostic hooks (`GC_gcollect()`, `GC_get_heap_size()`, `GC_get_free_bytes()`) that can be polled for runtime memory auditing.
+- **Submodule State Verification**:
+  Submodule commit references are pinned in the git index and can be verified via `git submodule status`:
+  - `bdwgc`: `1d38c6d905a83b006df843440b380e51a2119871`
+  - `grammars-v4`: `5a9a89fa7274878bdb93877c4be5d56859c08e5e`
 
 ### Future Integration Possibilities
 1. **Incremental Collection (`GC_enable_incremental()`)**: Minimize GC pause times for interactive applications and game engines.
