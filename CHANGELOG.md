@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.60
+- Drafted Section 1: Detailed ANTLR4 Grammar Integration & Go Transpiler CLI Stream Setup:
+  - Documented explicit token stream instantiation on `antlr.TokenDefaultChannel`.
+  - Added syntax error reporting configuration with `ConsoleErrorListener`.
+  - Streamlined `TranspileJava(javaSource, outDir)` signature and caller interface in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+- Bumped version to `1.0.60` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.59
 - Investigated and documented `grammars-v4` and `bdwgc` submodules in `SUBMODULES.md`:
   - Detailed Boehm GC heap initialization (`GC_INIT()`), memory allocation, and array buffers.

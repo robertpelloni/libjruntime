@@ -36,38 +36,39 @@ The transpilation pipeline connects the ANTLR4 grammar sources, generated Go par
 ```
 
 #### 1.2 Initial Transpiler CLI Stream Setup & Bootstrap Code
-The Go CLI initializes the ANTLR4 input stream, token stream, and parser using standard Go runtime bindings. Here is the concrete setup used to parse arbitrary Java source strings:
+The Go CLI initializes the ANTLR4 input stream, token stream, and parser using standard Go runtime bindings (`github.com/antlr4-go/antlr/v4`). Here is the concrete setup used to parse arbitrary Java source strings or disk files:
 
 ```go
 package main
 
 import (
     "fmt"
+    "log"
     "github.com/antlr4-go/antlr/v4"
     "github.com/user/j2cpp-engine/parser"
 )
 
 // TranspileJava parses Java source and emits C++20 header and body code
-func TranspileJava(javaSource, className, superName string) (headerCode, cppCode string, err error) {
-    // 1. Initialize character input stream
+func TranspileJava(javaSource, outDir string) (headerCode, cppCode string, err error) {
+    // 1. Initialize character input stream (or antlr.NewFileStream(filepath) for disk files)
     input := antlr.NewInputStream(javaSource)
 
-    // 2. Tokenize input with JavaLexer
+    // 2. Tokenize input with JavaLexer and common token stream on TokenDefaultChannel
     lexer := parser.NewJavaLexer(input)
     tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 
-    // 3. Construct JavaParser instance
+    // 3. Construct JavaParser instance and enable AST construction
     p := parser.NewJavaParser(tokens)
     p.BuildParseTrees = true
 
-    // 4. Attach error listeners if strict syntax checking is desired
-    // p.RemoveErrorListeners()
-    // p.AddErrorListener(antlr.NewConsoleErrorListener())
+    // 4. Attach error listeners for syntax validation
+    p.RemoveErrorListeners()
+    p.AddErrorListener(antlr.NewConsoleErrorListener())
 
-    // 5. Parse starting at compilationUnit rule
+    // 5. Parse starting at compilationUnit root grammar rule
     tree := p.CompilationUnit()
 
-    // 6. Execute AST reduction with CppTranspilerVisitor configured with output directory
+    // 6. Execute AST reduction with CppTranspilerVisitor configured with target output directory
     visitor := NewCppTranspilerVisitor(outDir)
     visitor.Visit(tree)
 

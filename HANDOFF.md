@@ -1,15 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.59 - grammars-v4 and bdwgc Submodules Investigation
+## Milestone Reached: v1.0.60 - Section 1 ANTLR4 Grammar Integration & Stream Setup
 
-### What Was Accomplished in v1.0.59
-1. **Submodules Investigation & Documentation**:
-   - Investigated `grammars-v4` and `bdwgc` state, build targets, and runtime interactions.
-   - Enhanced `SUBMODULES.md` with details on Boehm GC heap initialization (`GC_INIT()`), memory diagnostics, thread registration mechanics, and leak detection flags (`-DFIND_LEAK`).
+### What Was Accomplished in v1.0.60
+1. **Section 1 ANTLR4 Grammar Integration & Stream Setup**:
+   - Refined Section 1 in `README.md` and `compiler-engine/ARCHITECTURE.md` documenting ANTLR4 stream initialization, token channel setup, error listener hooks, and AST reduction with `CppTranspilerVisitor`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.59`.
+   - Bumped `VERSION` to `1.0.60`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

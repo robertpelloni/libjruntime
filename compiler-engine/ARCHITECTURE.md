@@ -96,7 +96,7 @@ The CLI bootstrap sets up the ANTLR4 input stream, token stream, and parser pipe
 // 1. Create character stream from input source code (or antlr.NewFileStream for disk files)
 inputStream := antlr.NewInputStream(javaSource)
 
-// 2. Lexical analysis: instantiate lexer and wrap in common token stream
+// 2. Lexical analysis: instantiate lexer and wrap in common token stream on default channel
 lexer := parser.NewJavaLexer(inputStream)
 tokenStream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 
@@ -104,9 +104,9 @@ tokenStream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 javaParser := parser.NewJavaParser(tokenStream)
 javaParser.BuildParseTrees = true
 
-// Optional error listener hook for diagnostics
-// javaParser.RemoveErrorListeners()
-// javaParser.AddErrorListener(antlr.NewConsoleErrorListener())
+// Attach error listener for syntax reporting
+javaParser.RemoveErrorListeners()
+javaParser.AddErrorListener(antlr.NewConsoleErrorListener())
 
 // 4. Parse starting from root rule compilationUnit
 tree := javaParser.CompilationUnit()

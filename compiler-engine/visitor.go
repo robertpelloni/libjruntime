@@ -1340,6 +1340,22 @@ func (v *CppTranspilerVisitor) VisitBinaryOperatorExpression(ctx *parser.BinaryO
 	return ctx.GetText()
 }
 
+// GetHeaderCode returns the accumulated C++ header code emitted by the visitor
+func (v *CppTranspilerVisitor) GetHeaderCode() string {
+	if v.headerCode != nil {
+		return v.headerCode.String()
+	}
+	return ""
+}
+
+// GetCppCode returns the accumulated C++ implementation code emitted by the visitor
+func (v *CppTranspilerVisitor) GetCppCode() string {
+	if v.cppCode != nil {
+		return v.cppCode.String()
+	}
+	return ""
+}
+
 func (v *CppTranspilerVisitor) VisitInstanceOfOperatorExpression(ctx *parser.InstanceOfOperatorExpressionContext) interface{} {
 	exprStr := ""
 	if ctx.Expression() != nil {

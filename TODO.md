@@ -32,6 +32,7 @@
 - [x] Draft dedicated Section 1 ANTLR4 grammar integration specifications in `README.md` and `compiler-engine/ARCHITECTURE.md`.
 - [x] Deepen Section 1 with lexer token classifications and parser grammar rule hierarchy.
 - [x] Investigate and document `grammars-v4` and `bdwgc` submodules in `SUBMODULES.md`.
+- [x] Draft Section 1 detailing ANTLR4 grammar integration and Go transpiler CLI stream setup.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.
