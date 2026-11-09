@@ -79,9 +79,15 @@ sed -i 's/\bthis\./p\./g' compiler-engine/parser/*.go
 ```
 
 The output Go package in `compiler-engine/parser/` exposes:
-- `JavaLexer`: Tokenizer scanning input character streams into categorized tokens.
-- `JavaParser`: Predictive LL(*) recursive-descent parser returning parse tree contexts (starting at `ICompilationUnitContext`).
-- `JavaParserVisitor`: Interface defining visitor callback signatures for all 100+ grammar rules.
+- `JavaLexer`: Tokenizer scanning input character streams into categorized tokens (`IDENTIFIER`, `DECIMAL_LITERAL`, `STRING_LITERAL`, `CLASS`, `INTERFACE`, etc.).
+- `JavaParser`: Predictive LL(*) recursive-descent parser returning parse tree contexts starting at root rule `compilationUnit`:
+  - `ICompilationUnitContext`: Root unit parsing package declarations, imports, and top-level types.
+  - `IClassDeclarationContext`: Class header, superclass (`extends`), interfaces (`implements`), and body.
+  - `IInterfaceDeclarationContext`: Interface definitions and signatures.
+  - `IClassBodyDeclarationContext`: Methods, constructors, fields, and static initializers.
+  - `IStatementContext`: Control flow, blocks, synchronized locks, and exception blocks.
+  - `IExpressionContext`: Expressions, lambda syntax, and method references.
+- `JavaParserVisitor`: Interface defining visitor callback signatures for all grammar rules.
 - `BaseJavaParserVisitor`: Default no-op implementation embedded by `CppTranspilerVisitor`.
 
 ### 2.3 Initializing the ANTLR4 Parser Stream in Go

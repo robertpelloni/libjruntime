@@ -1,16 +1,16 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.57 - Section 1 ANTLR4 Grammar Integration Specifications
+## Milestone Reached: v1.0.58 - Lexer & Parser Grammar Rule Hierarchy Documentation
 
-### What Was Accomplished in v1.0.57
-1. **Section 1 ANTLR4 Grammar Integration Specifications**:
-   - Refined Section 1 in `README.md` and `compiler-engine/ARCHITECTURE.md` detailing ANTLR4 grammar pipeline architecture.
-   - Detailed lexical analysis tokens (`JavaLexer.g4`) and context-free syntactic grammar rules (`JavaParser.g4`).
-   - Clarified end-to-end pipeline diagram connecting grammar inputs, code generation via `scripts/generate_parser.sh`, predicate normalization, AST traversal, and C++20 emission.
+### What Was Accomplished in v1.0.58
+1. **Lexer & Parser Grammar Rule Hierarchy**:
+   - Detailed lexical token classifications (`DECIMAL_LITERAL`, `FLOAT_LITERAL`, `BOOL_LITERAL`, `STRING_LITERAL`, `TEXT_BLOCK`, keywords).
+   - Documented context-free syntactic grammar rule hierarchy in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+   - Documented exposed parse tree context interfaces (`ICompilationUnitContext`, `IClassDeclarationContext`, etc.) in `compiler-engine/parser/`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.57`.
+   - Bumped `VERSION` to `1.0.58`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

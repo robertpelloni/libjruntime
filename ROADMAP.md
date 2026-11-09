@@ -65,6 +65,7 @@
 - [x] CLI entrypoint and argument parsing documentation in `ARCHITECTURE.md` and `README.md`.
 - [x] Detailed ANTLR4 grammar and submodule integration workflow documentation (`compiler-engine/ARCHITECTURE.md`, `SUBMODULES.md`, `README.md`).
 - [x] Section 1 ANTLR4 grammar integration and transpiler pipeline specifications in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+- [x] Deepened lexer token definitions and parser grammar rule hierarchy documentation.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.58
+- Deepened Section 1: Lexer & Parser Grammar Rule Hierarchy in `README.md` and `compiler-engine/ARCHITECTURE.md`:
+  - Detailed explicit lexical token classifications: literals (`DECIMAL_LITERAL`, `FLOAT_LITERAL`, `BOOL_LITERAL`, `STRING_LITERAL`, `TEXT_BLOCK`) and keywords.
+  - Documented context-free syntactic grammar rule hierarchy (`compilationUnit`, `typeDeclaration`, `classDeclaration`, `interfaceDeclaration`, `classBody`, `memberDeclaration`, `statement`, `expression`).
+  - Added parse tree context interfaces exposed by `compiler-engine/parser/` package.
+- Bumped version to `1.0.58` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.57
 - Drafted and refined Section 1: ANTLR4 Grammar Integration Specifications in `README.md` and `compiler-engine/ARCHITECTURE.md`:
   - Detailed `JavaLexer.g4` token specifications and keyword categories.

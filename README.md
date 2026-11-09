@@ -81,12 +81,20 @@ ANTLR4 provides two primary tree traversal paradigms:
 - **Parse Tree Visitors (`CppTranspilerVisitor`)**: Explicit, active reduction where `visitor.Visit(node)` returns intermediate string expressions and AST values. This enables localized code generation (e.g. evaluating an `ExpressionList` or constructor arguments before emitting the enclosing method call).
 
 #### 1.4 ANTLR4 Parsing & Code Generation Pipeline
-1. **Lexical Analysis (`JavaLexer`)**: Stream of raw Java code is tokenized into typed tokens (`IDENTIFIER`, `INT`, `RETURN`, `IF`, etc.).
-2. **Syntactic Analysis (`JavaParser`)**: Tokens form a parse tree starting from root rule `compilationUnit`:
-   - `typeDeclaration` ➔ `classDeclaration` | `interfaceDeclaration`
-   - `classBody` ➔ `classBodyDeclaration` ➔ `memberDeclaration` (`methodDeclaration`, `constructorDeclaration`, `fieldDeclaration`)
-   - `statement` ➔ `block`, `statementExpression`, `ifThenElse`, `whileStatement`, `forStatement`, `synchronizedStatement`
-   - `expression` ➔ `primary`, `expression '.' IDENTIFIER`, `methodCall`, `lambdaExpression`, `methodReference`
+1. **Lexical Analysis (`JavaLexer`)**:
+   Stream of raw Java code is tokenized into typed tokens (`IDENTIFIER`, `INT`, `RETURN`, `IF`, etc.).
+   - Literals: `DECIMAL_LITERAL`, `FLOAT_LITERAL`, `BOOL_LITERAL`, `STRING_LITERAL`, `TEXT_BLOCK`.
+   - Keywords: `CLASS`, `INTERFACE`, `EXTENDS`, `IMPLEMENTS`, `SYNCHRONIZED`, `DEFAULT`, `STATIC`.
+2. **Syntactic Rule Hierarchy (`JavaParser`)**:
+   Tokens form a typed parse tree starting from root rule `compilationUnit`:
+   - `compilationUnit` ➔ `packageDeclaration?` `importDeclaration*` `typeDeclaration*` `EOF`
+   - `typeDeclaration` ➔ `classDeclaration` | `interfaceDeclaration` | `recordDeclaration`
+   - `classDeclaration` ➔ `CLASS IDENTIFIER (EXTENDS typeType)? (IMPLEMENTS typeList)? classBody`
+   - `interfaceDeclaration` ➔ `INTERFACE IDENTIFIER (EXTENDS typeList)? interfaceBody`
+   - `classBody` ➔ `classBodyDeclaration*` ➔ `memberDeclaration`
+   - `memberDeclaration` ➔ `methodDeclaration` | `constructorDeclaration` | `fieldDeclaration` | `genericMethodDeclaration`
+   - `statement` ➔ `block`, `statementExpression`, `ifThenElse`, `whileStatement`, `forStatement`, `synchronizedStatement`, `switchStatement`, `tryStatement`
+   - `expression` ➔ `primary`, `expression '.' IDENTIFIER`, `methodCall`, `lambdaExpression`, `methodReference`, `ternaryExpression`
 3. **AST Visitor Traversal (`CppTranspilerVisitor`)**:
    `CppTranspilerVisitor` embeds `parser.BaseJavaParserVisitor` to implement selective override hooks:
    - `VisitCompilationUnit`: Scans package/import metadata and initiates class lowering.

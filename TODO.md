@@ -30,6 +30,7 @@
 - [x] Document CLI entrypoint and argument parsing in `ARCHITECTURE.md` and `README.md`.
 - [x] Detail ANTLR4 grammar and submodule integration workflow for Go transpiler CLI setup.
 - [x] Draft dedicated Section 1 ANTLR4 grammar integration specifications in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+- [x] Deepen Section 1 with lexer token classifications and parser grammar rule hierarchy.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.
