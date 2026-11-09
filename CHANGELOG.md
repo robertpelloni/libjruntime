@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.68
+- Expanded Section 1: Step-by-Step Transpiler CLI Stream Setup in `README.md`:
+  - Detailed character stream creation, lexical scanning, common token stream filtering, parser instantiation, and top-down parse tree derivation.
+- Bumped version to `1.0.68` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.67
 - Documented submodule structure and standard Git commit message conventions in `SUBMODULES.md`:
   - Added commit message formats for adding, updating, and building submodules.

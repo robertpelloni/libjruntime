@@ -1,14 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.67 - Submodule Structure & Git Commit Conventions
+## Milestone Reached: v1.0.68 - Section 1 Step-by-Step Transpiler CLI Stream Setup
 
-### What Was Accomplished in v1.0.67
-1. **Submodule Structure & Git Commit Conventions**:
-   - Documented submodule structure and standard Git commit conventions (`feat(submodules)`, `chore(submodules)`, `build(submodules)`) in `SUBMODULES.md`.
+### What Was Accomplished in v1.0.68
+1. **Step-by-Step Transpiler Stream Setup**:
+   - Documented explicit step-by-step stream mechanics (character stream creation, lexical scanning, token buffering, LL(*) parser derivation) in `README.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.67`.
+   - Bumped `VERSION` to `1.0.68`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

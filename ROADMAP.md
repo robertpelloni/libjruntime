@@ -75,6 +75,7 @@
 - [x] Outlined implementation details and verification checklists for submodules.
 - [x] Documented core AST traversal logic of `CppTranspilerVisitor`.
 - [x] Documented submodule structure and commit message conventions.
+- [x] Expanded Section 1 with step-by-step transpiler CLI stream setup.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

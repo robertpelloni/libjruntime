@@ -76,7 +76,14 @@ func TranspileJava(javaSource, outDir string) (headerCode, cppCode string, err e
 }
 ```
 
-#### 1.3 Initial Structure of the Go Transpiler CLI & `CppTranspilerVisitor`
+#### 1.3 Step-by-Step Transpiler CLI Stream Setup
+1. **Character Stream Creation**: `antlr.NewInputStream(javaSource)` converts raw in-memory strings into unicode codepoints, while `antlr.NewFileStream(path)` reads directly from disk.
+2. **Lexical Scanning**: `parser.NewJavaLexer` translates the character stream into discrete tokens according to `JavaLexer.g4`.
+3. **Common Token Stream**: `antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)` buffers lexed tokens, filtering out comments and whitespace to channel 0.
+4. **Parser Instantiation**: `parser.NewJavaParser(tokens)` creates an LL(*) predictive parser instance with `BuildParseTrees = true`.
+5. **Parse Tree Reduction**: Calling `p.CompilationUnit()` begins top-down parse tree derivation, passing the root context to `visitor.Visit(tree)`.
+
+#### 1.4 Initial Structure of the Go Transpiler CLI & `CppTranspilerVisitor`
 The transpiler is organized into three primary units:
 1. `compiler-engine/main.go`: CLI parsing (`-src`, `-out`, `-dashboard`, `-port`), recursive file discovery, and orchestrating the ANTLR4 pipeline.
 2. `compiler-engine/visitor.go`: Implements `CppTranspilerVisitor`, embedding `parser.BaseJavaParserVisitor`.
