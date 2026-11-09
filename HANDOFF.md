@@ -1,14 +1,15 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.61 - Go Transpiler CLI Initial Structure & Visitor Documentation
+## Milestone Reached: v1.0.62 - Submodules Integration Requirements Documentation
 
-### What Was Accomplished in v1.0.61
-1. **Initial Structure Documentation**:
-   - Documented Go transpiler CLI structure, module breakdown, `CppTranspilerVisitor` struct fields, constructor, and code getters (`GetHeaderCode()`, `GetCppCode()`) in `README.md`.
+### What Was Accomplished in v1.0.62
+1. **Submodule Integration Requirements**:
+   - Documented Boehm GC signal handling (`SIGPWR`/`SIGXCPU`) and stop-the-world mechanics during root inspection in `SUBMODULES.md`.
+   - Detailed thread stack scanning and GC root discovery across worker threads.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.61`.
+   - Bumped `VERSION` to `1.0.62`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

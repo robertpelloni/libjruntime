@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.62
+- Explored and documented submodule integration requirements in `SUBMODULES.md`:
+  - Detailed thread stack scanning and stop-the-world signal coordination (`SIGPWR`/`SIGXCPU`) for Boehm GC.
+  - Outlined GC root scanning across dynamic threads registered via `GC_register_my_thread`.
+- Bumped version to `1.0.62` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.61
 - Detailed Initial Structure of the Go Transpiler CLI & `CppTranspilerVisitor`:
   - Added module breakdown (`main.go`, `visitor.go`, `parser/`).

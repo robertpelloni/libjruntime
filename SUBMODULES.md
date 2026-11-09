@@ -78,11 +78,13 @@ make -j$(nproc)
   Array allocations similarly utilize `GC_MALLOC` for dynamic contiguous buffer storage.
 - **Heap Initialization (`GC_init`)**:
   The runtime calls `GC_INIT()` at startup to detect OS stack boundaries and initialize allocator free lists.
-- **Multi-threading Stack Registration (`libjruntime/Thread.h`)**:
+- **Thread Stack Scanning & Concurrency Hooks (`libjruntime/Thread.h`)**:
   When a thread spawns via `java.lang.Thread`, the runtime coordinates with Boehm GC:
   - `GC_allow_register_threads()`: Permitting dynamically created POSIX threads to attach to the collector.
   - `GC_register_my_thread(&sb)`: Registering the thread's stack bottom (`sb.stack_bottom`) with the GC before executing user code so thread local roots can be scanned.
   - `GC_unregister_my_thread()`: Safely unregistering the thread from GC tracking upon termination.
+- **Signal Handling & Stop-the-World Mechanics**:
+  Boehm GC utilizes signals (`SIGPWR` / `SIGXCPU`) to pause worker threads during root inspection and collection sweeps.
 - **Memory Diagnostics & Leaks**:
   Boehm GC provides diagnostic hooks (`GC_gcollect()`, `GC_get_heap_size()`, `GC_get_free_bytes()`) that can be polled for runtime memory auditing.
 
