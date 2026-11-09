@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.55
+- Documented CLI Entrypoint and Argument Parsing in `compiler-engine/ARCHITECTURE.md` and `README.md`:
+  - Detailed CLI flag specifications (`-src`, `-out`, `-dashboard`, `-port`).
+  - Added complete argument parsing, directory creation, and file discovery code.
+  - Documented `processJavaFile` pipeline.
+- Bumped version to `1.0.55` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.54
 - Documented Git Submodule Incorporation & Management Workflow in `SUBMODULES.md` and `README.md`:
   - Detailed `.gitmodules` specification for `grammars-v4` and `bdwgc`.

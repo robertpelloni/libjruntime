@@ -1,15 +1,15 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.54 - Git Submodule Incorporation & Tracking Specification
+## Milestone Reached: v1.0.55 - CLI Entrypoint & Argument Parsing Documentation
 
-### What Was Accomplished in v1.0.54
-1. **Submodule Incorporation & Synchronization Documentation**:
-   - Documented `.gitmodules` specification for `grammars-v4` and `bdwgc` in `SUBMODULES.md` and `README.md`.
-   - Outlined git commands for initial cloning (`--recursive`), submodule updating (`--init --recursive`), remote branch tracking (`--remote --merge`), and manual build commands.
+### What Was Accomplished in v1.0.55
+1. **CLI Entrypoint Documentation**:
+   - Detailed CLI flags (`-src`, `-out`, `-dashboard`, `-port`) in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+   - Provided complete argument parsing logic, error checking, directory validation, recursive directory traversal with `filepath.WalkDir`, and `processJavaFile` pipeline.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.54`.
+   - Bumped `VERSION` to `1.0.55`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

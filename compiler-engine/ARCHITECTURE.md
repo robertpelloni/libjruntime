@@ -203,17 +203,88 @@ func mapType(javaType string) string {
 
 ---
 
-## 4. Execution Modes & CLI
+## 4. Execution Modes & CLI Entrypoint
 
-The CLI (`compiler-engine/main.go`) operates in two modes:
+The CLI entrypoint is defined in `compiler-engine/main.go`. It handles command-line arguments using Go's `flag` standard library, manages input validation, and dispatches to either the interactive web dashboard or the recursive batch compiler.
 
-### Batch Compilation
+### Command-Line Arguments & Parsing Logic
+```go
+func main() {
+    srcDir := flag.String("src", "", "Source directory containing Java files")
+    outDir := flag.String("out", "", "Output directory for C++ files")
+    dashboard := flag.Bool("dashboard", false, "Start interactive web dashboard studio")
+    port := flag.Int("port", 8080, "Port for web dashboard studio")
+    flag.Parse()
+
+    // 1. Interactive Studio Dispatch
+    if *dashboard {
+        if err := startDashboardServer(*port); err != nil {
+            log.Fatalf("Dashboard server failed: %v", err)
+        }
+        return
+    }
+
+    // 2. Argument Validation for Batch Mode
+    if *srcDir == "" || *outDir == "" {
+        fmt.Println("Usage: j2cpp-engine -src=<source_directory> -out=<output_directory> [-dashboard -port=8080]")
+        os.Exit(1)
+    }
+
+    // 3. Ensure Output Directory Exists
+    err := os.MkdirAll(*outDir, os.ModePerm)
+    if err != nil {
+        log.Fatalf("Failed to create output directory: %v", err)
+    }
+
+    // 4. Recursive Source Directory Traversal
+    err = filepath.WalkDir(*srcDir, func(path string, d fs.DirEntry, err error) error {
+        if err != nil {
+            return err
+        }
+        if !d.IsDir() && strings.HasSuffix(d.Name(), ".java") {
+            processJavaFile(path, *outDir)
+        }
+        return nil
+    })
+
+    if err != nil {
+        log.Fatalf("Error walking source directory: %v", err)
+    }
+}
+```
+
+### File Processing Pipeline (`processJavaFile`)
+For each `.java` file discovered during recursive directory walking:
+```go
+func processJavaFile(javaFile string, outDir string) {
+    fmt.Printf("Processing %s\n", javaFile)
+
+    input, err := antlr.NewFileStream(javaFile)
+    if err != nil {
+        log.Printf("Failed to read file %s: %v", javaFile, err)
+        return
+    }
+
+    lexer := parser.NewJavaLexer(input)
+    stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+    p := parser.NewJavaParser(stream)
+
+    tree := p.CompilationUnit()
+
+    visitor := NewCppTranspilerVisitor(outDir)
+    visitor.Visit(tree)
+}
+```
+
+### CLI Execution Examples
+
+#### 1. Recursive Batch Compilation
 ```bash
 ./compiler-engine/j2cpp-engine -src=/path/to/java/src -out=/path/to/output
 ```
 Scans the source directory recursively for `.java` files, parses each file using `JavaParser`, runs `CppTranspilerVisitor`, and writes `<ClassName>.h` and `<ClassName>.cpp` pairs to the output directory.
 
-### Interactive Web Dashboard Studio
+#### 2. Interactive Web Dashboard Studio
 ```bash
 ./compiler-engine/j2cpp-engine -dashboard -port=8080
 ```

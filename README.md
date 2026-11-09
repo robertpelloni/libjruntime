@@ -120,7 +120,13 @@ Parser Go bindings can be re-generated at any time using `scripts/generate_parse
 ```
 This runs `antlr-4.13.1-complete.jar` targeting Go with visitor generation enabled (`-Dlanguage=Go -visitor -package parser -o compiler-engine/parser`) and normalizes receiver predicates.
 
-#### CLI Transpiler Usage
+#### 1.6 CLI Entrypoint & Flag Specifications
+The CLI binary (`compiler-engine/main.go`) handles arguments via Go's `flag` standard library:
+- `-src`: Root directory containing input `.java` source files to recursively discover and transpile.
+- `-out`: Target directory where `.h` and `.cpp` files will be generated.
+- `-dashboard`: Boolean flag to launch the embedded Web Dashboard Studio.
+- `-port`: HTTP port to bind the dashboard server (default: `8080`).
+
 Build the CLI binary:
 ```bash
 cd compiler-engine && go build -o j2cpp-engine . && cd ..
@@ -130,8 +136,6 @@ Execute batch transpilation across any directory of `.java` source files:
 ```bash
 ./compiler-engine/j2cpp-engine -src=/path/to/src -out=/path/to/out
 ```
-- `-src`: Directory containing input `.java` files (default: `./src`).
-- `-out`: Directory where modern C++20 header (`.h`) and implementation (`.cpp`) files will be emitted (default: `./out`).
 
 Or run the interactive Web Dashboard Studio:
 ```bash
