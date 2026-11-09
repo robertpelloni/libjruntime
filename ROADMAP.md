@@ -70,6 +70,7 @@
 - [x] Detailed ANTLR4 grammar integration and Go transpiler CLI stream setup in Section 1.
 - [x] Detailed initial structure of the Go transpiler CLI and `CppTranspilerVisitor`.
 - [x] Explored and documented `grammars-v4` and `bdwgc` submodule integration requirements.
+- [x] Documented explicit submodule incorporation procedures in `README.md` and `SUBMODULES.md`.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

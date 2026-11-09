@@ -1,15 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.62 - Submodules Integration Requirements Documentation
+## Milestone Reached: v1.0.63 - Submodule Incorporation Procedures Documentation
 
-### What Was Accomplished in v1.0.62
-1. **Submodule Integration Requirements**:
-   - Documented Boehm GC signal handling (`SIGPWR`/`SIGXCPU`) and stop-the-world mechanics during root inspection in `SUBMODULES.md`.
-   - Detailed thread stack scanning and GC root discovery across worker threads.
+### What Was Accomplished in v1.0.63
+1. **Submodule Incorporation Procedures**:
+   - Detailed step-by-step verification commands (`git submodule status`), recursive checkout, and Autotools build commands in `README.md` and `SUBMODULES.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.62`.
+   - Bumped `VERSION` to `1.0.63`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

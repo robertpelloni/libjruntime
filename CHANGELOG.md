@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.63
+- Documented explicit submodule incorporation procedures in `README.md` and `SUBMODULES.md`:
+  - Added step-by-step verification commands (`git submodule status`).
+  - Added instructions for recursive checkout and Autotools build commands.
+- Bumped version to `1.0.63` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.62
 - Explored and documented submodule integration requirements in `SUBMODULES.md`:
   - Detailed thread stack scanning and stop-the-world signal coordination (`SIGPWR`/`SIGXCPU`) for Boehm GC.

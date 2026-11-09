@@ -35,6 +35,7 @@
 - [x] Draft Section 1 detailing ANTLR4 grammar integration and Go transpiler CLI stream setup.
 - [x] Detail initial structure of the Go transpiler CLI and `CppTranspilerVisitor`.
 - [x] Explore and document submodule integration requirements for `grammars-v4` and `bdwgc`.
+- [x] Document explicit submodule incorporation procedures in `README.md` and `SUBMODULES.md`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

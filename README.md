@@ -226,18 +226,29 @@ The project relies on two core Git submodules configured in `.gitmodules`:
 - `grammars-v4`: Official ANTLR4 Java lexer and parser grammars (`https://github.com/robertpelloni/grammars-v4`).
 - `bdwgc`: Boehm-Demers-Weiser Conservative Garbage Collector (`https://github.com/robertpelloni/bdwgc`).
 
-Run the automated submodule preparation script to recursively initialize submodules and compile the Boehm Garbage Collector shared library (`bdwgc/.libs/libgc.so`):
-```bash
-./scripts/build_submodules.sh
-```
-Or initialize and build manually:
-```bash
-# Initialize and fetch submodules recursively
-git submodule update --init --recursive
-
-# Build Boehm GC native shared library
-cd bdwgc && ./autogen.sh && ./configure --enable-threads=posix --enable-shared --disable-static && make -j$(nproc) && cd ..
-```
+#### Submodule Incorporation Procedures
+1. **Verify Submodule Configuration**: Inspect `.gitmodules` to confirm valid tracking paths and repository URLs.
+2. **Recursive Checkout**: Fetch and checkout all submodule references:
+   ```bash
+   git submodule update --init --recursive
+   ```
+3. **Verify Commit Status**: Check initialized commit hashes:
+   ```bash
+   git submodule status
+   ```
+4. **Compile Boehm GC Shared Library**:
+   Run the automated preparation script:
+   ```bash
+   ./scripts/build_submodules.sh
+   ```
+   Or execute manual Autotools configuration:
+   ```bash
+   cd bdwgc
+   ./autogen.sh
+   ./configure --enable-threads=posix --enable-shared --disable-static
+   make -j$(nproc)
+   cd ..
+   ```
 
 ### Step 2: Build the `j2cpp-engine` Transpiler CLI
 Compile the Go transpiler CLI into a standalone binary:
