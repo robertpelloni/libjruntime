@@ -1,14 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.60 - Section 1 ANTLR4 Grammar Integration & Stream Setup
+## Milestone Reached: v1.0.61 - Go Transpiler CLI Initial Structure & Visitor Documentation
 
-### What Was Accomplished in v1.0.60
-1. **Section 1 ANTLR4 Grammar Integration & Stream Setup**:
-   - Refined Section 1 in `README.md` and `compiler-engine/ARCHITECTURE.md` documenting ANTLR4 stream initialization, token channel setup, error listener hooks, and AST reduction with `CppTranspilerVisitor`.
+### What Was Accomplished in v1.0.61
+1. **Initial Structure Documentation**:
+   - Documented Go transpiler CLI structure, module breakdown, `CppTranspilerVisitor` struct fields, constructor, and code getters (`GetHeaderCode()`, `GetCppCode()`) in `README.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.60`.
+   - Bumped `VERSION` to `1.0.61`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

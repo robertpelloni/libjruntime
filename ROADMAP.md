@@ -68,6 +68,7 @@
 - [x] Deepened lexer token definitions and parser grammar rule hierarchy documentation.
 - [x] Investigated and documented `grammars-v4` and `bdwgc` submodules in `SUBMODULES.md`.
 - [x] Detailed ANTLR4 grammar integration and Go transpiler CLI stream setup in Section 1.
+- [x] Detailed initial structure of the Go transpiler CLI and `CppTranspilerVisitor`.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

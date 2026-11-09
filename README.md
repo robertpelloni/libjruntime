@@ -76,12 +76,53 @@ func TranspileJava(javaSource, outDir string) (headerCode, cppCode string, err e
 }
 ```
 
-#### 1.3 Visitor vs. Listener Design Pattern
+#### 1.3 Initial Structure of the Go Transpiler CLI & `CppTranspilerVisitor`
+The transpiler is organized into three primary units:
+1. `compiler-engine/main.go`: CLI parsing (`-src`, `-out`, `-dashboard`, `-port`), recursive file discovery, and orchestrating the ANTLR4 pipeline.
+2. `compiler-engine/visitor.go`: Implements `CppTranspilerVisitor`, embedding `parser.BaseJavaParserVisitor`.
+3. `compiler-engine/parser/`: Generated Go lexer and parser bindings from `grammars-v4/java/java`.
+
+The core AST visitor struct tracks code emission buffers and inter-class dependency includes:
+
+```go
+type CppTranspilerVisitor struct {
+    *parser.BaseJavaParserVisitor
+    outDir                string
+    currentClass          string
+    currentSuper          string
+    headerCode            *strings.Builder
+    cppCode               *strings.Builder
+    included              map[string]bool
+    currentIsStatic       bool
+    currentIsSynchronized bool
+    staticInitCount       int
+    staticFields          map[string]bool
+}
+
+func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
+    return &CppTranspilerVisitor{
+        BaseJavaParserVisitor: &parser.BaseJavaParserVisitor{},
+        outDir:                outDir,
+        headerCode:           &strings.Builder{},
+        cppCode:              &strings.Builder{},
+        included:             make(map[string]bool),
+        staticFields:         make(map[string]bool),
+    }
+}
+
+// GetHeaderCode returns emitted header (.h) contents
+func (v *CppTranspilerVisitor) GetHeaderCode() string { return v.headerCode.String() }
+
+// GetCppCode returns emitted implementation (.cpp) contents
+func (v *CppTranspilerVisitor) GetCppCode() string { return v.cppCode.String() }
+```
+
+#### 1.4 Visitor vs. Listener Design Pattern
 ANTLR4 provides two primary tree traversal paradigms:
 - **Parse Tree Listeners (`JavaParserListener`)**: Passive, event-driven callbacks triggered as a walker enters and exits tree nodes. Listeners do not control traversal flow and cannot easily synthesize values up the tree.
 - **Parse Tree Visitors (`CppTranspilerVisitor`)**: Explicit, active reduction where `visitor.Visit(node)` returns intermediate string expressions and AST values. This enables localized code generation (e.g. evaluating an `ExpressionList` or constructor arguments before emitting the enclosing method call).
 
-#### 1.4 ANTLR4 Parsing & Code Generation Pipeline
+#### 1.5 ANTLR4 Parsing & Code Generation Pipeline
 1. **Lexical Analysis (`JavaLexer`)**:
    Stream of raw Java code is tokenized into typed tokens (`IDENTIFIER`, `INT`, `RETURN`, `IF`, etc.).
    - Literals: `DECIMAL_LITERAL`, `FLOAT_LITERAL`, `BOOL_LITERAL`, `STRING_LITERAL`, `TEXT_BLOCK`.

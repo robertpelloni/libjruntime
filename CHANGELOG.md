@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.61
+- Detailed Initial Structure of the Go Transpiler CLI & `CppTranspilerVisitor`:
+  - Added module breakdown (`main.go`, `visitor.go`, `parser/`).
+  - Documented `CppTranspilerVisitor` struct definition, buffer management, and `NewCppTranspilerVisitor` constructor.
+  - Documented `GetHeaderCode()` and `GetCppCode()` accessors in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+- Bumped version to `1.0.61` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.60
 - Drafted Section 1: Detailed ANTLR4 Grammar Integration & Go Transpiler CLI Stream Setup:
   - Documented explicit token stream instantiation on `antlr.TokenDefaultChannel`.
