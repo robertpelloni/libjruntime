@@ -41,6 +41,7 @@
 - [x] Document core AST traversal logic of `CppTranspilerVisitor`.
 - [x] Document submodule structure and commit message conventions.
 - [x] Expand Section 1 with step-by-step transpiler CLI stream setup.
+- [x] Document ANTLR4 Go parser bindings generation and architecture.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

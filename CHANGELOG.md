@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.69
+- Documented ANTLR4 Go Parser Bindings Generation and Architecture in `README.md`:
+  - Detailed generated files in `compiler-engine/parser/` (`java_lexer.go`, `java_parser.go`, `java_parser_base_visitor.go`, `java_parser_visitor.go`).
+  - Documented regeneration flags and automated pipeline.
+- Bumped version to `1.0.69` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.68
 - Expanded Section 1: Step-by-Step Transpiler CLI Stream Setup in `README.md`:
   - Detailed character stream creation, lexical scanning, common token stream filtering, parser instantiation, and top-down parse tree derivation.
