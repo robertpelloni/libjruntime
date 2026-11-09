@@ -105,6 +105,21 @@ make -j$(nproc)
   - `bdwgc`: `1d38c6d905a83b006df843440b380e51a2119871`
   - `grammars-v4`: `5a9a89fa7274878bdb93877c4be5d56859c08e5e`
 
+### Submodule Directory Layout
+```
+bdwgc/
+├── autogen.sh          # Autotools bootstrap script
+├── configure.ac        # Build configuration definitions
+├── include/gc.h        # Public C/C++ API header
+└── .libs/libgc.so      # Compiled shared library
+
+grammars-v4/
+└── java/
+    └── java/
+        ├── JavaLexer.g4   # Lexical grammar specification
+        └── JavaParser.g4  # Syntactic grammar specification
+```
+
 ### Future Integration Possibilities
 1. **Incremental Collection (`GC_enable_incremental()`)**: Minimize GC pause times for interactive applications and game engines.
 2. **Custom Finalizers (`GC_register_finalizer_no_order`)**: Emulate Java `Object.finalize()` or modern `java.lang.ref.Cleaner` mechanisms.

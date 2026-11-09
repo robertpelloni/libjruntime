@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.72
+- Deepened Submodules Exploration with Directory Layout Trees in `SUBMODULES.md`:
+  - Detailed directory layouts for `bdwgc/` and `grammars-v4/java/java/`.
+- Bumped version to `1.0.72` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.71
 - Detailed Go Transpiler CLI Structure, ANTLR4 Integration, and `CppTranspilerVisitor` Lifecycle:
   - Documented module architecture (`main.go`, `visitor.go`, `parser/`).
