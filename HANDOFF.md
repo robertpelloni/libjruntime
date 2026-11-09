@@ -1,16 +1,17 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.55 - CLI Entrypoint & Argument Parsing Documentation
+## Milestone Reached: v1.0.56 - ANTLR4 Grammar & Submodule Integration Documentation
 
-### What Was Accomplished in v1.0.55
-1. **CLI Entrypoint Documentation**:
-   - Detailed CLI flags (`-src`, `-out`, `-dashboard`, `-port`) in `README.md` and `compiler-engine/ARCHITECTURE.md`.
-   - Provided complete argument parsing logic, error checking, directory validation, recursive directory traversal with `filepath.WalkDir`, and `processJavaFile` pipeline.
+### What Was Accomplished in v1.0.56
+1. **ANTLR4 Grammar & Submodule Integration**:
+   - Detailed `grammars-v4/java/java` submodule integration (`JavaLexer.g4`, `JavaParser.g4`) in `compiler-engine/ARCHITECTURE.md`, `SUBMODULES.md`, and `README.md`.
+   - Documented recursive submodule initialization (`git submodule update --init --recursive`), ANTLR 4.13.1 parser generation, and predicate normalization (`sed`).
+   - Detailed Go parser stream bootstrap mechanics (`InputStream`, `JavaLexer`, `CommonTokenStream`, `JavaParser`, `CompilationUnit`).
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.55`.
-   - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
+   - Bumped `VERSION` to `1.0.56`.
+   - Updated `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
 - Project compiles clean with Go and modern C++20.

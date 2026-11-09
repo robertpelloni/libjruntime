@@ -115,7 +115,26 @@ java -jar /usr/local/lib/antlr-4.13.1-complete.jar \
 ```
 
 **Normalization Step:**
-ANTLR4's Go target generates parser receiver variables like `p` while some predicate helper methods reference `this`. `scripts/generate_parser.sh` automatically normalizes `this` predicates to `p` using `sed` to ensure clean Go compilation.
+ANTLR4's Go target generates parser receiver variables like `p` while some predicate helper methods reference `this`. `scripts/generate_parser.sh` automatically normalizes `this` predicates to `p` using `sed` to ensure clean Go compilation:
+```bash
+sed -i 's/\bthis\./p\./g' compiler-engine/parser/*.go
+```
+
+### Initial Transpiler CLI Stream Setup
+The Go CLI imports the generated `parser` package and initializes the ANTLR stream:
+```go
+import (
+    "github.com/antlr4-go/antlr/v4"
+    "github.com/user/j2cpp-engine/parser"
+)
+
+input := antlr.NewInputStream(javaSource)
+lexer := parser.NewJavaLexer(input)
+tokens := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+p := parser.NewJavaParser(tokens)
+p.BuildParseTrees = true
+tree := p.CompilationUnit()
+```
 
 ### Runtime Integration in `compiler-engine`
 - `compiler-engine/parser/`: Houses the generated lexer and parser.

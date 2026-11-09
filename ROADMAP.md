@@ -63,6 +63,7 @@
 - [x] Documented verified `CppTranspilerVisitor` struct definition and constructor.
 - [x] Git submodule incorporation and management workflow in `SUBMODULES.md` and `README.md`.
 - [x] CLI entrypoint and argument parsing documentation in `ARCHITECTURE.md` and `README.md`.
+- [x] Detailed ANTLR4 grammar and submodule integration workflow documentation (`compiler-engine/ARCHITECTURE.md`, `SUBMODULES.md`, `README.md`).
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

@@ -28,6 +28,7 @@
 - [x] Document `CppTranspilerVisitor` struct definition and constructor in `ARCHITECTURE.md`.
 - [x] Document git submodule incorporation and management workflow in `SUBMODULES.md` and `README.md`.
 - [x] Document CLI entrypoint and argument parsing in `ARCHITECTURE.md` and `README.md`.
+- [x] Detail ANTLR4 grammar and submodule integration workflow for Go transpiler CLI setup.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.56
+- Detailed ANTLR4 Grammar & Submodule Integration Workflow for Go Transpiler CLI Setup:
+  - Added section 2 detailing `grammars-v4/java/java` integration in `compiler-engine/ARCHITECTURE.md`.
+  - Added submodule synchronization (`git submodule update --init --recursive`), ANTLR 4.13.1 parser generation, and predicate normalization (`sed`) in `SUBMODULES.md` and `README.md`.
+  - Documented Go parser stream bootstrap mechanics (`InputStream`, `JavaLexer`, `CommonTokenStream`, `JavaParser`, `CompilationUnit`).
+- Bumped version to `1.0.56` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.55
 - Documented CLI Entrypoint and Argument Parsing in `compiler-engine/ARCHITECTURE.md` and `README.md`:
   - Detailed CLI flag specifications (`-src`, `-out`, `-dashboard`, `-port`).

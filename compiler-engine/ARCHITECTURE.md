@@ -44,40 +44,63 @@ The `compiler-engine` is a standalone Go program (`j2cpp-engine`) that converts 
 
 ---
 
-## 2. ANTLR4 Integration Mechanics
+## 2. ANTLR4 Grammar & Submodule Integration Mechanics
 
-The transpiler leverages official Java grammars from `grammars-v4/java/java`:
-- **`JavaLexer.g4`**: Tokenizes input character streams into tokens (`IF`, `WHILE`, `IDENTIFIER`, `STRING_LITERAL`, etc.).
-- **`JavaParser.g4`**: Builds an AST according to the Java language specification.
+The transpiler frontend leverages official Java grammars maintained inside the `grammars-v4` git submodule at `grammars-v4/java/java`:
+- **`JavaLexer.g4`**: Complete lexical specification defining unicode identifiers, keywords (`class`, `interface`, `extends`, `implements`, `synchronized`, `default`, `static`), literals, and operators.
+- **`JavaParser.g4`**: Comprehensive context-free production rules for compilation units, class and interface declarations, member fields, constructors, methods, control flow statements, lambdas, and expressions.
 
-### Code Generation (`scripts/generate_parser.sh`)
+### 2.1 Submodule Checkout & Workspace Initialization
+To initialize the `grammars-v4` submodule alongside Boehm GC (`bdwgc`), the CLI setup workflow requires recursive git submodule synchronization:
+```bash
+# Initialize and fetch grammars-v4 and bdwgc submodules
+git submodule update --init --recursive
+```
+The grammar files are verified to exist at:
+- `grammars-v4/java/java/JavaLexer.g4`
+- `grammars-v4/java/java/JavaParser.g4`
+
+### 2.2 Go Parser Code Generation Pipeline (`scripts/generate_parser.sh`)
+ANTLR4 parser Go bindings are generated via the automated script `scripts/generate_parser.sh`. The generator invokes the ANTLR 4.13.1 tool targeting the Go runtime:
 ```bash
 java -jar /usr/local/lib/antlr-4.13.1-complete.jar \
-     -Dlanguage=Go -visitor -package parser -o compiler-engine/parser \
-     grammars-v4/java/java/JavaLexer.g4 grammars-v4/java/java/JavaParser.g4
+     -Dlanguage=Go \
+     -visitor \
+     -package parser \
+     -o compiler-engine/parser \
+     grammars-v4/java/java/JavaLexer.g4 \
+     grammars-v4/java/java/JavaParser.g4
 ```
+
+**Predicate Receiver Normalization:**
+When ANTLR4 generates Go code for grammars containing semantic predicates, some predicate methods may reference `this` instead of the Go receiver identifier `p`. `scripts/generate_parser.sh` automatically applies an automated normalization step using `sed`:
+```bash
+sed -i 's/\bthis\./p\./g' compiler-engine/parser/*.go
+```
+
 The output Go package in `compiler-engine/parser/` exposes:
-- `JavaLexer`: The scanner.
-- `JavaParser`: The parser returning `ICompilationUnitContext`.
-- `JavaParserVisitor`: Interface defining visitor callbacks for every grammar production.
+- `JavaLexer`: Tokenizer scanning input character streams into categorized tokens.
+- `JavaParser`: Predictive LL(*) recursive-descent parser returning parse tree contexts (starting at `ICompilationUnitContext`).
+- `JavaParserVisitor`: Interface defining visitor callback signatures for all 100+ grammar rules.
 - `BaseJavaParserVisitor`: Default no-op implementation embedded by `CppTranspilerVisitor`.
 
-### Initializing the ANTLR4 Parser Stream
-The parsing entrypoint in `compiler-engine` sets up the lexer and parser pipeline as follows:
+### 2.3 Initializing the ANTLR4 Parser Stream in Go
+The CLI bootstrap sets up the ANTLR4 input stream, token stream, and parser pipeline:
 ```go
-// 1. Create character stream from input source code
+// 1. Create character stream from input source code (or antlr.NewFileStream for disk files)
 inputStream := antlr.NewInputStream(javaSource)
 
-// 2. Lexical analysis: generate token stream
+// 2. Lexical analysis: instantiate lexer and wrap in common token stream
 lexer := parser.NewJavaLexer(inputStream)
 tokenStream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
 
-// 3. Syntactic analysis: construct parser instance
+// 3. Syntactic analysis: construct parser instance with parse tree construction enabled
 javaParser := parser.NewJavaParser(tokenStream)
 javaParser.BuildParseTrees = true
 
 // Optional error listener hook for diagnostics
-// javaParser.AddErrorListener(antlr.NewDiagnosticErrorListener(true))
+// javaParser.RemoveErrorListeners()
+// javaParser.AddErrorListener(antlr.NewConsoleErrorListener())
 
 // 4. Parse starting from root rule compilationUnit
 tree := javaParser.CompilationUnit()

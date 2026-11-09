@@ -71,3 +71,4 @@
 - Uninitialized instance and static fields automatically receive Java specification default values (`bool` -> `false`, integers -> `0`, floats -> `0.0`, pointers -> `nullptr`) in emitted C++ header declarations.
 - Atomic concurrency variables `AtomicInteger`, `AtomicBoolean`, and `AtomicLong` are implemented in `libjruntime/Atomic.h` under namespace `java::util::concurrent::atomic`, backed by `std::atomic` and mapped in `compiler-engine/visitor.go`.
 - Explicit synchronization lock `ReentrantLock` is implemented in `libjruntime/Lock.h` under namespace `java::util::concurrent::locks` backed by `std::recursive_mutex`.
+- Detailed ANTLR4 grammar pipeline integration (`grammars-v4/java/java/JavaLexer.g4`, `JavaParser.g4`), Go parser code generation, predicate normalization (`sed`), and Go token stream bootstrapping are documented across `compiler-engine/ARCHITECTURE.md`, `SUBMODULES.md`, and `README.md`.

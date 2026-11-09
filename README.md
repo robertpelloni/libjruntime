@@ -113,12 +113,12 @@ The transpiler maps Java types to modern C++20 types and garbage-collected point
 | `AtomicInteger`, `AtomicLong`, `AtomicBoolean` | `java::util::concurrent::atomic::*` | `Atomic.h` |
 | `ReentrantLock` | `java::util::concurrent::locks::ReentrantLock*` | `Lock.h` |
 
-#### Automated Parser Regeneration
+#### Automated Parser Regeneration & Submodule Setup
 Parser Go bindings can be re-generated at any time using `scripts/generate_parser.sh`:
 ```bash
 ./scripts/generate_parser.sh
 ```
-This runs `antlr-4.13.1-complete.jar` targeting Go with visitor generation enabled (`-Dlanguage=Go -visitor -package parser -o compiler-engine/parser`) and normalizes receiver predicates.
+This runs `antlr-4.13.1-complete.jar` targeting Go with visitor generation enabled (`-Dlanguage=Go -visitor -package parser -o compiler-engine/parser`) from grammar definitions in `grammars-v4/java/java/` and automatically normalizes receiver predicates (`sed -i 's/\bthis\./p\./g' compiler-engine/parser/*.go`).
 
 #### 1.6 CLI Entrypoint & Flag Specifications
 The CLI binary (`compiler-engine/main.go`) handles arguments via Go's `flag` standard library:
