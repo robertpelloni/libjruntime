@@ -72,6 +72,7 @@
 - [x] Explored and documented `grammars-v4` and `bdwgc` submodule integration requirements.
 - [x] Documented explicit submodule incorporation procedures in `README.md` and `SUBMODULES.md`.
 - [x] Explored and documented `bdwgc` and `grammars-v4` submodule integration points.
+- [x] Outlined implementation details and verification checklists for submodules.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

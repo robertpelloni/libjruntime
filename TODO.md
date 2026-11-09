@@ -37,6 +37,7 @@
 - [x] Explore and document submodule integration requirements for `grammars-v4` and `bdwgc`.
 - [x] Document explicit submodule incorporation procedures in `README.md` and `SUBMODULES.md`.
 - [x] Explore and document submodule integration points for `grammars-v4` and `bdwgc`.
+- [x] Outline implementation details and verification checklists for submodules.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

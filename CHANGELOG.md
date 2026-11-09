@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.65
+- Outlined implementation details and verification checklists for submodules in `SUBMODULES.md`:
+  - Added implementation checklist for `bdwgc` (Autotools configuration, POSIX threads, dynamic linking, `java_new<T>`, thread registration).
+  - Added implementation checklist for `grammars-v4` (grammar hierarchy, Go code generator, predicate normalization, AST reduction via `CppTranspilerVisitor`).
+- Bumped version to `1.0.65` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.64
 - Explored and documented submodule integration points in `SUBMODULES.md`:
   - Detailed conservative pointer tracing across stacks and CPU registers.

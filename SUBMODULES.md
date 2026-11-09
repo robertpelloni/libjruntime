@@ -102,6 +102,12 @@ make -j$(nproc)
 3. **Generational Garbage Collection**: Enable GC write-barrier support for high-throughput batch workloads.
 4. **Leak Detection Mode (`-DFIND_LEAK`)**: Compile with leak checking to verify memory reclaim on program exit.
 
+### Implementation Checklist for `bdwgc`
+- [x] Configure Autotools with `--enable-threads=posix --enable-shared --disable-static`.
+- [x] Compile dynamic library `libgc.so` and link against native executables (`-lgc`).
+- [x] Integrate `java_new<T>` allocation macro calling `GC_MALLOC(sizeof(T))`.
+- [x] Hook multi-threading thread stack registration (`GC_register_my_thread`, `GC_unregister_my_thread`).
+
 ---
 
 ## 2. ANTLR4 Grammars (`grammars-v4`)
@@ -162,3 +168,9 @@ tree := p.CompilationUnit()
 1. **Java 17+ Grammar Features**: Pattern matching for `switch`, record classes (`record Point(int x, int y)`), and sealed classes (`sealed interface Shape permits Circle, Square`).
 2. **Incremental AST Caching**: Cache parse tree hashes to enable sub-millisecond re-transpilation of large Java codebases during live dashboard editing.
 3. **Syntax Tree Visualizer**: Wire the dashboard to render AST parse tree graphs alongside the C++ output.
+
+### Implementation Checklist for `grammars-v4`
+- [x] Integrate official `grammars-v4/java/java/JavaLexer.g4` and `JavaParser.g4`.
+- [x] Configure code generation targeting Go (`-Dlanguage=Go -visitor -package parser`).
+- [x] Implement automated predicate normalization (`sed -i 's/\bthis\./p\./g'`).
+- [x] Wire parse tree reduction via `CppTranspilerVisitor` extending `BaseJavaParserVisitor`.
