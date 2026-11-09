@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.66
+- Documented core AST traversal logic of `CppTranspilerVisitor` in `README.md`:
+  - Detailed `VisitFieldDeclaration`, `VisitMethodDeclaration`, `VisitStatement`, and `VisitExpression` traversal mechanics.
+- Bumped version to `1.0.66` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.65
 - Outlined implementation details and verification checklists for submodules in `SUBMODULES.md`:
   - Added implementation checklist for `bdwgc` (Autotools configuration, POSIX threads, dynamic linking, `java_new<T>`, thread registration).

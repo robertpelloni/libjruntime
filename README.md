@@ -143,7 +143,9 @@ ANTLR4 provides two primary tree traversal paradigms:
    - `VisitClassDeclaration`: Extracts class names, superclasses (`extends`), implemented interfaces (`implements`), emitting modern C++ class declarations.
    - `VisitInterfaceDeclaration`: Emits pure virtual abstract C++ base classes or inlined default/static methods.
    - `VisitConstructorDeclaration`: Translates constructors and constructor chaining (`this(...)`, `super(...)`) into C++ member initializer lists.
-   - `VisitMethodDeclaration`: Emits virtual and static method signatures into `.h` and implementations into `.cpp`.
+   - `VisitFieldDeclaration`: Detects static vs instance modifiers and applies Java default initializers (`0`, `false`, `0.0`, `nullptr`).
+   - `VisitMethodDeclaration`: Emits virtual and static method signatures into `.h` and definitions into `.cpp`.
+   - `VisitStatement`: Lowers `if-else`, `while`, standard `for`, enhanced `for-each`, `switch`, synchronized blocks, and `try-catch-finally` with RAII guards.
    - `VisitExpression`: Translates arithmetic, comparisons, ternary expressions (`cond ? a : b`), method invocations, and object allocations (`new T(...)` ➔ `java_new<T>(...)`).
    - `VisitLambdaExpression` & `VisitMethodReferenceExpression`: Lowers Java lambdas and method references into C++20 universal generic forwarding closures `[=](auto&&... args) { ... }`.
 

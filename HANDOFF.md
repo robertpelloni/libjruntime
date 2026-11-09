@@ -1,14 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.65 - Submodules Implementation Checklist Documentation
+## Milestone Reached: v1.0.66 - Core AST Traversal Logic Documentation
 
-### What Was Accomplished in v1.0.65
-1. **Submodules Implementation Checklist**:
-   - Outlined implementation details and verification checklists for `bdwgc` and `grammars-v4` in `SUBMODULES.md`.
+### What Was Accomplished in v1.0.66
+1. **Core AST Traversal Logic Documentation**:
+   - Documented core AST traversal hooks (`VisitFieldDeclaration`, `VisitMethodDeclaration`, `VisitStatement`, `VisitExpression`) in `README.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.65`.
+   - Bumped `VERSION` to `1.0.66`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
