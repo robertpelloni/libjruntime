@@ -1,8 +1,49 @@
-# Submodule Integration Guide: bdwgc & grammars-v4
+# Submodule Integration & Incorporation Guide: bdwgc & grammars-v4
 
-This document outlines the architecture, configuration, integration mechanics, and future evolution of the two core Git submodules used by `libjruntime`:
+This document outlines the architecture, configuration, git submodule incorporation, integration mechanics, and future evolution of the two core Git submodules used by `libjruntime`:
 1. **Boehm-Demers-Weiser Conservative Garbage Collector (`bdwgc`)**
 2. **Official ANTLR4 Grammars Repository (`grammars-v4`)**
+
+---
+
+## 0. Git Submodule Incorporation & Management Workflow
+
+Both submodules are tracked in `.gitmodules`:
+```ini
+[submodule "grammars-v4"]
+	path = grammars-v4
+	url = https://github.com/robertpelloni/grammars-v4
+[submodule "bdwgc"]
+	path = bdwgc
+	url = https://github.com/robertpelloni/bdwgc
+```
+
+### Initial Cloning & Recursive Initialization
+When cloning `libjruntime` fresh from source control:
+```bash
+# Clone repository and recursively initialize all submodules
+git clone --recursive https://github.com/robertpelloni/libjruntime.git
+```
+
+If the repository has already been cloned without submodules:
+```bash
+# Initialize and fetch submodules recursively
+git submodule update --init --recursive
+```
+
+### Keeping Submodules Updated
+To pull the latest commits for submodules tracked from remote forks:
+```bash
+# Fetch and merge updates from the remote tracking branches
+git submodule update --remote --merge
+```
+
+### Adding New Submodules
+To incorporate additional libraries as git submodules:
+```bash
+git submodule add <repository-url> <path>
+git commit -m "chore: add <submodule-name> submodule"
+```
 
 ---
 

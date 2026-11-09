@@ -1,16 +1,15 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.53 - CppTranspilerVisitor Blueprint & Construction Specification
+## Milestone Reached: v1.0.54 - Git Submodule Incorporation & Tracking Specification
 
-### What Was Accomplished in v1.0.53
-1. **Visitor Struct & Constructor Documentation**:
-   - Documented the verified struct definition of `CppTranspilerVisitor` in `compiler-engine/ARCHITECTURE.md`.
-   - Documented `NewCppTranspilerVisitor(outDir string)` constructor and memory/buffer allocations.
-   - Synchronized usage examples in `README.md` and `ARCHITECTURE.md`.
+### What Was Accomplished in v1.0.54
+1. **Submodule Incorporation & Synchronization Documentation**:
+   - Documented `.gitmodules` specification for `grammars-v4` and `bdwgc` in `SUBMODULES.md` and `README.md`.
+   - Outlined git commands for initial cloning (`--recursive`), submodule updating (`--init --recursive`), remote branch tracking (`--remote --merge`), and manual build commands.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.53`.
+   - Bumped `VERSION` to `1.0.54`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

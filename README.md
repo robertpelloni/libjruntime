@@ -166,13 +166,20 @@ Or run the interactive Web Dashboard Studio:
 - **Java Runtime**: JRE/JDK 11+ (for optional ANTLR4 parser regeneration)
 
 ### Step 1: Initialize & Build Submodules
-Run the automated submodule preparation script to initialize Git submodules (`grammars-v4`, `bdwgc`) and build the Boehm Garbage Collector shared library:
+The project relies on two core Git submodules configured in `.gitmodules`:
+- `grammars-v4`: Official ANTLR4 Java lexer and parser grammars (`https://github.com/robertpelloni/grammars-v4`).
+- `bdwgc`: Boehm-Demers-Weiser Conservative Garbage Collector (`https://github.com/robertpelloni/bdwgc`).
+
+Run the automated submodule preparation script to recursively initialize submodules and compile the Boehm Garbage Collector shared library (`bdwgc/.libs/libgc.so`):
 ```bash
 ./scripts/build_submodules.sh
 ```
-Or build manually:
+Or initialize and build manually:
 ```bash
+# Initialize and fetch submodules recursively
 git submodule update --init --recursive
+
+# Build Boehm GC native shared library
 cd bdwgc && ./autogen.sh && ./configure --enable-threads=posix --enable-shared --disable-static && make -j$(nproc) && cd ..
 ```
 

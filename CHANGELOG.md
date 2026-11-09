@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.54
+- Documented Git Submodule Incorporation & Management Workflow in `SUBMODULES.md` and `README.md`:
+  - Detailed `.gitmodules` specification for `grammars-v4` and `bdwgc`.
+  - Added commands for recursive cloning, remote tracking sync, and manual build commands.
+  - Aligned build scripts documentation with latest submodule revisions.
+- Bumped version to `1.0.54` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.53
 - Documented verified `CppTranspilerVisitor` struct definition and constructor:
   - Added exact struct fields from `visitor.go` in `compiler-engine/ARCHITECTURE.md`.

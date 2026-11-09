@@ -26,6 +26,7 @@
 - [x] Document type conversion and symbol resolution matrix in `compiler-engine/ARCHITECTURE.md`.
 - [x] Document concrete Go bootstrap and parser stream setup in `README.md`.
 - [x] Document `CppTranspilerVisitor` struct definition and constructor in `ARCHITECTURE.md`.
+- [x] Document git submodule incorporation and management workflow in `SUBMODULES.md` and `README.md`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

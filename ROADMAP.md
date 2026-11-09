@@ -61,6 +61,7 @@
 - [x] Type conversion and symbol resolution matrix in `README.md` and `compiler-engine/ARCHITECTURE.md`.
 - [x] Concrete Go bootstrap and parser stream initialization code in `README.md`.
 - [x] Documented verified `CppTranspilerVisitor` struct definition and constructor.
+- [x] Git submodule incorporation and management workflow in `SUBMODULES.md` and `README.md`.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
