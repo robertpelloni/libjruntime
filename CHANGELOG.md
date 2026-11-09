@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.74
+- Documented Basic Structure of Go Transpiler CLI: ANTLR4 Integration & `CppTranspilerVisitor` in `compiler-engine/ARCHITECTURE.md`:
+  - Detailed stream setup, visitor initialization, and `GetHeaderCode()` / `GetCppCode()` code retrieval.
+- Bumped version to `1.0.74` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.73
 - Documented Concrete AST Traversal Implementation in Go for `CppTranspilerVisitor` in `README.md`:
   - Added code example demonstrating `VisitClassDeclaration` extracting class identifiers, base types, and emitting class declarations.

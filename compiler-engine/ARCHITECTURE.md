@@ -114,6 +114,10 @@ tree := javaParser.CompilationUnit()
 // 5. Walk tree with custom transpiler visitor configured with output directory
 visitor := NewCppTranspilerVisitor(outDir)
 visitor.Visit(tree)
+
+// 6. Retrieve emitted C++ header and implementation code
+header := visitor.GetHeaderCode()
+cpp := visitor.GetCppCode()
 ```
 
 ---
