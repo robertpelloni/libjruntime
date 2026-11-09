@@ -75,16 +75,22 @@ make -j$(nproc)
 ### Runtime Integration in `libjruntime`
 - **Object Allocation (`libjruntime/GC.h`)**:
   All Java object allocations are wrapped via `java_new<T>(...)`, which invokes `GC_MALLOC(sizeof(T))` and executes C++ in-place placement new `new (ptr) T(std::forward<Args>(args)...);`.
+  Array allocations similarly utilize `GC_MALLOC` for dynamic contiguous buffer storage.
+- **Heap Initialization (`GC_init`)**:
+  The runtime calls `GC_INIT()` at startup to detect OS stack boundaries and initialize allocator free lists.
 - **Multi-threading Stack Registration (`libjruntime/Thread.h`)**:
-  When a thread spawns via `java.lang.Thread`, the runtime calls:
-  - `GC_allow_register_threads()`: Permitting dynamically created threads to attach to the collector.
-  - `GC_register_my_thread(&sb)`: Registering the thread's stack bottom and context with the GC before executing user code.
-  - `GC_unregister_my_thread()`: Detaching the thread upon termination.
+  When a thread spawns via `java.lang.Thread`, the runtime coordinates with Boehm GC:
+  - `GC_allow_register_threads()`: Permitting dynamically created POSIX threads to attach to the collector.
+  - `GC_register_my_thread(&sb)`: Registering the thread's stack bottom (`sb.stack_bottom`) with the GC before executing user code so thread local roots can be scanned.
+  - `GC_unregister_my_thread()`: Safely unregistering the thread from GC tracking upon termination.
+- **Memory Diagnostics & Leaks**:
+  Boehm GC provides diagnostic hooks (`GC_gcollect()`, `GC_get_heap_size()`, `GC_get_free_bytes()`) that can be polled for runtime memory auditing.
 
 ### Future Integration Possibilities
 1. **Incremental Collection (`GC_enable_incremental()`)**: Minimize GC pause times for interactive applications and game engines.
 2. **Custom Finalizers (`GC_register_finalizer_no_order`)**: Emulate Java `Object.finalize()` or modern `java.lang.ref.Cleaner` mechanisms.
 3. **Generational Garbage Collection**: Enable GC write-barrier support for high-throughput batch workloads.
+4. **Leak Detection Mode (`-DFIND_LEAK`)**: Compile with leak checking to verify memory reclaim on program exit.
 
 ---
 

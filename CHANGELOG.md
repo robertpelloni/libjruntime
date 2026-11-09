@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.59
+- Investigated and documented `grammars-v4` and `bdwgc` submodules in `SUBMODULES.md`:
+  - Detailed Boehm GC heap initialization (`GC_INIT()`), memory allocation, and array buffers.
+  - Documented thread registration mechanics (`GC_allow_register_threads`, `GC_register_my_thread`, `GC_unregister_my_thread`).
+  - Added memory diagnostics and leak detection mode documentation (`-DFIND_LEAK`, `GC_gcollect`, `GC_get_heap_size`).
+- Bumped version to `1.0.59` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.58
 - Deepened Section 1: Lexer & Parser Grammar Rule Hierarchy in `README.md` and `compiler-engine/ARCHITECTURE.md`:
   - Detailed explicit lexical token classifications: literals (`DECIMAL_LITERAL`, `FLOAT_LITERAL`, `BOOL_LITERAL`, `STRING_LITERAL`, `TEXT_BLOCK`) and keywords.

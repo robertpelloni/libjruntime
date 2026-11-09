@@ -1,16 +1,15 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.58 - Lexer & Parser Grammar Rule Hierarchy Documentation
+## Milestone Reached: v1.0.59 - grammars-v4 and bdwgc Submodules Investigation
 
-### What Was Accomplished in v1.0.58
-1. **Lexer & Parser Grammar Rule Hierarchy**:
-   - Detailed lexical token classifications (`DECIMAL_LITERAL`, `FLOAT_LITERAL`, `BOOL_LITERAL`, `STRING_LITERAL`, `TEXT_BLOCK`, keywords).
-   - Documented context-free syntactic grammar rule hierarchy in `README.md` and `compiler-engine/ARCHITECTURE.md`.
-   - Documented exposed parse tree context interfaces (`ICompilationUnitContext`, `IClassDeclarationContext`, etc.) in `compiler-engine/parser/`.
+### What Was Accomplished in v1.0.59
+1. **Submodules Investigation & Documentation**:
+   - Investigated `grammars-v4` and `bdwgc` state, build targets, and runtime interactions.
+   - Enhanced `SUBMODULES.md` with details on Boehm GC heap initialization (`GC_INIT()`), memory diagnostics, thread registration mechanics, and leak detection flags (`-DFIND_LEAK`).
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.58`.
+   - Bumped `VERSION` to `1.0.59`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
