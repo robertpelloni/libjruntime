@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.64
+- Explored and documented submodule integration points in `SUBMODULES.md`:
+  - Detailed conservative pointer tracing across stacks and CPU registers.
+  - Documented C++20 in-place object construction with `java_new<T>` and `GC_MALLOC`.
+  - Detailed contiguous array buffer allocations.
+- Bumped version to `1.0.64` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.63
 - Documented explicit submodule incorporation procedures in `README.md` and `SUBMODULES.md`:
   - Added step-by-step verification commands (`git submodule status`).

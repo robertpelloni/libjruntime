@@ -58,6 +58,14 @@ The Boehm-Demers-Weiser Garbage Collector provides automatic conservative memory
 - `bdwgc/.libs/`: Output directory containing compiled shared libraries (`libgc.so`).
 - `bdwgc/tests/`: Diagnostic tests and multi-threading verification routines.
 
+### Key Integration Points
+1. **Conservative Pointer Tracing**:
+   `bdwgc` scans thread execution stacks and registers conservatively to identify active references without requiring precise object map descriptors.
+2. **C++20 In-Place Object Construction**:
+   `java_new<T>(Args&&... args)` invokes `GC_MALLOC(sizeof(T))` and executes C++ placement-new `new (ptr) T(std::forward<Args>(args)...)` seamlessly.
+3. **Array Buffer Allocation**:
+   Dynamic arrays (`Array<T>`, `ArrayList<T>`) allocate contiguous memory buffers via `GC_MALLOC`, ensuring full visibility during garbage collector sweep phases.
+
 ### Build Configuration & Flags
 The automated setup script (`scripts/build_submodules.sh`) compiles `bdwgc` using GNU Autotools:
 ```bash
