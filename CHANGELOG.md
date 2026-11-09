@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.67
+- Documented submodule structure and standard Git commit message conventions in `SUBMODULES.md`:
+  - Added commit message formats for adding, updating, and building submodules.
+- Bumped version to `1.0.67` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.66
 - Documented core AST traversal logic of `CppTranspilerVisitor` in `README.md`:
   - Detailed `VisitFieldDeclaration`, `VisitMethodDeclaration`, `VisitStatement`, and `VisitExpression` traversal mechanics.

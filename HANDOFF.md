@@ -1,14 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.66 - Core AST Traversal Logic Documentation
+## Milestone Reached: v1.0.67 - Submodule Structure & Git Commit Conventions
 
-### What Was Accomplished in v1.0.66
-1. **Core AST Traversal Logic Documentation**:
-   - Documented core AST traversal hooks (`VisitFieldDeclaration`, `VisitMethodDeclaration`, `VisitStatement`, `VisitExpression`) in `README.md`.
+### What Was Accomplished in v1.0.67
+1. **Submodule Structure & Git Commit Conventions**:
+   - Documented submodule structure and standard Git commit conventions (`feat(submodules)`, `chore(submodules)`, `build(submodules)`) in `SUBMODULES.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.66`.
+   - Bumped `VERSION` to `1.0.67`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

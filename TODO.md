@@ -39,6 +39,7 @@
 - [x] Explore and document submodule integration points for `grammars-v4` and `bdwgc`.
 - [x] Outline implementation details and verification checklists for submodules.
 - [x] Document core AST traversal logic of `CppTranspilerVisitor`.
+- [x] Document submodule structure and commit message conventions.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

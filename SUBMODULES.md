@@ -38,12 +38,17 @@ To pull the latest commits for submodules tracked from remote forks:
 git submodule update --remote --merge
 ```
 
-### Adding New Submodules
+### Adding New Submodules & Commit Message Conventions
 To incorporate additional libraries as git submodules:
 ```bash
 git submodule add <repository-url> <path>
 git commit -m "chore: add <submodule-name> submodule"
 ```
+
+Standard Git commit messages for submodule lifecycle management:
+- Adding a submodule: `feat(submodules): add <name> submodule at <path>`
+- Updating submodule commit reference: `chore(submodules): bump <name> to <hash>`
+- Submodule build scripts / tooling: `build(submodules): update <name> compile flags`
 
 ---
 
