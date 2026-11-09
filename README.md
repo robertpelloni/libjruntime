@@ -126,6 +126,23 @@ func (v *CppTranspilerVisitor) GetHeaderCode() string { return v.headerCode.Stri
 func (v *CppTranspilerVisitor) GetCppCode() string { return v.cppCode.String() }
 ```
 
+#### Core AST Traversal Logic Example
+```go
+// VisitClassDeclaration extracts identifiers, base class, and interfaces
+func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclarationContext) interface{} {
+    className := ctx.IDENTIFIER().GetText()
+    v.currentClass = className
+    superClass := "java::lang::Object"
+    if ctx.EXTENDS() != nil && ctx.TypeType() != nil {
+        superClass = mapType(ctx.TypeType().GetText())
+    }
+    v.headerCode.WriteString(fmt.Sprintf("class %s : public %s {\npublic:\n", className, superClass))
+    v.Visit(ctx.ClassBody())
+    v.headerCode.WriteString("};\n")
+    return nil
+}
+```
+
 #### 1.4 Visitor vs. Listener Design Pattern
 ANTLR4 provides two primary tree traversal paradigms:
 - **Parse Tree Listeners (`JavaParserListener`)**: Passive, event-driven callbacks triggered as a walker enters and exits tree nodes. Listeners do not control traversal flow and cannot easily synthesize values up the tree.

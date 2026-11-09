@@ -45,6 +45,7 @@
 - [x] Deepen submodules exploration and state verification.
 - [x] Detail Go transpiler CLI structure and `CppTranspilerVisitor` lifecycle.
 - [x] Deepen submodule directory layout documentation.
+- [x] Document concrete AST traversal implementation in Go for `CppTranspilerVisitor`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

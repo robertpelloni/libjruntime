@@ -80,6 +80,7 @@
 - [x] Deepened submodules exploration and state verification.
 - [x] Detailed Go transpiler CLI structure and `CppTranspilerVisitor` lifecycle.
 - [x] Deepened submodule directory layout documentation.
+- [x] Documented concrete AST traversal implementation in Go for `CppTranspilerVisitor`.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

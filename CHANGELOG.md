@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.73
+- Documented Concrete AST Traversal Implementation in Go for `CppTranspilerVisitor` in `README.md`:
+  - Added code example demonstrating `VisitClassDeclaration` extracting class identifiers, base types, and emitting class declarations.
+- Bumped version to `1.0.73` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.72
 - Deepened Submodules Exploration with Directory Layout Trees in `SUBMODULES.md`:
   - Detailed directory layouts for `bdwgc/` and `grammars-v4/java/java/`.
