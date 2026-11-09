@@ -84,11 +84,12 @@ func TranspileJava(javaSource, outDir string) (headerCode, cppCode string, err e
 5. **Parse Tree Reduction**: Calling `p.CompilationUnit()` begins top-down parse tree derivation, passing the root context to `visitor.Visit(tree)`.
 
 #### 1.4 Initial Structure of the Go Transpiler CLI & `CppTranspilerVisitor`
-The transpiler is organized into three primary units:
+The transpiler CLI is organized into three primary units:
 1. `compiler-engine/main.go`: CLI parsing (`-src`, `-out`, `-dashboard`, `-port`), recursive file discovery, and orchestrating the ANTLR4 pipeline.
 2. `compiler-engine/visitor.go`: Implements `CppTranspilerVisitor`, embedding `parser.BaseJavaParserVisitor`.
 3. `compiler-engine/parser/`: Generated Go lexer and parser bindings from `grammars-v4/java/java`.
 
+#### CppTranspilerVisitor Struct & Lifecycle
 The core AST visitor struct tracks code emission buffers and inter-class dependency includes:
 
 ```go
@@ -106,6 +107,7 @@ type CppTranspilerVisitor struct {
     staticFields          map[string]bool
 }
 
+// NewCppTranspilerVisitor creates a new visitor instance initialized with empty buffers
 func NewCppTranspilerVisitor(outDir string) *CppTranspilerVisitor {
     return &CppTranspilerVisitor{
         BaseJavaParserVisitor: &parser.BaseJavaParserVisitor{},

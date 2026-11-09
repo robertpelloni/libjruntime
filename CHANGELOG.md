@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.71
+- Detailed Go Transpiler CLI Structure, ANTLR4 Integration, and `CppTranspilerVisitor` Lifecycle:
+  - Documented module architecture (`main.go`, `visitor.go`, `parser/`).
+  - Added visitor lifecycle documentation and constructor annotations in `README.md`.
+- Bumped version to `1.0.71` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.70
 - Deepened Submodules Exploration & State Verification in `SUBMODULES.md`:
   - Added explicit commit hash references for `bdwgc` and `grammars-v4` submodules.

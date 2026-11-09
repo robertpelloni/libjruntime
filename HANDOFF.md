@@ -1,14 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.70 - Submodule State Verification Documentation
+## Milestone Reached: v1.0.71 - Go Transpiler CLI Structure & Visitor Lifecycle
 
-### What Was Accomplished in v1.0.70
-1. **Submodule State Verification**:
-   - Documented commit hash references and status verification procedures (`git submodule status`) for `bdwgc` and `grammars-v4` in `SUBMODULES.md`.
+### What Was Accomplished in v1.0.71
+1. **CLI Structure & Visitor Lifecycle**:
+   - Detailed `CppTranspilerVisitor` struct definition, buffer management, constructor initialization, and lifecycle hooks in `README.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.70`.
+   - Bumped `VERSION` to `1.0.71`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
