@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.57
+- Drafted and refined Section 1: ANTLR4 Grammar Integration Specifications in `README.md` and `compiler-engine/ARCHITECTURE.md`:
+  - Detailed `JavaLexer.g4` token specifications and keyword categories.
+  - Detailed `JavaParser.g4` context-free production rules for compilation units, classes, interfaces, statements, lambdas, and expressions.
+  - Clarified pipeline diagram connecting grammar inputs, code generation via `scripts/generate_parser.sh`, predicate normalization, AST traversal, and C++20 emission.
+- Bumped version to `1.0.57` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.56
 - Detailed ANTLR4 Grammar & Submodule Integration Workflow for Go Transpiler CLI Setup:
   - Added section 2 detailing `grammars-v4/java/java` integration in `compiler-engine/ARCHITECTURE.md`.

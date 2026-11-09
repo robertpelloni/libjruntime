@@ -12,22 +12,24 @@ For deep architectural insights, build configuration flags, memory management ho
 ### SECTION 1: ANTLR4 Grammar Integration & Transpiler CLI Setup
 
 The Go-based transpiler front-end relies on the official Java ANTLR4 grammar specifications maintained in the `grammars-v4` git submodule (`grammars-v4/java/java`):
-- `JavaLexer.g4`: Complete lexical specifications defining token patterns, unicode escapes, identifiers, operators, keywords, and numeric/string/character literals.
-- `JavaParser.g4`: Context-free grammar rules defining Java compilation units, class and interface declarations, member fields, constructors, methods, control flow statements, and expression trees.
+- `JavaLexer.g4`: Complete lexical specifications defining token patterns, unicode escapes, identifiers, operators, keywords (`class`, `interface`, `extends`, `implements`, `synchronized`, `default`, `static`, etc.), and numeric/string/character literals.
+- `JavaParser.g4`: Context-free grammar rules defining Java compilation units (`compilationUnit`), class and interface declarations, member fields, constructors, methods, control flow statements (`if`, `while`, `for`, `switch`), lambdas, and expression trees.
 
-#### 1.1 Grammar Integration Architecture
+#### 1.1 Grammar Integration Architecture & Workflow
+The transpilation pipeline connects the ANTLR4 grammar sources, generated Go parser package, and C++ emitter:
+
 ```
 ┌─────────────────────────────────┐       ┌────────────────────────────────┐
 │   grammars-v4/java/java/*.g4    │ ────> │ scripts/generate_parser.sh     │
 └─────────────────────────────────┘       └────────────────────────────────┘
                                                            │
-                                                           ▼ (ANTLR 4.13.1 Go target)
+                                                           ▼ (ANTLR 4.13.1 Go target & sed normalizer)
 ┌─────────────────────────────────┐       ┌────────────────────────────────┐
 │ compiler-engine/visitor.go      │ <──── │ compiler-engine/parser/*.go    │
 │ (CppTranspilerVisitor)          │       │ (Lexer, Parser, Listener, Base)│
 └─────────────────────────────────┘       └────────────────────────────────┘
                  │
-                 ▼ (AST Traversal & Semantic Mapping)
+                 ▼ (AST Traversal, Type Mapping & C++20 Lowering)
 ┌─────────────────────────────────┐
 │ C++20 Header (.h) & Body (.cpp) │
 └─────────────────────────────────┘
