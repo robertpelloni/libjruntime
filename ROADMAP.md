@@ -83,6 +83,7 @@
 - [x] Documented concrete AST traversal implementation in Go for `CppTranspilerVisitor`.
 - [x] Documented basic structure of Go transpiler CLI and `CppTranspilerVisitor`.
 - [x] Documented concrete method declaration AST traversal.
+- [x] Documented submodule build automation and CI integration.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

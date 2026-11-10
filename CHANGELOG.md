@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.76
+- Documented Submodule Build Automation and CI Integration in `SUBMODULES.md`:
+  - Detailed `build_submodules.sh` and `generate_parser.sh` automation scripts.
+  - Documented GitHub Actions CI workflow pipeline stages.
+- Bumped version to `1.0.76` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.75
 - Documented Concrete Method Declaration AST Traversal in `README.md`:
   - Added code example for `VisitMethodDeclaration` showing modifier inspection, parameter extraction, and `.h`/`.cpp` code emission.

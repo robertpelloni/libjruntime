@@ -198,3 +198,21 @@ tree := p.CompilationUnit()
 - [x] Configure code generation targeting Go (`-Dlanguage=Go -visitor -package parser`).
 - [x] Implement automated predicate normalization (`sed -i 's/\bthis\./p\./g'`).
 - [x] Wire parse tree reduction via `CppTranspilerVisitor` extending `BaseJavaParserVisitor`.
+
+---
+
+## 3. Submodule Build Automation & CI Integration
+
+### Automation Scripts Overview
+- **`scripts/build_submodules.sh`**:
+  Initializes git submodules recursively (`git submodule update --init --recursive`) and configures/builds Boehm GC (`bdwgc`) with POSIX threads enabled.
+- **`scripts/generate_parser.sh`**:
+  Invokes ANTLR 4.13.1 on `grammars-v4/java/java/JavaLexer.g4` and `JavaParser.g4`, emitting Go parser code into `compiler-engine/parser/` and normalizing receiver references.
+
+### Continuous Integration Pipeline (`.github/workflows/ci.yml`)
+The GitHub Actions workflow executes on push and pull requests:
+1. Checks out repository with submodules recursively.
+2. Sets up Go 1.21 and modern GCC with C++20 support.
+3. Builds the `bdwgc` shared library.
+4. Executes Go unit tests with race detection (`go test -v -race ./...`).
+5. Executes the native end-to-end integration test harness (`tests/e2e_test.sh`).

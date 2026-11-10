@@ -1,14 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.75 - Concrete Method Declaration AST Traversal Documentation
+## Milestone Reached: v1.0.76 - Submodule Build Automation & CI Documentation
 
-### What Was Accomplished in v1.0.75
-1. **Method Declaration AST Traversal**:
-   - Documented `VisitMethodDeclaration` AST traversal example showing modifiers, parameter lists, and `.h`/`.cpp` code emission in `README.md`.
+### What Was Accomplished in v1.0.76
+1. **Build Automation & CI Integration**:
+   - Documented `build_submodules.sh`, `generate_parser.sh`, and GitHub Actions CI workflow pipeline in `SUBMODULES.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.75`.
+   - Bumped `VERSION` to `1.0.76`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
