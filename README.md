@@ -304,6 +304,28 @@ libjruntime/
 - **Thread Stack Registration**: Concurrency support in `libjruntime/Thread.h` initializes thread safety via `GC_allow_register_threads()` and registers OS threads using `GC_register_my_thread` / `GC_unregister_my_thread`.
 - **Linker Configuration**: Transpiled native executables link against `bdwgc/.libs/libgc.so` using `-L./bdwgc/.libs -lgc -Wl,-rpath,./bdwgc/.libs`.
 
+#### 1.9 Submodule Operational Mechanics & Current Integration State
+The following matrix summarizes the verified operational state, commit anchors, and verification criteria for both submodules:
+
+| Submodule | Pinned Commit | Upstream Origin | Local Tracking Path | Integration Verification Checklist |
+|:---|:---|:---|:---|:---|
+| **`grammars-v4`** | `5a9a89fa7274878bdb93877c4be5d56859c08e5e` | `https://github.com/robertpelloni/grammars-v4` | `grammars-v4/` | <ul><li>`grammars-v4/java/java/JavaLexer.g4` exists</li><li>`grammars-v4/java/java/JavaParser.g4` exists</li><li>`scripts/generate_parser.sh` runs cleanly</li><li>`compiler-engine/parser/` builds without errors</li></ul> |
+| **`bdwgc`** | `1d38c6d905a83b006df843440b380e51a2119871` | `https://github.com/robertpelloni/bdwgc` | `bdwgc/` | <ul><li>`bdwgc/include/gc.h` is present</li><li>`bdwgc/.libs/libgc.so` is compiled</li><li>`tests/e2e_test.sh` links and passes</li><li>Pthread thread safety enabled</li></ul> |
+
+##### Operational Submodule Sync & Maintenance Commands
+- Update and sync both submodules recursively:
+  ```bash
+  git submodule update --init --recursive
+  ```
+- Build the Boehm GC native shared library:
+  ```bash
+  ./scripts/build_submodules.sh
+  ```
+- Regenerate Go ANTLR4 parser bindings:
+  ```bash
+  ./scripts/generate_parser.sh
+  ```
+
 1. **Go Transpiler Engine (`compiler-engine/`)**
    - Uses ANTLR4 with Java grammar (`grammars-v4`).
    - Walks AST with `CppTranspilerVisitor`.

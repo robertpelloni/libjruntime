@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.83
+- Documented Submodule Operational Mechanics and Current Integration State in `README.md`:
+  - Added operational status table for `grammars-v4` and `bdwgc` with pinned commit hashes, upstream origins, tracking paths, and verification checklists.
+  - Documented operational submodule sync and maintenance commands.
+- Bumped version to `1.0.83` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.82
 - Outlined Submodule Structure and Integration Points in `README.md`:
   - Detailed directory layouts and integration mechanics for `grammars-v4` (JavaLexer/JavaParser, ANTLR 4.13.1 Go code generation, and predicate normalization).
