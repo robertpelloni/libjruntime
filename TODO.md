@@ -49,6 +49,7 @@
 - [x] Document basic structure of Go transpiler CLI and `CppTranspilerVisitor`.
 - [x] Document concrete method declaration AST traversal.
 - [x] Document submodule build automation and CI integration.
+- [x] Add Submodule Operational Requirements Matrix.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

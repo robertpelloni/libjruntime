@@ -84,6 +84,7 @@
 - [x] Documented basic structure of Go transpiler CLI and `CppTranspilerVisitor`.
 - [x] Documented concrete method declaration AST traversal.
 - [x] Documented submodule build automation and CI integration.
+- [x] Added Submodule Operational Requirements Matrix.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

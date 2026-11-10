@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.77
+- Added Submodule Operational Requirements Matrix in `SUBMODULES.md`:
+  - Detailed target outputs, host prerequisites, and runtime hooks for `bdwgc` and `grammars-v4`.
+- Bumped version to `1.0.77` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.76
 - Documented Submodule Build Automation and CI Integration in `SUBMODULES.md`:
   - Detailed `build_submodules.sh` and `generate_parser.sh` automation scripts.

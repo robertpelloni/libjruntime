@@ -216,3 +216,9 @@ The GitHub Actions workflow executes on push and pull requests:
 3. Builds the `bdwgc` shared library.
 4. Executes Go unit tests with race detection (`go test -v -race ./...`).
 5. Executes the native end-to-end integration test harness (`tests/e2e_test.sh`).
+
+### Submodule Operational Requirements Matrix
+| Submodule | Target Output | Host Prerequisites | Runtime Hook |
+|:---|:---|:---|:---|
+| `bdwgc` | `libgc.so` | GNU Autotools (`autoconf`, `automake`, `libtool`), `make`, GCC/Clang | `GC_INIT()`, `GC_MALLOC()`, `GC_register_my_thread()` |
+| `grammars-v4` | Go files in `compiler-engine/parser/` | Java 11+ runtime, `antlr-4.13.1-complete.jar` | `parser.NewJavaLexer()`, `parser.NewJavaParser()` |
