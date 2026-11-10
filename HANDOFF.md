@@ -1,14 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.77 - Submodule Operational Requirements Matrix Documentation
+## Milestone Reached: v1.0.78 - Batch Traversal & File Discovery Documentation
 
-### What Was Accomplished in v1.0.77
-1. **Submodule Operational Requirements Matrix**:
-   - Added Submodule Operational Requirements Matrix detailing outputs, host prerequisites, and runtime hooks for `bdwgc` and `grammars-v4` in `SUBMODULES.md`.
+### What Was Accomplished in v1.0.78
+1. **Batch Traversal & File Discovery Documentation**:
+   - Documented batch mode directory validation, output directory creation, and `filepath.WalkDir` recursive discovery in `README.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.77`.
+   - Bumped `VERSION` to `1.0.78`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

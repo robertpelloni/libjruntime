@@ -50,6 +50,7 @@
 - [x] Document concrete method declaration AST traversal.
 - [x] Document submodule build automation and CI integration.
 - [x] Add Submodule Operational Requirements Matrix.
+- [x] Document batch traversal and file discovery workflow in `README.md`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

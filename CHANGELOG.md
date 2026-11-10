@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.78
+- Documented Batch Traversal and File Discovery Workflow in `README.md`:
+  - Detailed directory validation, directory creation, and `filepath.WalkDir` traversal logic.
+- Bumped version to `1.0.78` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.77
 - Added Submodule Operational Requirements Matrix in `SUBMODULES.md`:
   - Detailed target outputs, host prerequisites, and runtime hooks for `bdwgc` and `grammars-v4`.

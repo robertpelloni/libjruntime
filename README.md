@@ -242,6 +242,11 @@ Execute batch transpilation across any directory of `.java` source files:
 ```bash
 ./compiler-engine/j2cpp-engine -src=/path/to/src -out=/path/to/out
 ```
+In batch mode, the CLI:
+1. Validates that `-src` and `-out` are non-empty directory paths.
+2. Ensures the target output directory exists via `os.MkdirAll(*outDir, os.ModePerm)`.
+3. Traverses the source directory recursively with `filepath.WalkDir`.
+4. Parses and transpiles every discovered `.java` file into `<ClassName>.h` and `<ClassName>.cpp`.
 
 Or run the interactive Web Dashboard Studio:
 ```bash
