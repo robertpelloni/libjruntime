@@ -1,14 +1,14 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.74 - Basic Structure of Go Transpiler CLI & CppTranspilerVisitor
+## Milestone Reached: v1.0.75 - Concrete Method Declaration AST Traversal Documentation
 
-### What Was Accomplished in v1.0.74
-1. **CLI Structure Documentation**:
-   - Documented stream setup, visitor initialization, and code retrieval (`GetHeaderCode()`, `GetCppCode()`) in `compiler-engine/ARCHITECTURE.md`.
+### What Was Accomplished in v1.0.75
+1. **Method Declaration AST Traversal**:
+   - Documented `VisitMethodDeclaration` AST traversal example showing modifiers, parameter lists, and `.h`/`.cpp` code emission in `README.md`.
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.74`.
+   - Bumped `VERSION` to `1.0.75`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents

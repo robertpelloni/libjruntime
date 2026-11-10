@@ -141,6 +141,26 @@ func (v *CppTranspilerVisitor) VisitClassDeclaration(ctx *parser.ClassDeclaratio
     v.headerCode.WriteString("};\n")
     return nil
 }
+
+// VisitMethodDeclaration lowers instance virtual and static member methods
+func (v *CppTranspilerVisitor) VisitMethodDeclaration(ctx *parser.MethodDeclarationContext) interface{} {
+    methodName := ctx.IDENTIFIER().GetText()
+    returnType := mapType(ctx.TypeTypeOrVoid().GetText())
+    params := v.extractParameters(ctx.FormalParameters())
+
+    // Virtual dispatch for instance methods in headers
+    qualifier := "virtual "
+    if v.currentIsStatic {
+        qualifier = "static "
+    }
+    v.headerCode.WriteString(fmt.Sprintf("    %s%s %s(%s);\n", qualifier, returnType, methodName, params))
+
+    // Definition emission into .cpp
+    v.cppCode.WriteString(fmt.Sprintf("%s %s::%s(%s) {\n", returnType, v.currentClass, methodName, params))
+    v.Visit(ctx.MethodBody())
+    v.cppCode.WriteString("}\n\n")
+    return nil
+}
 ```
 
 #### 1.4 Visitor vs. Listener Design Pattern

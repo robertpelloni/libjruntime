@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.75
+- Documented Concrete Method Declaration AST Traversal in `README.md`:
+  - Added code example for `VisitMethodDeclaration` showing modifier inspection, parameter extraction, and `.h`/`.cpp` code emission.
+- Bumped version to `1.0.75` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.74
 - Documented Basic Structure of Go Transpiler CLI: ANTLR4 Integration & `CppTranspilerVisitor` in `compiler-engine/ARCHITECTURE.md`:
   - Detailed stream setup, visitor initialization, and `GetHeaderCode()` / `GetCppCode()` code retrieval.

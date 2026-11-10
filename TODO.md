@@ -47,6 +47,7 @@
 - [x] Deepen submodule directory layout documentation.
 - [x] Document concrete AST traversal implementation in Go for `CppTranspilerVisitor`.
 - [x] Document basic structure of Go transpiler CLI and `CppTranspilerVisitor`.
+- [x] Document concrete method declaration AST traversal.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.
