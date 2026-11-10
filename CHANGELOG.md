@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.82
+- Outlined Submodule Structure and Integration Points in `README.md`:
+  - Detailed directory layouts and integration mechanics for `grammars-v4` (JavaLexer/JavaParser, ANTLR 4.13.1 Go code generation, and predicate normalization).
+  - Detailed integration mechanics for `bdwgc` (C API headers, `java_new<T>` placement allocation wrapper, thread stack registration, and native linker flags).
+- Bumped version to `1.0.82` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.81
 - Outlined Initial Architecture of the Go Transpiler CLI & ANTLR4 Integration in `README.md`:
   - Detailed ANTLR4 Go runtime binding, lexer token stream buffering, channel isolation, parser rule invocation, syntax error listeners, and AST visitor synthesis.

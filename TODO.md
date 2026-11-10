@@ -54,6 +54,7 @@
 - [x] Detail explicit Git submodule operational workflows and commit pinning in `README.md`.
 - [x] Detail initial setup instructions, environment dependencies, and verification table in `README.md`.
 - [x] Detail initial architecture of Go transpiler CLI and ANTLR4 grammar integration in `README.md`.
+- [x] Detail submodule structure and integration points for `grammars-v4` and `bdwgc` in `README.md`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

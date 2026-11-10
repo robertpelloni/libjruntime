@@ -270,6 +270,40 @@ The Go transpiler CLI operates as an end-to-end multi-pass compiler driver conne
    - `CppTranspilerVisitor` walks the AST nodes (`VisitClassDeclaration`, `VisitMethodDeclaration`, etc.).
    - Header definitions (`.h`) and implementation bodies (`.cpp`) are emitted in tandem into in-memory string buffers and written to disk or returned to the interactive dashboard.
 
+#### 1.8 Submodule Structure & Integration Points
+The project links two foundational external submodules into the compiler pipeline and native runtime:
+
+```
+libjruntime/
+├── grammars-v4/                     # ANTLR4 Official Grammar Library Submodule
+│   └── java/java/
+│       ├── JavaLexer.g4             # Token patterns & lexical specifications
+│       └── JavaParser.g4            # Context-free Java grammar rules
+└── bdwgc/                           # Boehm-Demers-Weiser GC Submodule
+    ├── include/gc.h                 # Native C API (`GC_MALLOC`, `GC_INIT`)
+    └── .libs/libgc.so               # Compiled shared library linked at runtime
+```
+
+##### 1. `grammars-v4` Integration Points
+- **Grammar Location**: `grammars-v4/java/java/JavaLexer.g4` and `grammars-v4/java/java/JavaParser.g4`.
+- **Code Generation Trigger**: Invoked via `scripts/generate_parser.sh` using ANTLR 4.13.1 targeting Go (`-Dlanguage=Go -visitor`).
+- **Semantic Predicate Normalization**: Post-generation regex normalization (`sed -i 's/\bthis\./p\./g' compiler-engine/parser/*.go`) adapts ANTLR4 Java-style parser receiver predicates to Go pointer syntax.
+- **Transpiler Consumption**: The generated Go parser artifacts in `compiler-engine/parser/` are directly consumed by `compiler-engine/visitor.go`.
+
+##### 2. `bdwgc` Integration Points
+- **C API Headers**: `bdwgc/include/gc.h` and `bdwgc/include/gc_pthread_redirects.h` are included by `libjruntime/GC.h`.
+- **Memory Allocation Wrapper**: Native allocations wrap Boehm GC's `GC_MALLOC(size)` through the type-safe placement-new template:
+  ```cpp
+  template <typename T, typename... Args>
+  inline T* java_new(Args&&... args) {
+      void* ptr = GC_MALLOC(sizeof(T));
+      if (!ptr) throw std::bad_alloc();
+      return new (ptr) T(std::forward<Args>(args)...);
+  }
+  ```
+- **Thread Stack Registration**: Concurrency support in `libjruntime/Thread.h` initializes thread safety via `GC_allow_register_threads()` and registers OS threads using `GC_register_my_thread` / `GC_unregister_my_thread`.
+- **Linker Configuration**: Transpiled native executables link against `bdwgc/.libs/libgc.so` using `-L./bdwgc/.libs -lgc -Wl,-rpath,./bdwgc/.libs`.
+
 1. **Go Transpiler Engine (`compiler-engine/`)**
    - Uses ANTLR4 with Java grammar (`grammars-v4`).
    - Walks AST with `CppTranspilerVisitor`.
