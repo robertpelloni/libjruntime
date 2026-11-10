@@ -53,6 +53,7 @@
 - [x] Document batch traversal and file discovery workflow in `README.md`.
 - [x] Detail explicit Git submodule operational workflows and commit pinning in `README.md`.
 - [x] Detail initial setup instructions, environment dependencies, and verification table in `README.md`.
+- [x] Detail initial architecture of Go transpiler CLI and ANTLR4 grammar integration in `README.md`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

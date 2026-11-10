@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.81
+- Outlined Initial Architecture of the Go Transpiler CLI & ANTLR4 Integration in `README.md`:
+  - Detailed ANTLR4 Go runtime binding, lexer token stream buffering, channel isolation, parser rule invocation, syntax error listeners, and AST visitor synthesis.
+- Bumped version to `1.0.81` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.80
 - Outlined Initial Setup Instructions and Environment Requirements in `README.md`:
   - Added comprehensive prerequisites matrix with minimum versions, requirements, and verification commands.

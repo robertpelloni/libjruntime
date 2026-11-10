@@ -88,6 +88,7 @@
 - [x] Documented batch traversal and file discovery workflow in `README.md`.
 - [x] Detailed explicit Git submodule operational workflows and commit pinning in `README.md`.
 - [x] Detailed initial setup instructions, environment dependencies, and verification table in `README.md`.
+- [x] Detailed initial architecture of Go transpiler CLI and ANTLR4 grammar integration in `README.md`.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

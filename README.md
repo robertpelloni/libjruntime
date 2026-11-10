@@ -253,6 +253,23 @@ Or run the interactive Web Dashboard Studio:
 ./compiler-engine/j2cpp-engine -dashboard -port=8080
 ```
 
+#### 1.7 Initial Architecture of the Go Transpiler CLI & ANTLR4 Integration
+The Go transpiler CLI operates as an end-to-end multi-pass compiler driver connecting ANTLR4 grammar analysis with modern C++ emission:
+
+1. **ANTLR4 Go Runtime Binding**:
+   - `github.com/antlr4-go/antlr/v4` provides the underlying runtime engine for lexing, token streaming, and LL(*) predictive parsing.
+   - The Go lexer (`parser.NewJavaLexer(input)`) converts raw Unicode codepoints into typed tokens against `grammars-v4/java/java/JavaLexer.g4`.
+2. **Token Buffering & Channel Isolation**:
+   - `antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)` buffers lexed tokens while cleanly filtering hidden tokens (whitespace, line comments, block docstrings) away from the parser channel.
+3. **Parser Initialization & Rule Invocation**:
+   - `parser.NewJavaParser(tokens)` instantiates the syntactic rule engine.
+   - Calling `p.CompilationUnit()` parses the stream starting at the top-level compilation unit rule (`compilationUnit`), building an AST parse tree in memory.
+4. **Syntax Error Handling & Listener Attachments**:
+   - Custom diagnostic listeners implementing `antlr.ErrorListener` (or `antlr.NewConsoleErrorListener()`) intercept syntax errors, lexical anomalies, and mismatched tokens, providing exact line/column diagnostics.
+5. **AST Visitor Traversal & Code Synthesis**:
+   - `CppTranspilerVisitor` walks the AST nodes (`VisitClassDeclaration`, `VisitMethodDeclaration`, etc.).
+   - Header definitions (`.h`) and implementation bodies (`.cpp`) are emitted in tandem into in-memory string buffers and written to disk or returned to the interactive dashboard.
+
 1. **Go Transpiler Engine (`compiler-engine/`)**
    - Uses ANTLR4 with Java grammar (`grammars-v4`).
    - Walks AST with `CppTranspilerVisitor`.
