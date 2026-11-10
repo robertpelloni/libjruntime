@@ -274,11 +274,37 @@ Or run the interactive Web Dashboard Studio:
 
 ## Building and Running
 
-### Prerequisites
-- **Go Toolchain**: 1.20+
-- **C++ Compiler**: GCC (g++ 10+) or Clang (clang++ 11+) with C++20 support
-- **Build Tools**: Autoconf, Automake, Libtool, Make
-- **Java Runtime**: JRE/JDK 11+ (for optional ANTLR4 parser regeneration)
+### Prerequisites & Initial Environment Setup
+Before building and running `libjruntime` or the Go transpiler CLI, ensure your host environment satisfies the following dependencies:
+
+| Toolchain / Dependency | Minimum Version | Required For | Verification Command |
+|:---|:---|:---|:---|
+| **Go Toolchain** | 1.20+ | Compiling the `j2cpp-engine` CLI & dashboard | `go version` |
+| **C++ Compiler** | GCC 10+ / Clang 11+ | Compiling C++20 transpiled code & runtime | `g++ --version` or `clang++ --version` |
+| **Autotools Suite** | Autoconf 2.69+, Automake 1.15+, Libtool 2.4+ | Configuring & building `bdwgc` shared library | `autoconf --version && libtool --version` |
+| **GNU Make** | 4.0+ | Building submodules & orchestrating compilation | `make --version` |
+| **Java Runtime (JRE/JDK)** | 11+ | Optional ANTLR4 parser regeneration | `java -version` |
+| **Git** | 2.25+ | Submodule cloning and version control management | `git --version` |
+
+#### Installing Dependencies
+
+##### Ubuntu / Debian
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential autoconf automake libtool make \
+    openjdk-17-jre-headless golang git
+```
+
+##### Fedora / RHEL
+```bash
+sudo dnf groupinstall "Development Tools"
+sudo dnf install autoconf automake libtool golang java-17-openjdk-headless git
+```
+
+##### macOS (Homebrew)
+```bash
+brew install go autoconf automake libtool make openjdk@17 git
+```
 
 ### Step 1: Initialize & Build Submodules
 The project relies on two core Git submodules configured in `.gitmodules`:

@@ -52,6 +52,7 @@
 - [x] Add Submodule Operational Requirements Matrix.
 - [x] Document batch traversal and file discovery workflow in `README.md`.
 - [x] Detail explicit Git submodule operational workflows and commit pinning in `README.md`.
+- [x] Detail initial setup instructions, environment dependencies, and verification table in `README.md`.
 
 ## Maintenance & Optimization
 - [x] Add continuous integration GitHub Actions workflow `.github/workflows/ci.yml`.

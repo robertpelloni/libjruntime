@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.80
+- Outlined Initial Setup Instructions and Environment Requirements in `README.md`:
+  - Added comprehensive prerequisites matrix with minimum versions, requirements, and verification commands.
+  - Documented installation instructions for Ubuntu/Debian, Fedora/RHEL, and macOS (Homebrew).
+- Bumped version to `1.0.80` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.79
 - Deepened Submodules Architecture and Workflow in `README.md`:
   - Detailed explicit commit status hashes for `bdwgc` and `grammars-v4`.

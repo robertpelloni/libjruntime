@@ -1,15 +1,15 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.79 - Submodule Architecture & Integration Workflows Documentation
+## Milestone Reached: v1.0.80 - Initial Setup Instructions & Dependencies Documentation
 
-### What Was Accomplished in v1.0.79
-1. **Submodule Architecture & Integration Workflows Documentation**:
-   - Expanded `README.md` Step 1 with explicit commit hashes for `bdwgc` and `grammars-v4`.
-   - Documented Autotools build commands and parser generation steps (`scripts/generate_parser.sh`).
+### What Was Accomplished in v1.0.80
+1. **Initial Setup Instructions & Dependencies Documentation**:
+   - Outlined comprehensive environment prerequisites table with verification commands in `README.md`.
+   - Documented installation procedures for Ubuntu/Debian, Fedora/RHEL, and macOS (Homebrew).
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.79`.
+   - Bumped `VERSION` to `1.0.80`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
