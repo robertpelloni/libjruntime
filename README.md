@@ -285,16 +285,15 @@ The project relies on two core Git submodules configured in `.gitmodules`:
 - `grammars-v4`: Official ANTLR4 Java lexer and parser grammars (`https://github.com/robertpelloni/grammars-v4`).
 - `bdwgc`: Boehm-Demers-Weiser Conservative Garbage Collector (`https://github.com/robertpelloni/bdwgc`).
 
-#### Submodule Incorporation Procedures
+#### Submodule Incorporation & Architecture Overview
 1. **Verify Submodule Configuration**: Inspect `.gitmodules` to confirm valid tracking paths and repository URLs.
 2. **Recursive Checkout**: Fetch and checkout all submodule references:
    ```bash
    git submodule update --init --recursive
    ```
-3. **Verify Commit Status**: Check initialized commit hashes:
-   ```bash
-   git submodule status
-   ```
+3. **Verify Commit Status**: Check initialized commit hashes (`git submodule status`):
+   - `bdwgc`: `1d38c6d905a83b006df843440b380e51a2119871`
+   - `grammars-v4`: `5a9a89fa7274878bdb93877c4be5d56859c08e5e`
 4. **Compile Boehm GC Shared Library**:
    Run the automated preparation script:
    ```bash
@@ -307,6 +306,11 @@ The project relies on two core Git submodules configured in `.gitmodules`:
    ./configure --enable-threads=posix --enable-shared --disable-static
    make -j$(nproc)
    cd ..
+   ```
+5. **ANTLR4 Code Generation**:
+   Generate Go parser bindings from `grammars-v4/java/java/`:
+   ```bash
+   ./scripts/generate_parser.sh
    ```
 
 ### Step 2: Build the `j2cpp-engine` Transpiler CLI

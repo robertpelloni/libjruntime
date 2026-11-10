@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.79
+- Deepened Submodules Architecture and Workflow in `README.md`:
+  - Detailed explicit commit status hashes for `bdwgc` and `grammars-v4`.
+  - Added step 5 documenting ANTLR4 parser regeneration command.
+- Bumped version to `1.0.79` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.78
 - Documented Batch Traversal and File Discovery Workflow in `README.md`:
   - Detailed directory validation, directory creation, and `filepath.WalkDir` traversal logic.

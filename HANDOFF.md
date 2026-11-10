@@ -1,14 +1,15 @@
 # HANDOFF & ARCHITECTURAL SUMMARY
 
-## Milestone Reached: v1.0.78 - Batch Traversal & File Discovery Documentation
+## Milestone Reached: v1.0.79 - Submodule Architecture & Integration Workflows Documentation
 
-### What Was Accomplished in v1.0.78
-1. **Batch Traversal & File Discovery Documentation**:
-   - Documented batch mode directory validation, output directory creation, and `filepath.WalkDir` recursive discovery in `README.md`.
+### What Was Accomplished in v1.0.79
+1. **Submodule Architecture & Integration Workflows Documentation**:
+   - Expanded `README.md` Step 1 with explicit commit hashes for `bdwgc` and `grammars-v4`.
+   - Documented Autotools build commands and parser generation steps (`scripts/generate_parser.sh`).
 2. **Comprehensive Verification**:
    - Verified that all unit tests (`go test -v -race ./...`) and E2E tests (`./tests/e2e_test.sh`) pass cleanly.
 3. **Workspace Governance**:
-   - Bumped `VERSION` to `1.0.78`.
+   - Bumped `VERSION` to `1.0.79`.
    - Updated `compiler-engine/dashboard.go`, `CHANGELOG.md`, `ROADMAP.md`, `TODO.md`, `MEMORY.md`, and `HANDOFF.md`.
 
 ### Context for Successor Agents
