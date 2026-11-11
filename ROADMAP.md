@@ -91,6 +91,7 @@
 - [x] Detailed initial architecture of Go transpiler CLI and ANTLR4 grammar integration in `README.md`.
 - [x] Detailed submodule structure and integration points for `grammars-v4` and `bdwgc` in `README.md`.
 - [x] Documented submodule operational mechanics and current integration state in `README.md`.
+- [x] Refactored dashboard template rendering and version interpolation with `html/template`.
 - [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
 
 ## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)

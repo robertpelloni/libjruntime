@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -182,7 +183,7 @@ const dashboardHTML = `<!DOCTYPE html>
     <header>
         <div class="brand">
             <span>⚡ libjruntime</span>
-            <span class="badge" id="version-badge">v1.0.38</span>
+            <span class="badge" id="version-badge">{{.Version}}</span>
         </div>
         <div class="header-actions">
             <button class="btn" onclick="transpileCode()">Transpile Code</button>
@@ -346,7 +347,7 @@ func getProjectVersion() string {
 			}
 		}
 	}
-	return "v1.0.83"
+	return "v1.0.84"
 }
 
 func handleStatus(w http.ResponseWriter, r *http.Request) {
@@ -369,11 +370,16 @@ func handleStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 func startDashboardServer(port int) error {
+	tmpl, err := template.New("dashboard").Parse(dashboardHTML)
+	if err != nil {
+		return err
+	}
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		html := strings.ReplaceAll(dashboardHTML, "v1.0.38", getProjectVersion())
-		w.Write([]byte(html))
+		_ = tmpl.Execute(w, map[string]string{
+			"Version": getProjectVersion(),
+		})
 	})
 	mux.HandleFunc("/api/transpile", handleTranspileSnippet)
 	mux.HandleFunc("/api/status", handleStatus)

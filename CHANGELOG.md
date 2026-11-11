@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.84
+- Refactored Dashboard Templating and Version Handling in `compiler-engine/dashboard.go`:
+  - Migrated embedded dashboard rendering to standard `html/template` with dynamic `{{.Version}}` interpolation.
+  - Replaced hardcoded fallback string replacements with clean template execution.
+- Bumped version to `1.0.84` in `VERSION` and `compiler-engine/dashboard.go`.
+
 ## 1.0.83
 - Documented Submodule Operational Mechanics and Current Integration State in `README.md`:
   - Added operational status table for `grammars-v4` and `bdwgc` with pinned commit hashes, upstream origins, tracking paths, and verification checklists.
