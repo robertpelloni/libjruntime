@@ -1,0 +1,74 @@
+# INTERNAL CODEBASE MEMORY & ARCHITECTURAL OBSERVATIONS
+
+## Repository Structure & Components
+- **`compiler-engine/`**: Go module translating Java source to modern C++20.
+  - `main.go`: CLI parsing `-src` and `-out` directories and orchestrating ANTLR file traversal.
+  - `visitor.go`: `CppTranspilerVisitor` extending ANTLR's `BaseJavaParserVisitor`. Emits `.h` declarations and `.cpp` definitions, manages header inclusion dependencies, and translates Java `Math`, static initialization blocks, `StringBuilder`, static members (`static method`, `inline static field`, `ClassName::member`), arrays (`T[]` / `new T[n]` / `arr[i]`), interfaces, classes (`extends` / `implements`), constructors, methods, fields, statements/expressions (`if`, `while`, `for`, `try-catch-finally`, arithmetic/relational operators).
+  - `parser/`: Generated Go parser and lexer bindings from ANTLR4 Java grammar.
+- **`libjruntime/`**: Header-only native C++ runtime library in `java::lang` namespace.
+  - `Object.h`: Base `Object` containing lazy atomic monitor initialization (`std::mutex*`).
+  - `String.h`: Standard string wrapper with concatenation overloads and `toString()`.
+  - `StringBuilder.h`: Mutable string builder backing `java::lang::StringBuilder` with chained appends.
+  - `Array.h`: Standard array wrapper `java::lang::Array<T>` with length field, bounds checking, and `GC_MALLOC` buffer allocation.
+  - `Math.h`: Mathematical functions (`abs`, `min`, `max`, `sqrt`, `pow`, etc.) and constants (`PI`, `E`).
+  - `Boxes.h`: Primitive wrapper types `java::lang::Integer`, `Boolean`, `Long`, `Double`, `Float`, `Byte`, `Character`, and `Short` with `valueOf`, unboxing methods, `equals`, `hashCode`, and `toString`.
+  - `ArrayList.h`: Dynamic collection `java::util::ArrayList<T>` with GC-backed growth, add, get, set, remove, size, isEmpty, clear, and bounds checking.
+  - `HashMap.h`: Key-value associative container `java::util::HashMap<K, V>` with dynamic rehashing, Object equals/hashCode dispatch, put, get, containsKey, remove, size, isEmpty, and clear.
+  - `FileIO.h`: File I/O primitives `java::io::File`, `java::io::FileInputStream`, and `java::io::FileOutputStream` backed by standard POSIX/C streams.
+  - `Thread.h`: Multi-threading primitives `java::lang::Runnable` and `java::lang::Thread` with Boehm GC thread stack registration.
+  - `System.h`: Standard I/O output stream wrapper (`PrintStream`) backing `java::lang::System::out`.
+  - `GC.h`: Memory allocation via `GC_MALLOC` wrapped in `java_new<T>()`.
+  - `Exceptions.h`: Native exception types `Exception`, `NullPointerException`, and `ArrayIndexOutOfBoundsException`.
+  - `FinallyGuard.h`: RAII guard wrapper `JAVA_FINALLY` variadic with line-unique guard identifiers.
+  - `Runtime.h`: Runtime safety macros including `JAVA_NULL_CHECK` implemented via `check_not_null<T>()`.
+- **`bdwgc/`**: Git submodule pointing to Boehm GC repository.
+- **`grammars-v4/`**: Git submodule containing standard ANTLR4 grammar definitions.
+- **`scripts/`**: Automation and toolchain scripts.
+  - `build_submodules.sh`: Recursively initializes submodules and builds Boehm GC (`bdwgc/.libs/libgc.so`).
+  - `generate_parser.sh`: Compiles `grammars-v4/java/java/JavaLexer.g4` and `JavaParser.g4` to Go parser bindings in `compiler-engine/parser/` via `antlr-4.13.1-complete.jar`.
+- **`tests/`**: Integration and regression tests.
+  - `e2e_test.sh`: End-to-end pipeline transpiling Java sample code, compiling with `g++ -std=c++20`, linking with `libgc`, and verifying assertions, Math, static initialization blocks, StringBuilder, static members, arrays, polymorphism, interfaces, constructors, and console output at runtime.
+
+## Key Design Patterns & Invariants
+- Class transpilation produces two files per Java class: `<ClassName>.h` and `<ClassName>.cpp`.
+- `Math` calls map directly to `java::lang::Math::method` without allocating instances or checking null pointers.
+- Primitive wrappers `Integer`, `Boolean`, `Long`, `Double`, `Float`, `Byte`, `Character`, and `Short` map to `java::lang::*` pointers, auto-including `Boxes.h`.
+- Collections like `ArrayList` and `ArrayList<T>` map to `java::util::ArrayList<mappedT>*` with auto-inclusion of `ArrayList.h`.
+- `HashMap` and `HashMap<K, V>` map to `java::util::HashMap<mappedK, mappedV>*` with auto-inclusion of `HashMap.h`.
+- File I/O classes (`File`, `FileInputStream`, `FileOutputStream`) map to `java::io::*` with auto-inclusion of `FileIO.h`.
+- Multi-threading classes (`Thread`, `Runnable`) map to `java::lang::*` with auto-inclusion of `Thread.h`.
+- Enhanced for-each loops `for (Type x : iterable)` map to `for (Type x : *JAVA_NULL_CHECK(iterable))` leveraging C++ `begin()`/`end()` pointer ranges on `Array<T>` and `ArrayList<T>`.
+- Constructor chaining `this(...)` and `super(...)` inside constructor bodies translate into C++ constructor member initializer lists (`: Sibling(args)` or `: Super(args)`) and are omitted from the constructor body.
+- Ternary expressions map via `VisitTernaryExpression` to `cond ? thenVal : elseVal` with parenthesized group preservation.
+- `synchronized` blocks and methods lower to `std::lock_guard<std::mutex> _java_sync_lock(*target->getMonitor());` using `java::lang::Object` atomic monitors.
+- `throw` statements map via `VisitStatement` to `throw expr;` with `Exception(String*)` constructor support in `Exceptions.h`.
+- `switch` statements map to C++ `switch (expr) { case ...: default: ... }` with `break;` and `continue;` statement support.
+- Unary expressions map via `VisitUnaryOperatorExpression` with prefix operators (`-`, `+`, `!`, `~`).
+- `instanceof` expressions map to `(dynamic_cast<TargetType*>(expr) != nullptr)`.
+- Explicit casts `(Target)expr` map to `dynamic_cast<Target*>(expr)` for reference types and `static_cast<Target>(expr)` for primitive types.
+- Java `null` maps to C++ `nullptr`.
+- Static factory methods like `Integer.valueOf(...)` route directly to `java::lang::Integer::valueOf(...)`.
+- Static initialization blocks `static { ... }` translate to self-invoking lambda runners `static inline bool _static_init_## = []() { ...; return true; }();` ensuring pre-main execution.
+- Static fields map to `inline static fieldType fieldName = init;` in the C++ header.
+- Static methods map to `static returnType methodName(...)` without `virtual`.
+- Member accesses with capitalized object names map directly to scope resolution (`ClassName::member`) rather than `JAVA_NULL_CHECK(ClassName)->member`.
+- Interface transpilation produces `<InterfaceName>.h` declaring an abstract base with pure virtual methods (`= 0`) and virtual default destructor.
+- Class inheritance (`extends SuperClass`) and interface implementation (`implements InterfaceA, InterfaceB`) map to C++ multiple inheritance.
+- Arrays map to `java::lang::Array<T>*` allocated via `java_new<java::lang::Array<T>>(size)` with internal storage allocated with `GC_MALLOC`.
+- `StringBuilder` maps to `java::lang::StringBuilder*` with internal dynamic resizing and `toString()` allocation via `java_new<String>`.
+- All native allocations must route through `java_new<T>` instead of raw `new` to remain visible to `bdwgc`.
+- Lambda expressions `(args) -> expr` / `(args) -> { ... }` map to C++20 lambda expressions `[=](params) { return expr; }` or `[=](params) { body; }` with explicit types or `auto` inferred parameters.
+- Method references `Type::method`, `expr::method`, and `Type::new` map to universal forwarding C++ lambda closures `[=](auto&&... args) { return ...; }`.
+- Functional interfaces (`Function<T, R>`, `Consumer<T>`, `Supplier<T>`, `Predicate<T>`) map to `java::util::function::*` templates in `libjruntime/Functions.h` with adapter helpers (`make_function`, `make_consumer`, `make_supplier`, `make_predicate`).
+- Stream API (`Stream<T>`) is implemented in `libjruntime/Stream.h` with lazy-compatible intermediate operations (`filter`, `map`, `limit`, `skip`) and terminal operations (`count`, `forEach`, `toList`), and `ArrayList<T>::stream()`.
+- Default interface methods (`default ReturnType method(...) { ... }`) and static interface methods (`static ReturnType method(...) { ... }`) are transpiled in `compiler-engine/visitor.go` into inlined method implementations directly inside the C++ interface header class definition.
+- Reflection basics (`Class<T>`) are implemented in `libjruntime/Class.h` with `getName()`, `getSimpleName()`, `isInstance(Object*)`, and `Object::getClass()`, with class literals (`Type.class`) transpiled via `VisitPrimary`.
+- Container abstraction `Optional<T>` is implemented in `libjruntime/Optional.h` with static factories `of`, `ofNullable`, `empty`, predicates `isPresent`, `isEmpty`, accessors `get`, `orElse`, and transformations `map`, `filter`.
+- Set collection `HashSet<E>` is implemented in `libjruntime/HashSet.h` backed by `HashMap<E, Object*>` for O(1) membership operations and a dynamic flat array for enhanced for-each iteration (`begin()`, `end()`).
+- Embedded interactive web dashboard studio is built into `compiler-engine` via `-dashboard` (defaulting to port 8080) with HTTP API endpoints `/api/transpile` and `/api/status`, providing real-time side-by-side Java to C++ transpilation in the browser.
+- Collection algorithms utility `java::util::Collections` is implemented in `libjruntime/Collections.h` with `sort`, `reverse`, `shuffle`, `min`, `max`, `fill`, and `frequency` operating on `ArrayList<T>*`.
+- Sequential and deque container `LinkedList<T>` is implemented in `libjruntime/LinkedList.h` via `java::util::LinkedList<T>` backed by doubly linked GC-managed nodes with `addFirst`, `addLast`, `getFirst`, `getLast`, `removeFirst`, `removeLast`, and range iterators.
+- Uninitialized instance and static fields automatically receive Java specification default values (`bool` -> `false`, integers -> `0`, floats -> `0.0`, pointers -> `nullptr`) in emitted C++ header declarations.
+- Atomic concurrency variables `AtomicInteger`, `AtomicBoolean`, and `AtomicLong` are implemented in `libjruntime/Atomic.h` under namespace `java::util::concurrent::atomic`, backed by `std::atomic` and mapped in `compiler-engine/visitor.go`.
+- Explicit synchronization lock `ReentrantLock` is implemented in `libjruntime/Lock.h` under namespace `java::util::concurrent::locks` backed by `std::recursive_mutex`.
+- Detailed ANTLR4 grammar pipeline integration (`grammars-v4/java/java/JavaLexer.g4`, `JavaParser.g4`), Go parser code generation, predicate normalization (`sed`), and Go token stream bootstrapping are documented across `compiler-engine/ARCHITECTURE.md`, `SUBMODULES.md`, and `README.md`.

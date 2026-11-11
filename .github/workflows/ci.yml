@@ -1,0 +1,53 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, "feature/**" ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential autoconf automake libtool
+
+      - name: Build Submodules
+        run: |
+          chmod +x scripts/build_submodules.sh
+          ./scripts/build_submodules.sh
+
+      - name: Build Go Transpiler Engine
+        run: |
+          cd compiler-engine
+          go build -v -o j2cpp-engine .
+
+      - name: Run Go Unit Tests
+        run: |
+          cd compiler-engine
+          go test -v -race ./...
+
+      - name: Run End-to-End Native Execution Tests
+        run: |
+          chmod +x tests/e2e_test.sh
+          ./tests/e2e_test.sh

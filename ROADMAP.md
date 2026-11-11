@@ -1,0 +1,98 @@
+# ROADMAP
+
+## Milestone 1: Core Foundation & Toolchain (v1.0.x) - [Completed]
+- [x] Initial submodules and runtime headers setup (`grammars-v4`, `bdwgc`).
+- [x] Automated submodule build and parser generation toolchain scripts (`scripts/build_submodules.sh`, `scripts/generate_parser.sh`).
+- [x] AST transpiler engine in Go (`j2cpp-engine`) mapping Java syntax to C++20.
+- [x] Base native runtime types: `Object`, `String`, `Exceptions`, `FinallyGuard`, and `GC`.
+- [x] Automated unit test suite (`visitor_test.go`) and end-to-end integration test harness (`tests/e2e_test.sh`).
+- [x] Control flow statement transpilation: `if`, `else`, `while`, and `for` loops.
+- [x] Basic console I/O emulation: `System.out.println` and `System.out.print` (`System.h`).
+- [x] Class constructor transpilation (default, overloaded, parameterized constructors).
+- [x] Class inheritance (`extends SuperClass`), dynamic dispatch, and polymorphism.
+- [x] Interface declarations (`interface Foo`) and implementation (`implements Bar`) with pure virtual C++ bases.
+- [x] Array types (`T[]`), creation (`new T[n]`), indexing (`arr[i]`), and bounds safety (`Array.h`).
+- [x] Static fields, static methods, and class member access (`ClassName::member`).
+- [x] Native string manipulation: `java.lang.StringBuilder` with chained appends.
+- [x] Static initialization blocks (`static { ... }`) mapped to self-executing lambda runners.
+- [x] Mathematical utilities: `java.lang.Math` constants (`PI`, `E`) and functions (`abs`, `min`, `max`, `sqrt`, `pow`, etc.).
+- [x] Primitive wrapper classes (`Integer`, `Long`, `Boolean`) and boxed methods (`libjruntime/Boxes.h`).
+- [x] Dynamic collections runtime (`java.util.ArrayList<T>` in `libjruntime/ArrayList.h`).
+- [x] Enhanced for-each loops (`for (T x : collection)`) with range-based loop lowering.
+
+- [x] Explicit type casting (`(Type)expr`) and runtime `instanceof` expressions.
+- [x] `switch` statements (`switch (expr) { case ...: default: ... }`), `break`, `continue`, and unary expressions.
+- [x] Ternary expressions (`cond ? a : b`).
+
+- [x] Constructor chaining (`this(...)`, `super(...)`) and C++ member initializer lowering.
+- [x] Explicit `throw` statements and parameterized exception constructor overloads.
+
+## Milestone 2: Language Completeness (v1.1.0)
+- [x] Field default initializers in generated constructors and class field declarations.
+
+- [x] Key-value associative container: `java.util.HashMap<K, V>` in `libjruntime/HashMap.h`.
+
+- [x] File I/O primitives (`File`, `FileInputStream`, `FileOutputStream`) in `libjruntime/FileIO.h`.
+
+- [x] Extended wrapper classes (`Double`, `Float`, `Byte`, `Character`, `Short`) in `libjruntime/Boxes.h`.
+
+- [x] `synchronized` block and method syntax translation backed by `Object` atomic monitor mutexes.
+
+- [x] Concurrency primitives (`Thread`, `Runnable`) in `libjruntime/Thread.h`.
+- [x] Atomic variables (`AtomicInteger`, `AtomicBoolean`, `AtomicLong`) in `libjruntime/Atomic.h`.
+- [x] Explicit lock primitives (`ReentrantLock`) in `libjruntime/Lock.h`.
+
+## Milestone 3: Runtime Library Expansion (v1.2.0)
+- [x] Functional interfaces and lambda expressions (`(args) -> expr / { ... }`).
+- [x] Method references (`Class::method`, `expr::method`, `Class::new`).
+- [x] Nested / inner classes and anonymous class support.
+- [x] Functional interfaces runtime headers (`libjruntime/Functions.h` - `Function`, `Consumer`, `Supplier`, `Predicate`).
+- [x] Stream API runtime headers (`libjruntime/Stream.h` - `java.util.stream.Stream<T>`).
+- [x] Default and static interface methods transpilation.
+- [x] Reflection basics (`java.lang.Class<T>` runtime header and class literal transpilation).
+- [x] Container abstractions (`java.util.Optional<T>` runtime header and transpiler mappings).
+- [x] Set collections (`java.util.HashSet<E>` runtime header and transpiler mappings).
+- [x] Sequential and Deque collections (`java.util.LinkedList<T>` in `libjruntime/LinkedList.h`).
+- [x] Collection algorithms (`java.util.Collections` in `libjruntime/Collections.h` - `sort`, `reverse`, `shuffle`, `min`, `max`, `fill`, `frequency`).
+- [x] Comprehensive ANTLR4 grammar architecture documentation in `README.md`.
+- [x] In-depth submodule architecture and integration guide (`SUBMODULES.md`).
+- [x] Compiler engine architecture & visitor blueprint (`compiler-engine/ARCHITECTURE.md`).
+- [x] Section 1 ANTLR4 grammar stream setup and visitor architecture documentation.
+- [x] Type conversion and symbol resolution matrix in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+- [x] Concrete Go bootstrap and parser stream initialization code in `README.md`.
+- [x] Documented verified `CppTranspilerVisitor` struct definition and constructor.
+- [x] Git submodule incorporation and management workflow in `SUBMODULES.md` and `README.md`.
+- [x] CLI entrypoint and argument parsing documentation in `ARCHITECTURE.md` and `README.md`.
+- [x] Detailed ANTLR4 grammar and submodule integration workflow documentation (`compiler-engine/ARCHITECTURE.md`, `SUBMODULES.md`, `README.md`).
+- [x] Section 1 ANTLR4 grammar integration and transpiler pipeline specifications in `README.md` and `compiler-engine/ARCHITECTURE.md`.
+- [x] Deepened lexer token definitions and parser grammar rule hierarchy documentation.
+- [x] Investigated and documented `grammars-v4` and `bdwgc` submodules in `SUBMODULES.md`.
+- [x] Detailed ANTLR4 grammar integration and Go transpiler CLI stream setup in Section 1.
+- [x] Detailed initial structure of the Go transpiler CLI and `CppTranspilerVisitor`.
+- [x] Explored and documented `grammars-v4` and `bdwgc` submodule integration requirements.
+- [x] Documented explicit submodule incorporation procedures in `README.md` and `SUBMODULES.md`.
+- [x] Explored and documented `bdwgc` and `grammars-v4` submodule integration points.
+- [x] Outlined implementation details and verification checklists for submodules.
+- [x] Documented core AST traversal logic of `CppTranspilerVisitor`.
+- [x] Documented submodule structure and commit message conventions.
+- [x] Expanded Section 1 with step-by-step transpiler CLI stream setup.
+- [x] Documented ANTLR4 Go parser bindings generation and architecture.
+- [x] Deepened submodules exploration and state verification.
+- [x] Detailed Go transpiler CLI structure and `CppTranspilerVisitor` lifecycle.
+- [x] Deepened submodule directory layout documentation.
+- [x] Documented concrete AST traversal implementation in Go for `CppTranspilerVisitor`.
+- [x] Documented basic structure of Go transpiler CLI and `CppTranspilerVisitor`.
+- [x] Documented concrete method declaration AST traversal.
+- [x] Documented submodule build automation and CI integration.
+- [x] Added Submodule Operational Requirements Matrix.
+- [x] Documented batch traversal and file discovery workflow in `README.md`.
+- [x] Detailed explicit Git submodule operational workflows and commit pinning in `README.md`.
+- [x] Detailed initial setup instructions, environment dependencies, and verification table in `README.md`.
+- [x] Detailed initial architecture of Go transpiler CLI and ANTLR4 grammar integration in `README.md`.
+- [x] Detailed submodule structure and integration points for `grammars-v4` and `bdwgc` in `README.md`.
+- [x] Documented submodule operational mechanics and current integration state in `README.md`.
+- [x] Refactored dashboard template rendering and version interpolation with `html/template`.
+- [x] Continuous integration automated testing workflow (`.github/workflows/ci.yml`).
+
+## Milestone 4: Multi-threading & Advanced Tooling (v2.0.0)
+- [x] Real-time transpilation dashboard and interactive developer CLI tools (`compiler-engine -dashboard`).
