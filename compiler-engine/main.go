@@ -16,10 +16,19 @@ import (
 func main() {
 	srcDir := flag.String("src", "", "Source directory containing Java files")
 	outDir := flag.String("out", "", "Output directory for C++ files")
+	dashboard := flag.Bool("dashboard", false, "Start interactive web dashboard studio")
+	port := flag.Int("port", 8080, "Port for web dashboard studio")
 	flag.Parse()
 
+	if *dashboard {
+		if err := startDashboardServer(*port); err != nil {
+			log.Fatalf("Dashboard server failed: %v", err)
+		}
+		return
+	}
+
 	if *srcDir == "" || *outDir == "" {
-		fmt.Println("Usage: j2cpp-engine -src=<source_directory> -out=<output_directory>")
+		fmt.Println("Usage: j2cpp-engine -src=<source_directory> -out=<output_directory> [-dashboard -port=8080]")
 		os.Exit(1)
 	}
 

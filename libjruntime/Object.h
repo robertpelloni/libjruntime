@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <mutex>
 #include <string>
 #include <atomic>
@@ -8,6 +9,7 @@ namespace java {
 namespace lang {
 
 class String;
+template <typename T> class Class;
 
 class Object {
 private:
@@ -30,6 +32,7 @@ public:
     }
 
     virtual String* toString();
+    virtual Class<Object>* getClass();
 
     std::mutex* getMonitor() {
         std::mutex* m = monitor.load(std::memory_order_acquire);

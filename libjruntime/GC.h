@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef GC_THREADS
+#define GC_THREADS 1
+#endif
+
 #include <new>
 #include <gc.h>
 

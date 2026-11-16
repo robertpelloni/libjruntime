@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object.h"
+#include "GC.h"
 #include <string>
 #include <string_view>
 
@@ -39,12 +40,12 @@ public:
     }
 
     String* operator+(const String& other) {
-        return new String(this->value + other.value);
+        return java_new<String>(this->value + other.value);
     }
 };
 
 inline String* Object::toString() {
-    return new String("Object@" + std::to_string(reinterpret_cast<long long>(this)));
+    return java_new<String>("Object@" + std::to_string(reinterpret_cast<long long>(this)));
 }
 
 } // namespace lang
